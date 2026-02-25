@@ -1,98 +1,159 @@
-import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
-import { ArrowRight } from "lucide-react";
-import eventPlanningImg from "@/assets/event-planning.jpg";
-import eventVenueImg from "@/assets/event-venue.jpg";
+import { Button } from "@/components/ui/button";
+import { ArrowRight, Bot, User } from "lucide-react";
+import { useState, useEffect } from "react";
+
+const chatMessages = [
+  { role: "user" as const, text: "I need to plan a corporate event for 200 people next month." },
+  { role: "ai" as const, text: "I'd love to help! Let me suggest a timeline. First, what's your budget range and preferred venue type?" },
+  { role: "user" as const, text: "Budget is around $15,000. We'd prefer a downtown hotel ballroom." },
+  { role: "ai" as const, text: "Great choice! I found 3 venues in your range. I've also drafted a 4-week planning timeline with vendor recommendations. Shall I share it?" },
+  { role: "user" as const, text: "Yes, please share the timeline and top vendor picks." },
+  { role: "ai" as const, text: "Done! Your timeline is ready with 12 milestones. I've shortlisted 5 caterers and 3 AV companies — all rated 4.8+ ⭐" },
+];
+
+const AIInteraction = () => {
+  const [visibleCount, setVisibleCount] = useState(0);
+
+  useEffect(() => {
+    if (visibleCount < chatMessages.length) {
+      const timer = setTimeout(() => setVisibleCount(c => c + 1), 1800);
+      return () => clearTimeout(timer);
+    }
+    // Reset loop
+    const resetTimer = setTimeout(() => setVisibleCount(0), 4000);
+    return () => clearTimeout(resetTimer);
+  }, [visibleCount]);
+
+  return (
+    <div className="max-w-2xl mx-auto rounded-2xl p-6 space-y-4 overflow-hidden" style={{
+      background: 'linear-gradient(135deg, #121218 0%, #0e0e14 100%)',
+      border: '1px solid rgba(255,255,255,0.08)',
+      maxHeight: '400px'
+    }}>
+      <div className="flex items-center gap-2 mb-2">
+        <div className="w-2 h-2 rounded-full bg-green-400 animate-pulse" />
+        <span className="text-xs font-medium text-white/60">AI Assistant • Online</span>
+      </div>
+      <div className="space-y-3">
+        {chatMessages.slice(0, visibleCount).map((msg, i) => (
+          <div key={i} className={`flex gap-3 ${msg.role === 'user' ? 'flex-row-reverse' : ''} animate-fade-in`}>
+            <div className="w-7 h-7 rounded-full flex items-center justify-center flex-shrink-0" style={{
+              background: msg.role === 'ai' ? 'rgba(59,130,246,0.2)' : 'rgba(255,255,255,0.1)'
+            }}>
+              {msg.role === 'ai' ? <Bot className="w-3.5 h-3.5 text-blue-400" /> : <User className="w-3.5 h-3.5 text-gray-400" />}
+            </div>
+            <div className={`rounded-2xl px-4 py-2.5 text-sm max-w-[75%] ${
+              msg.role === 'user'
+                ? 'text-white rounded-br-sm'
+                : 'text-gray-300 rounded-bl-sm'
+            }`} style={{
+              background: msg.role === 'user' ? 'rgba(59,130,246,0.15)' : 'rgba(255,255,255,0.06)'
+            }}>
+              {msg.text}
+            </div>
+          </div>
+        ))}
+        {visibleCount < chatMessages.length && visibleCount > 0 && (
+          <div className="flex gap-3">
+            <div className="w-7 h-7 rounded-full flex items-center justify-center flex-shrink-0" style={{ background: 'rgba(59,130,246,0.2)' }}>
+              <Bot className="w-3.5 h-3.5 text-blue-400" />
+            </div>
+            <div className="flex gap-1 items-center px-4 py-3 rounded-2xl rounded-bl-sm" style={{ background: 'rgba(255,255,255,0.06)' }}>
+              <span className="w-1.5 h-1.5 rounded-full bg-gray-500 animate-bounce" style={{ animationDelay: '0ms' }} />
+              <span className="w-1.5 h-1.5 rounded-full bg-gray-500 animate-bounce" style={{ animationDelay: '150ms' }} />
+              <span className="w-1.5 h-1.5 rounded-full bg-gray-500 animate-bounce" style={{ animationDelay: '300ms' }} />
+            </div>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+};
 
 const CTASection = () => {
   return (
     <>
-      {/* Say goodbye section */}
-      <section className="py-20 bg-secondary">
+      {/* AI Interaction Section */}
+      <section className="py-20" style={{ background: '#0B0B0F' }}>
         <div className="container mx-auto px-4 lg:px-8">
           <div className="text-center mb-10">
-            <span className="text-xs font-semibold uppercase tracking-wider text-primary">Your Planning Saviour is Events Built on Time</span>
-            <h2 className="text-3xl md:text-4xl font-bold text-foreground mt-2 mb-4">
-              Say goodbye to planning headaches
+            <span className="text-xs font-semibold uppercase tracking-wider text-blue-400">Interactive AI Assistant</span>
+            <h2 className="text-3xl md:text-4xl font-bold text-white mt-2 mb-4">
+              Your AI event planner in action
             </h2>
-            <p className="text-muted-foreground max-w-2xl mx-auto">
-              EventNest brings smart automation to event planning. Let AI handle the heavy lifting while you focus on creating memorable experiences.
-            </p>
           </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center max-w-5xl mx-auto">
-            <div className="rounded-2xl overflow-hidden shadow-elevated">
-              <img src={eventPlanningImg} alt="Team collaborating on event planning" className="w-full h-64 md:h-80 object-cover" />
-            </div>
-            <div className="space-y-6">
-              <div className="bg-card rounded-xl p-5 border border-border shadow-card">
-                <h3 className="font-semibold text-foreground mb-2">AI-Powered Planning</h3>
-                <p className="text-sm text-muted-foreground">Generate complete event timelines, budgets, and vendor lists with a few clicks.</p>
-              </div>
-              <div className="bg-card rounded-xl p-5 border border-border shadow-card">
-                <h3 className="font-semibold text-foreground mb-2">Smart Budget Tracking</h3>
-                <p className="text-sm text-muted-foreground">Real-time expense tracking with alerts before budget overruns happen.</p>
-              </div>
-              <Button asChild>
-                <Link to="/signup">Get Started <ArrowRight className="ml-2 h-4 w-4" /></Link>
-              </Button>
-            </div>
-          </div>
+          <AIInteraction />
         </div>
       </section>
 
-      {/* AI Editing tools section */}
-      <section className="py-20 bg-background">
-        <div className="container mx-auto px-4 lg:px-8">
-          <div className="text-center mb-10">
-            <span className="text-xs font-semibold uppercase tracking-wider text-primary">Interactive AI Assistant</span>
-            <h2 className="text-3xl md:text-4xl font-bold text-foreground mt-2 mb-4">
-              Review AI results with our advanced editing tools
-            </h2>
-          </div>
-          <div className="max-w-4xl mx-auto bg-card rounded-2xl shadow-elevated border border-border overflow-hidden">
-            <img src={eventVenueImg} alt="Event venue setup" className="w-full h-64 md:h-96 object-cover" />
-          </div>
+      {/* CTA Section - inspired by screenshot */}
+      <section className="relative py-32 overflow-hidden" style={{ background: '#0B0B0F' }}>
+        {/* Grid lines background */}
+        <div className="absolute inset-0 pointer-events-none">
+          {/* Vertical lines */}
+          {[20, 35, 50, 65, 80].map((pos) => (
+            <div key={`v${pos}`} className="absolute top-0 bottom-0 w-px" style={{
+              left: `${pos}%`,
+              background: 'rgba(255,255,255,0.04)'
+            }} />
+          ))}
+          {/* Horizontal lines */}
+          {[20, 40, 60, 80].map((pos) => (
+            <div key={`h${pos}`} className="absolute left-0 right-0 h-px" style={{
+              top: `${pos}%`,
+              background: 'rgba(255,255,255,0.04)'
+            }} />
+          ))}
+          {/* Curved corner accents */}
+          <div className="absolute top-0 left-0 w-40 h-40" style={{
+            borderRight: '1px solid rgba(255,255,255,0.06)',
+            borderBottom: '1px solid rgba(255,255,255,0.06)',
+            borderRadius: '0 0 60px 0'
+          }} />
+          <div className="absolute top-0 right-0 w-40 h-40" style={{
+            borderLeft: '1px solid rgba(255,255,255,0.06)',
+            borderBottom: '1px solid rgba(255,255,255,0.06)',
+            borderRadius: '0 0 0 60px'
+          }} />
+          <div className="absolute bottom-0 left-0 w-40 h-40" style={{
+            borderRight: '1px solid rgba(255,255,255,0.06)',
+            borderTop: '1px solid rgba(255,255,255,0.06)',
+            borderRadius: '0 60px 0 0'
+          }} />
+          <div className="absolute bottom-0 right-0 w-40 h-40" style={{
+            borderLeft: '1px solid rgba(255,255,255,0.06)',
+            borderTop: '1px solid rgba(255,255,255,0.06)',
+            borderRadius: '60px 0 0 0'
+          }} />
         </div>
-      </section>
 
-      {/* Centralized planning */}
-      <section className="py-20 bg-secondary">
-        <div className="container mx-auto px-4 lg:px-8">
-          <div className="text-center mb-10">
-            <span className="text-xs font-semibold uppercase tracking-wider text-primary">All Plans Access: Multiple</span>
-            <h2 className="text-3xl md:text-4xl font-bold text-foreground mt-2 mb-4">
-              Centralized planning and management
-            </h2>
-            <p className="text-muted-foreground max-w-2xl mx-auto">
-              Gain your full picture view, live status, collaborative edits and event team visualization to focus on what matters most.
-            </p>
-          </div>
+        {/* Ambient glow */}
+        <div className="absolute inset-0 pointer-events-none" style={{
+          background: 'radial-gradient(ellipse at center top, rgba(255,255,255,0.03) 0%, transparent 60%)'
+        }} />
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center max-w-5xl mx-auto">
-            <div className="space-y-4">
-              <div className="bg-card rounded-xl p-4 border border-border shadow-card">
-                <span className="text-xs text-muted-foreground">All events in one place</span>
-                <div className="mt-2 px-3 py-2 rounded-lg bg-accent text-accent-foreground text-sm font-medium">event+config/access</div>
-              </div>
-              <div className="bg-card rounded-xl p-4 border border-border shadow-card">
-                <span className="text-xs text-muted-foreground">Unified notifications</span>
-              </div>
-              <div className="bg-card rounded-xl p-4 border border-border shadow-card">
-                <span className="text-xs text-muted-foreground">All in one full timeline</span>
-              </div>
-              <div className="flex gap-3">
-                <div className="bg-accent text-accent-foreground rounded-lg px-3 py-1.5 text-xs font-medium">all+integrations</div>
-                <div className="bg-accent text-accent-foreground rounded-lg px-3 py-1.5 text-xs font-medium">team members</div>
-              </div>
-              <Button asChild>
-                <Link to="/signup">Start Now</Link>
-              </Button>
-            </div>
-            <div className="rounded-2xl overflow-hidden shadow-elevated">
-              <img src={eventVenueImg} alt="Beautiful event venue" className="w-full h-64 md:h-80 object-cover" />
-            </div>
-          </div>
+        <div className="relative z-10 text-center max-w-3xl mx-auto px-4">
+          <h2 className="text-4xl md:text-6xl font-bold mb-6" style={{
+            background: 'linear-gradient(180deg, rgba(255,255,255,0.9) 0%, rgba(255,255,255,0.4) 100%)',
+            WebkitBackgroundClip: 'text',
+            WebkitTextFillColor: 'transparent'
+          }}>
+            Your All-in-One Event Companion
+          </h2>
+          <p className="text-sm md:text-base mb-10 max-w-xl mx-auto" style={{ color: '#9CA3AF' }}>
+            Simplify event planning, vendor management, and team coordination with cutting-edge tools designed for everyone — from beginners to pros.
+          </p>
+          <Button size="lg" asChild className="rounded-full px-8 py-3 text-sm font-medium" style={{
+            background: 'rgba(255,255,255,0.08)',
+            border: '1px solid rgba(255,255,255,0.15)',
+            color: 'white',
+            boxShadow: '0 0 30px rgba(255,255,255,0.05)'
+          }}>
+            <Link to="/signup">
+              Get Started Now <ArrowRight className="ml-2 h-4 w-4" />
+            </Link>
+          </Button>
         </div>
       </section>
     </>

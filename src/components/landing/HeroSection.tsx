@@ -44,7 +44,7 @@ const HeroSection = () => {
       </div>
 
       {/* Content overlay */}
-      <div className="relative z-10 container mx-auto px-4 lg:px-8 pt-32 pb-20 lg:pt-44 lg:pb-32">
+      <div className="relative z-10 container mx-auto px-4 lg:px-8 pt-44 pb-20 lg:pt-60 lg:pb-32">
         <div className="text-center max-w-4xl mx-auto animate-fade-in">
           {/* FontWeightText animated heading */}
           <div className="mb-6">

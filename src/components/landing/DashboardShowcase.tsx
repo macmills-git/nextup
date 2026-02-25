@@ -19,7 +19,7 @@ const DashboardShowcase = () => {
         </div>
 
         {/* Bento Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 max-w-6xl mx-auto">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3.5 max-w-[85%] mx-auto" style={{ fontSize: '0.9em' }}>
 
           {/* Total Revenue Card */}
           <div className="lg:col-span-1 bg-[#111] border border-white/10 rounded-2xl p-6 flex flex-col justify-between min-h-[220px]">
