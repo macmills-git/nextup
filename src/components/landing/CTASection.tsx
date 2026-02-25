@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { ArrowRight, Bot, User } from "lucide-react";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 
 const chatMessages = [
   { role: "user" as const, text: "I need to plan a corporate event for 200 people next month." },
@@ -14,16 +14,41 @@ const chatMessages = [
 
 const AIInteraction = () => {
   const [visibleCount, setVisibleCount] = useState(0);
+  const [scrollPhase, setScrollPhase] = useState(0); // 0=none, 1=scrollDown1, 2=scrollUp1, 3=scrollDown2, 4=scrollUp2
+  const chatRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (visibleCount < chatMessages.length) {
-      const timer = setTimeout(() => setVisibleCount(c => c + 1), 1800);
+      // 50% faster: 1800 → 900ms
+      const timer = setTimeout(() => setVisibleCount(c => c + 1), 900);
       return () => clearTimeout(timer);
     }
-    // Reset loop
-    const resetTimer = setTimeout(() => setVisibleCount(0), 4000);
-    return () => clearTimeout(resetTimer);
+    // Start scroll phase after all messages shown
+    const scrollTimer = setTimeout(() => setScrollPhase(1), 800);
+    return () => clearTimeout(scrollTimer);
   }, [visibleCount]);
+
+  useEffect(() => {
+    if (scrollPhase === 0 || !chatRef.current) return;
+    const el = chatRef.current;
+    const doScroll = () => {
+      if (scrollPhase === 1) {
+        el.scrollTo({ top: el.scrollHeight, behavior: 'smooth' });
+        setTimeout(() => setScrollPhase(2), 600);
+      } else if (scrollPhase === 2) {
+        el.scrollTo({ top: 0, behavior: 'smooth' });
+        setTimeout(() => setScrollPhase(3), 600);
+      } else if (scrollPhase === 3) {
+        el.scrollTo({ top: el.scrollHeight, behavior: 'smooth' });
+        setTimeout(() => setScrollPhase(4), 600);
+      } else if (scrollPhase === 4) {
+        el.scrollTo({ top: 0, behavior: 'smooth' });
+        // Reset loop: 50% faster: 4000 → 2000ms
+        setTimeout(() => { setScrollPhase(0); setVisibleCount(0); }, 2000);
+      }
+    };
+    doScroll();
+  }, [scrollPhase]);
 
   return (
     <div className="max-w-2xl mx-auto rounded-2xl p-6 space-y-4 overflow-hidden" style={{
@@ -35,7 +60,7 @@ const AIInteraction = () => {
         <div className="w-2 h-2 rounded-full bg-green-400 animate-pulse" />
         <span className="text-xs font-medium text-white/60">AI Assistant • Online</span>
       </div>
-      <div className="space-y-3">
+      <div ref={chatRef} className="space-y-3 max-h-[300px] overflow-y-auto" style={{ scrollBehavior: 'smooth' }}>
         {chatMessages.slice(0, visibleCount).map((msg, i) => (
           <div key={i} className={`flex gap-3 ${msg.role === 'user' ? 'flex-row-reverse' : ''} animate-fade-in`}>
             <div className="w-7 h-7 rounded-full flex items-center justify-center flex-shrink-0" style={{
@@ -44,9 +69,7 @@ const AIInteraction = () => {
               {msg.role === 'ai' ? <Bot className="w-3.5 h-3.5 text-blue-400" /> : <User className="w-3.5 h-3.5 text-gray-400" />}
             </div>
             <div className={`rounded-2xl px-4 py-2.5 text-sm max-w-[75%] ${
-              msg.role === 'user'
-                ? 'text-white rounded-br-sm'
-                : 'text-gray-300 rounded-bl-sm'
+              msg.role === 'user' ? 'text-white rounded-br-sm' : 'text-gray-300 rounded-bl-sm'
             }`} style={{
               background: msg.role === 'user' ? 'rgba(59,130,246,0.15)' : 'rgba(255,255,255,0.06)'
             }}>
@@ -87,52 +110,21 @@ const CTASection = () => {
         </div>
       </section>
 
-      {/* CTA Section - inspired by screenshot */}
+      {/* CTA Section */}
       <section className="relative py-32 overflow-hidden" style={{ background: '#0B0B0F' }}>
-        {/* Grid lines background */}
         <div className="absolute inset-0 pointer-events-none">
-          {/* Vertical lines */}
           {[20, 35, 50, 65, 80].map((pos) => (
-            <div key={`v${pos}`} className="absolute top-0 bottom-0 w-px" style={{
-              left: `${pos}%`,
-              background: 'rgba(255,255,255,0.04)'
-            }} />
+            <div key={`v${pos}`} className="absolute top-0 bottom-0 w-px" style={{ left: `${pos}%`, background: 'rgba(255,255,255,0.04)' }} />
           ))}
-          {/* Horizontal lines */}
           {[20, 40, 60, 80].map((pos) => (
-            <div key={`h${pos}`} className="absolute left-0 right-0 h-px" style={{
-              top: `${pos}%`,
-              background: 'rgba(255,255,255,0.04)'
-            }} />
+            <div key={`h${pos}`} className="absolute left-0 right-0 h-px" style={{ top: `${pos}%`, background: 'rgba(255,255,255,0.04)' }} />
           ))}
-          {/* Curved corner accents */}
-          <div className="absolute top-0 left-0 w-40 h-40" style={{
-            borderRight: '1px solid rgba(255,255,255,0.06)',
-            borderBottom: '1px solid rgba(255,255,255,0.06)',
-            borderRadius: '0 0 60px 0'
-          }} />
-          <div className="absolute top-0 right-0 w-40 h-40" style={{
-            borderLeft: '1px solid rgba(255,255,255,0.06)',
-            borderBottom: '1px solid rgba(255,255,255,0.06)',
-            borderRadius: '0 0 0 60px'
-          }} />
-          <div className="absolute bottom-0 left-0 w-40 h-40" style={{
-            borderRight: '1px solid rgba(255,255,255,0.06)',
-            borderTop: '1px solid rgba(255,255,255,0.06)',
-            borderRadius: '0 60px 0 0'
-          }} />
-          <div className="absolute bottom-0 right-0 w-40 h-40" style={{
-            borderLeft: '1px solid rgba(255,255,255,0.06)',
-            borderTop: '1px solid rgba(255,255,255,0.06)',
-            borderRadius: '60px 0 0 0'
-          }} />
+          <div className="absolute top-0 left-0 w-40 h-40" style={{ borderRight: '1px solid rgba(255,255,255,0.06)', borderBottom: '1px solid rgba(255,255,255,0.06)', borderRadius: '0 0 60px 0' }} />
+          <div className="absolute top-0 right-0 w-40 h-40" style={{ borderLeft: '1px solid rgba(255,255,255,0.06)', borderBottom: '1px solid rgba(255,255,255,0.06)', borderRadius: '0 0 0 60px' }} />
+          <div className="absolute bottom-0 left-0 w-40 h-40" style={{ borderRight: '1px solid rgba(255,255,255,0.06)', borderTop: '1px solid rgba(255,255,255,0.06)', borderRadius: '0 60px 0 0' }} />
+          <div className="absolute bottom-0 right-0 w-40 h-40" style={{ borderLeft: '1px solid rgba(255,255,255,0.06)', borderTop: '1px solid rgba(255,255,255,0.06)', borderRadius: '60px 0 0 0' }} />
         </div>
-
-        {/* Ambient glow */}
-        <div className="absolute inset-0 pointer-events-none" style={{
-          background: 'radial-gradient(ellipse at center top, rgba(255,255,255,0.03) 0%, transparent 60%)'
-        }} />
-
+        <div className="absolute inset-0 pointer-events-none" style={{ background: 'radial-gradient(ellipse at center top, rgba(255,255,255,0.03) 0%, transparent 60%)' }} />
         <div className="relative z-10 text-center max-w-3xl mx-auto px-4">
           <h2 className="text-4xl md:text-6xl font-bold mb-6" style={{
             background: 'linear-gradient(180deg, rgba(255,255,255,0.9) 0%, rgba(255,255,255,0.4) 100%)',
