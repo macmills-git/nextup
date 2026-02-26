@@ -11,6 +11,7 @@ import FeaturesPage from "./pages/FeaturesPage";
 import PricingPage from "./pages/PricingPage";
 import HelpPage from "./pages/HelpPage";
 import DocsPage from "./pages/DocsPage";
+import TemplatesPage from "./pages/TemplatesPage";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -29,6 +30,7 @@ const App = () => (
           <Route path="/pricing" element={<PricingPage />} />
           <Route path="/help" element={<HelpPage />} />
           <Route path="/docs" element={<DocsPage />} />
+          <Route path="/templates" element={<TemplatesPage />} />
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/dashboard/*" element={<Dashboard />} />
           <Route path="*" element={<NotFound />} />
