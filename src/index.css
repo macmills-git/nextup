@@ -6,7 +6,7 @@
 
 @layer base {
   :root {
-    --background: 0 0% 100%;
+    --background: 0 0% 98%;
     --foreground: 220 20% 14%;
     --card: 0 0% 100%;
     --card-foreground: 220 20% 14%;
@@ -41,39 +41,57 @@
     --info: 225 90% 60%;
     --info-foreground: 0 0% 100%;
     --gradient-primary: linear-gradient(135deg, hsl(225, 90%, 60%), hsl(240, 80%, 65%));
-    --gradient-hero: linear-gradient(180deg, hsl(225, 90%, 97%) 0%, hsl(0, 0%, 100%) 100%);
+    --gradient-hero: linear-gradient(180deg, hsl(220, 20%, 97%) 0%, hsl(0, 0%, 100%) 100%);
     --shadow-card: 0 1px 3px 0 hsl(220 20% 14% / 0.06), 0 1px 2px -1px hsl(220 20% 14% / 0.06);
     --shadow-elevated: 0 10px 25px -5px hsl(220 20% 14% / 0.08), 0 8px 10px -6px hsl(220 20% 14% / 0.04);
+    --hero-bg: 220 20% 97%;
+    --section-bg: 220 14% 97%;
+    --section-alt-bg: 0 0% 100%;
+    --nav-bg: 220 20% 14%;
+    --nav-text: 0 0% 100%;
+    --nav-text-muted: 0 0% 100% / 0.6;
+    --nav-active-bg: 0 0% 100% / 0.15;
+    --glass-bg: 220 20% 14% / 0.85;
+    --glass-border: 0 0% 100% / 0.1;
   }
 
   .dark {
-    --background: 222 47% 6%;
+    --background: 240 10% 4%;
     --foreground: 210 40% 98%;
-    --card: 222 47% 8%;
+    --card: 240 10% 6%;
     --card-foreground: 210 40% 98%;
-    --popover: 222 47% 8%;
+    --popover: 240 10% 6%;
     --popover-foreground: 210 40% 98%;
     --primary: 225 90% 60%;
     --primary-foreground: 0 0% 100%;
-    --secondary: 217 33% 17%;
+    --secondary: 240 6% 12%;
     --secondary-foreground: 210 40% 98%;
-    --muted: 217 33% 17%;
+    --muted: 240 6% 12%;
     --muted-foreground: 215 20% 65%;
-    --accent: 217 33% 17%;
+    --accent: 240 6% 14%;
     --accent-foreground: 210 40% 98%;
     --destructive: 0 63% 31%;
     --destructive-foreground: 210 40% 98%;
-    --border: 217 33% 17%;
-    --input: 217 33% 17%;
+    --border: 240 6% 15%;
+    --input: 240 6% 15%;
     --ring: 225 90% 60%;
-    --sidebar-background: 222 47% 8%;
+    --sidebar-background: 240 10% 5%;
     --sidebar-foreground: 240 5% 96%;
     --sidebar-primary: 225 90% 60%;
     --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 240 4% 16%;
+    --sidebar-accent: 240 6% 14%;
     --sidebar-accent-foreground: 240 5% 96%;
-    --sidebar-border: 240 4% 16%;
+    --sidebar-border: 240 6% 15%;
     --sidebar-ring: 225 90% 60%;
+    --hero-bg: 240 10% 4%;
+    --section-bg: 240 10% 3%;
+    --section-alt-bg: 240 10% 5%;
+    --nav-bg: 0 0% 100% / 0.08;
+    --nav-text: 0 0% 100%;
+    --nav-text-muted: 0 0% 100% / 0.6;
+    --nav-active-bg: 0 0% 100% / 0.15;
+    --glass-bg: 0 0% 100% / 0.06;
+    --glass-border: 0 0% 100% / 0.08;
   }
 }
 
@@ -100,6 +118,12 @@
   .shadow-elevated {
     box-shadow: var(--shadow-elevated);
   }
+  .grid-bg {
+    background-image: 
+      linear-gradient(hsl(var(--border)) 1px, transparent 1px),
+      linear-gradient(90deg, hsl(var(--border)) 1px, transparent 1px);
+    background-size: 60px 60px;
+  }
 }
 
 /* Theme sweep animation */
@@ -111,8 +135,8 @@
 
 /* Gradient flow animation for cards */
 @keyframes gradientCardFlow {
-  0%, 100% { box-shadow: 0 0 0 1px rgba(59,130,246,0), 0 30px 50px rgba(0,0,0,0.3); }
-  50% { box-shadow: 0 0 25px 2px rgba(59,130,246,0.25), 0 30px 50px rgba(0,0,0,0.3); }
+  0%, 100% { box-shadow: 0 0 0 1px hsl(var(--primary) / 0), 0 30px 50px hsl(var(--foreground) / 0.1); }
+  50% { box-shadow: 0 0 25px 2px hsl(var(--primary) / 0.2), 0 30px 50px hsl(var(--foreground) / 0.1); }
 }
 
 /* Energy orb animation */
@@ -134,15 +158,15 @@
 
 /* Globe glow pulse */
 @keyframes globeGlow {
-  0%, 100% { box-shadow: 0 0 60px 20px rgba(59,130,246,0.15); }
-  50% { box-shadow: 0 0 100px 40px rgba(59,130,246,0.25); }
+  0%, 100% { box-shadow: 0 0 60px 20px hsl(var(--primary) / 0.15); }
+  50% { box-shadow: 0 0 100px 40px hsl(var(--primary) / 0.25); }
 }
 
 /* Card sequential glow */
-@keyframes cardGlow1 { 0%,25% { box-shadow: 0 0 30px 3px rgba(59,130,246,0.3); } 26%,100% { box-shadow: none; } }
-@keyframes cardGlow2 { 0%,25% { box-shadow: none; } 26%,50% { box-shadow: 0 0 30px 3px rgba(59,130,246,0.3); } 51%,100% { box-shadow: none; } }
-@keyframes cardGlow3 { 0%,50% { box-shadow: none; } 51%,75% { box-shadow: 0 0 30px 3px rgba(59,130,246,0.3); } 76%,100% { box-shadow: none; } }
-@keyframes cardGlow4 { 0%,75% { box-shadow: none; } 76%,100% { box-shadow: 0 0 30px 3px rgba(59,130,246,0.3); } }
+@keyframes cardGlow1 { 0%,25% { box-shadow: 0 0 30px 3px hsl(var(--primary) / 0.3); } 26%,100% { box-shadow: none; } }
+@keyframes cardGlow2 { 0%,25% { box-shadow: none; } 26%,50% { box-shadow: 0 0 30px 3px hsl(var(--primary) / 0.3); } 51%,100% { box-shadow: none; } }
+@keyframes cardGlow3 { 0%,50% { box-shadow: none; } 51%,75% { box-shadow: 0 0 30px 3px hsl(var(--primary) / 0.3); } 76%,100% { box-shadow: none; } }
+@keyframes cardGlow4 { 0%,75% { box-shadow: none; } 76%,100% { box-shadow: 0 0 30px 3px hsl(var(--primary) / 0.3); } }
 
 /* Float animation for carousel */
 @keyframes floatY {
