@@ -1,13 +1,6 @@
 import { Link, useLocation } from "react-router-dom";
 import {
-  LayoutDashboard,
-  Calendar,
-  Users,
-  Store,
-  MessageSquare,
-  Settings,
-  Sparkles,
-  ChevronLeft,
+  LayoutDashboard, Calendar, Users, Store, MessageSquare, Settings, Sparkles, ChevronLeft,
 } from "lucide-react";
 import { useState } from "react";
 import { cn } from "@/lib/utils";
@@ -27,14 +20,11 @@ const DashboardSidebar = () => {
   const location = useLocation();
 
   return (
-    <aside
-      className={cn(
-        "h-screen bg-card border-r border-border flex flex-col transition-all duration-300 sticky top-0",
-        collapsed ? "w-16" : "w-60"
-      )}
-    >
-      {/* Logo */}
-      <div className="h-16 flex items-center px-4 border-b border-border">
+    <aside className={cn(
+      "h-screen bg-card border-r-2 border-border flex flex-col transition-all duration-300 sticky top-0",
+      collapsed ? "w-16" : "w-60"
+    )}>
+      <div className="h-16 flex items-center px-4 border-b-2 border-border">
         <Link to="/" className="flex items-center gap-2 overflow-hidden">
           <div className="w-8 h-8 rounded-lg gradient-primary flex items-center justify-center flex-shrink-0">
             <span className="text-primary-foreground font-bold text-sm">E</span>
@@ -43,7 +33,6 @@ const DashboardSidebar = () => {
         </Link>
       </div>
 
-      {/* Nav */}
       <nav className="flex-1 py-4 px-2 space-y-1 overflow-y-auto">
         {navItems.map(item => {
           const isActive = location.pathname === item.path;
@@ -52,10 +41,10 @@ const DashboardSidebar = () => {
               key={item.path}
               to={item.path}
               className={cn(
-                "flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors",
+                "flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors border-2",
                 isActive
-                  ? "bg-accent text-accent-foreground"
-                  : "text-muted-foreground hover:bg-secondary hover:text-foreground"
+                  ? "bg-primary/5 text-primary border-primary/20"
+                  : "text-muted-foreground hover:bg-secondary hover:text-foreground border-transparent hover:border-border"
               )}
             >
               <item.icon className="h-5 w-5 flex-shrink-0" />
@@ -65,11 +54,10 @@ const DashboardSidebar = () => {
         })}
       </nav>
 
-      {/* Collapse toggle */}
-      <div className="p-2 border-t border-border">
+      <div className="p-2 border-t-2 border-border">
         <button
           onClick={() => setCollapsed(!collapsed)}
-          className="w-full flex items-center justify-center gap-2 px-3 py-2 rounded-lg text-sm text-muted-foreground hover:bg-secondary transition-colors"
+          className="w-full flex items-center justify-center gap-2 px-3 py-2 rounded-lg text-sm text-muted-foreground hover:bg-secondary transition-colors border-2 border-transparent hover:border-border"
         >
           <ChevronLeft className={cn("h-4 w-4 transition-transform", collapsed && "rotate-180")} />
           {!collapsed && <span>Collapse</span>}

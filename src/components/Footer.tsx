@@ -4,12 +4,12 @@ import { Button } from "@/components/ui/button";
 
 const Footer = () => {
   return (
-    <div style={{ background: '#EEF1F6' }}>
+    <div className="bg-secondary dark:bg-card/50">
       {/* Newsletter CTA Card - overlapping */}
       <div className="container mx-auto px-4 lg:px-8 relative z-10">
         <div className="relative -mb-20 rounded-[20px] px-8 py-10 md:px-12 md:py-14 flex flex-col md:flex-row items-center gap-8" style={{
-          background: 'linear-gradient(135deg, #4F7CF7, #5B8DFB)',
-          boxShadow: '0 20px 60px rgba(0,0,0,0.15)',
+          background: 'linear-gradient(135deg, hsl(225, 90%, 60%), hsl(225, 80%, 65%))',
+          boxShadow: '0 20px 60px hsl(var(--foreground) / 0.15)',
         }}>
           {/* Decorative sparkles */}
           <div className="absolute top-4 left-8 text-white/20 text-4xl">✦</div>
@@ -18,10 +18,8 @@ const Footer = () => {
 
           {/* Left: 3D-style icon */}
           <div className="w-32 h-32 md:w-40 md:h-40 flex-shrink-0 relative">
-            <div className="w-full h-full rounded-2xl flex items-center justify-center" style={{
-              background: 'rgba(255,255,255,0.15)',
-              backdropFilter: 'blur(10px)',
-              boxShadow: '0 10px 30px rgba(0,0,0,0.1)',
+            <div className="w-full h-full rounded-2xl flex items-center justify-center bg-white/15 backdrop-blur-sm" style={{
+              boxShadow: '0 10px 30px hsl(var(--foreground) / 0.1)',
             }}>
               <div className="text-6xl">📅</div>
             </div>
@@ -39,12 +37,10 @@ const Footer = () => {
               <input
                 type="email"
                 placeholder="Enter your email"
-                className="flex-1 px-5 py-3 rounded-full text-sm outline-none"
-                style={{ background: 'white', color: '#111827' }}
+                className="flex-1 px-5 py-3 rounded-full text-sm outline-none bg-white text-foreground"
               />
-              <Button className="rounded-full px-6 py-3 text-sm font-medium" style={{
-                background: 'white', color: '#111827',
-                boxShadow: '0 4px 15px rgba(0,0,0,0.1)',
+              <Button className="rounded-full px-6 py-3 text-sm font-medium bg-white text-foreground hover:bg-white/90" style={{
+                boxShadow: '0 4px 15px hsl(var(--foreground) / 0.1)',
               }}>
                 Subscribe <ArrowRight className="ml-2 h-4 w-4" />
               </Button>
@@ -59,9 +55,7 @@ const Footer = () => {
       {/* Main Footer */}
       <div className="pt-32 pb-8">
         <div className="container mx-auto px-4 lg:px-8">
-          <div className="rounded-2xl bg-white p-10 md:p-14" style={{
-            boxShadow: '0 20px 50px rgba(0,0,0,0.04)',
-          }}>
+          <div className="rounded-2xl bg-card p-10 md:p-14 shadow-card border border-border">
             <div className="grid grid-cols-1 md:grid-cols-5 gap-8">
               {/* Brand */}
               <div className="md:col-span-1">
@@ -69,15 +63,15 @@ const Footer = () => {
                   <div className="w-8 h-8 rounded-lg gradient-primary flex items-center justify-center">
                     <span className="text-white font-bold text-sm">E</span>
                   </div>
-                  <span className="font-bold text-lg" style={{ color: '#111827' }}>Event Nest</span>
+                  <span className="font-bold text-lg text-foreground">Event Nest</span>
                 </Link>
-                <p className="text-sm leading-relaxed mb-5" style={{ color: '#6B7280' }}>
+                <p className="text-sm leading-relaxed mb-5 text-muted-foreground">
                   Your intelligent event planning and vendor marketplace platform.
                 </p>
                 <div className="flex gap-3">
                   {[Facebook, Twitter, Instagram, Linkedin].map((Icon, i) => (
-                    <a key={i} href="#" className="w-8 h-8 rounded-full flex items-center justify-center transition-colors hover:bg-blue-50" style={{ background: '#F3F4F6' }}>
-                      <Icon size={14} style={{ color: '#6B7280' }} />
+                    <a key={i} href="#" className="w-8 h-8 rounded-full flex items-center justify-center transition-colors bg-secondary hover:bg-accent border border-border">
+                      <Icon size={14} className="text-muted-foreground" />
                     </a>
                   ))}
                 </div>
@@ -85,11 +79,11 @@ const Footer = () => {
 
               {/* Company */}
               <div>
-                <h4 className="font-semibold mb-4 text-sm" style={{ color: '#111827' }}>Company</h4>
+                <h4 className="font-semibold mb-4 text-sm text-foreground">Company</h4>
                 <ul className="space-y-2.5">
                   {["About Us", "Features", "Pricing", "Templates"].map(link => (
                     <li key={link}>
-                      <a href="#" className="text-sm transition-colors hover:text-blue-500" style={{ color: '#6B7280' }}>{link}</a>
+                      <a href="#" className="text-sm transition-colors text-muted-foreground hover:text-primary">{link}</a>
                     </li>
                   ))}
                 </ul>
@@ -97,11 +91,11 @@ const Footer = () => {
 
               {/* Support */}
               <div>
-                <h4 className="font-semibold mb-4 text-sm" style={{ color: '#111827' }}>Support</h4>
+                <h4 className="font-semibold mb-4 text-sm text-foreground">Support</h4>
                 <ul className="space-y-2.5">
                   {["Help Center", "Documentation", "Community", "Feedback"].map(link => (
                     <li key={link}>
-                      <a href="#" className="text-sm transition-colors hover:text-blue-500" style={{ color: '#6B7280' }}>{link}</a>
+                      <a href="#" className="text-sm transition-colors text-muted-foreground hover:text-primary">{link}</a>
                     </li>
                   ))}
                 </ul>
@@ -109,11 +103,11 @@ const Footer = () => {
 
               {/* Links */}
               <div>
-                <h4 className="font-semibold mb-4 text-sm" style={{ color: '#111827' }}>Resources</h4>
+                <h4 className="font-semibold mb-4 text-sm text-foreground">Resources</h4>
                 <ul className="space-y-2.5">
                   {["Blog", "Guides", "API Docs", "Changelog"].map(link => (
                     <li key={link}>
-                      <a href="#" className="text-sm transition-colors hover:text-blue-500" style={{ color: '#6B7280' }}>{link}</a>
+                      <a href="#" className="text-sm transition-colors text-muted-foreground hover:text-primary">{link}</a>
                     </li>
                   ))}
                 </ul>
@@ -121,14 +115,14 @@ const Footer = () => {
 
               {/* Contact */}
               <div>
-                <h4 className="font-semibold mb-4 text-sm" style={{ color: '#111827' }}>Contact Us</h4>
+                <h4 className="font-semibold mb-4 text-sm text-foreground">Contact Us</h4>
                 <div className="space-y-3">
-                  <div className="flex items-center gap-2 text-sm" style={{ color: '#6B7280' }}>
-                    <Phone className="w-4 h-4 text-blue-500" />
+                  <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                    <Phone className="w-4 h-4 text-primary" />
                     +1 (555) 123-4567
                   </div>
-                  <div className="flex items-center gap-2 text-sm" style={{ color: '#6B7280' }}>
-                    <Mail className="w-4 h-4 text-blue-500" />
+                  <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                    <Mail className="w-4 h-4 text-primary" />
                     hello@eventnest.com
                   </div>
                 </div>
@@ -136,11 +130,11 @@ const Footer = () => {
             </div>
 
             {/* Legal bar */}
-            <div className="mt-10 pt-6 flex flex-col md:flex-row items-center justify-between gap-4" style={{ borderTop: '1px solid #E5E7EB' }}>
-              <p className="text-xs" style={{ color: '#9CA3AF' }}>© 2026 Event Nest. All rights reserved.</p>
+            <div className="mt-10 pt-6 flex flex-col md:flex-row items-center justify-between gap-4 border-t border-border">
+              <p className="text-xs text-muted-foreground">© 2026 Event Nest. All rights reserved.</p>
               <div className="flex items-center gap-4">
                 {["Privacy Policy", "Terms of Use", "Legal", "Site Map"].map(link => (
-                  <a key={link} href="#" className="text-xs transition-colors hover:text-blue-500" style={{ color: '#9CA3AF' }}>{link}</a>
+                  <a key={link} href="#" className="text-xs transition-colors text-muted-foreground hover:text-primary">{link}</a>
                 ))}
               </div>
             </div>

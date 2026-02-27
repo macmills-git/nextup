@@ -1,8 +1,7 @@
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Search, MessageCircle, BookOpen, Mail, HelpCircle } from "lucide-react";
+import { Search, MessageCircle, BookOpen, Mail, HelpCircle, Plus } from "lucide-react";
 import { useState } from "react";
 
 const faqs = [
@@ -21,22 +20,22 @@ const HelpPage = () => {
   const filtered = faqs.filter(f => f.q.toLowerCase().includes(search.toLowerCase()) || f.a.toLowerCase().includes(search.toLowerCase()));
 
   return (
-    <div className="min-h-screen" style={{ background: '#0B0B0F' }}>
+    <div className="min-h-screen bg-background grid-bg">
       <Navbar />
       <div className="pt-32 pb-20 container mx-auto px-4 lg:px-8">
         <div className="text-center max-w-3xl mx-auto mb-16">
-          <span className="text-xs font-semibold uppercase tracking-wider text-blue-400">Help & Support</span>
-          <h1 className="text-4xl md:text-6xl font-bold mt-3 mb-6" style={{
-            background: 'linear-gradient(180deg, rgba(255,255,255,0.9) 0%, rgba(255,255,255,0.4) 100%)',
-            WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent'
-          }}>
+          <span className="text-xs font-semibold uppercase tracking-wider text-primary">Help & Support</span>
+          <h1 className="text-4xl md:text-6xl font-bold mt-3 mb-6 text-foreground tracking-tight">
             How can we help you?
           </h1>
           <div className="relative max-w-lg mx-auto">
-            <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4" style={{ color: '#9CA3AF' }} />
-            <Input placeholder="Search for help..." className="pl-10 h-12 rounded-xl text-sm" style={{
-              background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.08)', color: 'white'
-            }} value={search} onChange={e => setSearch(e.target.value)} />
+            <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+            <input
+              placeholder="Search for help..."
+              className="w-full h-12 rounded-full pl-10 pr-4 text-sm bg-card border border-border text-foreground placeholder:text-muted-foreground outline-none focus:ring-2 focus:ring-primary/20"
+              value={search}
+              onChange={e => setSearch(e.target.value)}
+            />
           </div>
         </div>
 
@@ -47,16 +46,13 @@ const HelpPage = () => {
             { icon: MessageCircle, title: "Live Chat", desc: "Chat with our support team", link: "#" },
             { icon: Mail, title: "Email Support", desc: "support@eventnest.com", link: "mailto:support@eventnest.com" },
           ].map((item, i) => (
-            <a key={i} href={item.link} className="rounded-2xl p-6 flex items-start gap-4 transition-all duration-300 hover:-translate-y-1" style={{
-              background: 'linear-gradient(135deg, #16161D 0%, #121218 100%)',
-              border: '1px solid rgba(255,255,255,0.06)'
-            }}>
-              <div className="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0" style={{ background: 'rgba(59,130,246,0.15)' }}>
-                <item.icon className="h-5 w-5 text-blue-400" />
+            <a key={i} href={item.link} className="rounded-2xl p-6 flex items-start gap-4 transition-all duration-300 hover:-translate-y-1 bg-card border border-border shadow-card hover:shadow-elevated">
+              <div className="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0 bg-primary/10">
+                <item.icon className="h-5 w-5 text-primary" />
               </div>
               <div>
-                <h3 className="text-white font-semibold text-sm">{item.title}</h3>
-                <p className="text-xs mt-1" style={{ color: '#9CA3AF' }}>{item.desc}</p>
+                <h3 className="text-foreground font-semibold text-sm">{item.title}</h3>
+                <p className="text-xs mt-1 text-muted-foreground">{item.desc}</p>
               </div>
             </a>
           ))}
@@ -64,23 +60,23 @@ const HelpPage = () => {
 
         {/* FAQs */}
         <div className="max-w-3xl mx-auto">
-          <h2 className="text-xl font-bold text-white mb-6 flex items-center gap-2">
-            <HelpCircle className="h-5 w-5 text-blue-400" /> Frequently Asked Questions
+          <h2 className="text-xl font-bold text-foreground mb-6 flex items-center gap-2">
+            <HelpCircle className="h-5 w-5 text-primary" /> Frequently Asked Questions
           </h2>
-          <div className="space-y-3">
+          <div className="space-y-1">
             {filtered.map((faq, i) => (
-              <div key={i} className="rounded-xl overflow-hidden" style={{
-                background: 'linear-gradient(135deg, #16161D 0%, #121218 100%)',
-                border: '1px solid rgba(255,255,255,0.06)'
-              }}>
-                <button className="w-full text-left p-5 flex items-center justify-between" onClick={() => setOpenFaq(openFaq === i ? null : i)}>
-                  <span className="text-sm font-medium text-white">{faq.q}</span>
-                  <span className="text-white/40 text-lg">{openFaq === i ? '−' : '+'}</span>
+              <div key={i}>
+                <button
+                  className="w-full flex items-center justify-between py-4 border-b border-border text-left"
+                  onClick={() => setOpenFaq(openFaq === i ? null : i)}
+                >
+                  <span className="text-sm font-medium text-foreground">{faq.q}</span>
+                  <span className="w-6 h-6 rounded-full border border-border flex items-center justify-center text-muted-foreground flex-shrink-0">
+                    <Plus className={`w-3 h-3 transition-transform ${openFaq === i ? 'rotate-45' : ''}`} />
+                  </span>
                 </button>
                 {openFaq === i && (
-                  <div className="px-5 pb-5 pt-0">
-                    <p className="text-sm leading-relaxed" style={{ color: '#9CA3AF' }}>{faq.a}</p>
-                  </div>
+                  <div className="py-3 text-sm text-muted-foreground">{faq.a}</div>
                 )}
               </div>
             ))}

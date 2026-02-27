@@ -18,41 +18,35 @@ const features = [
 
 const FeaturesPage = () => {
   return (
-    <div className="min-h-screen" style={{ background: '#0B0B0F' }}>
+    <div className="min-h-screen bg-background grid-bg">
       <Navbar />
       <div className="pt-32 pb-20 container mx-auto px-4 lg:px-8">
         <div className="text-center max-w-3xl mx-auto mb-16">
-          <span className="text-xs font-semibold uppercase tracking-wider text-blue-400">Features</span>
-          <h1 className="text-4xl md:text-6xl font-bold mt-3 mb-6" style={{
-            background: 'linear-gradient(180deg, rgba(255,255,255,0.9) 0%, rgba(255,255,255,0.4) 100%)',
-            WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent'
-          }}>
+          <span className="text-xs font-semibold uppercase tracking-wider text-primary">Features</span>
+          <h1 className="text-4xl md:text-6xl font-bold mt-3 mb-6 text-foreground tracking-tight">
             Everything you need to plan perfect events
           </h1>
-          <p className="text-sm md:text-base" style={{ color: '#9CA3AF' }}>
+          <p className="text-sm md:text-base text-muted-foreground">
             Powerful tools that work together to streamline your entire event planning workflow.
           </p>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5 max-w-6xl mx-auto">
           {features.map((f, i) => (
-            <div key={i} className="rounded-2xl p-6 transition-all duration-300 hover:-translate-y-1.5 group" style={{
-              background: 'linear-gradient(135deg, #16161D 0%, #121218 100%)',
-              border: '1px solid rgba(255,255,255,0.06)',
-              boxShadow: '0 8px 30px rgba(0,0,0,0.3)'
-            }}>
-              <div className="w-10 h-10 rounded-xl mb-4 flex items-center justify-center" style={{ background: 'rgba(59,130,246,0.15)' }}>
-                <f.icon className="h-5 w-5 text-blue-400" />
+            <div key={i} className="rounded-2xl p-6 transition-all duration-300 hover:-translate-y-1.5 group bg-card border border-border shadow-card hover:shadow-elevated">
+              <div className="w-10 h-10 rounded-xl mb-4 flex items-center justify-center bg-primary/10">
+                <f.icon className="h-5 w-5 text-primary" />
               </div>
-              <h3 className="text-white font-semibold mb-2">{f.title}</h3>
-              <p className="text-sm leading-relaxed" style={{ color: '#9CA3AF' }}>{f.desc}</p>
+              <h3 className="text-foreground font-semibold mb-2">{f.title}</h3>
+              <p className="text-sm leading-relaxed text-muted-foreground">{f.desc}</p>
             </div>
           ))}
         </div>
 
         <div className="text-center mt-20">
-          <Button size="lg" asChild className="rounded-full px-8 py-3 text-sm font-medium" style={{
-            background: 'rgba(255,255,255,0.08)', border: '1px solid rgba(255,255,255,0.15)', color: 'white', boxShadow: '0 0 30px rgba(255,255,255,0.05)'
+          <Button size="lg" asChild className="rounded-full px-8 py-3 text-sm font-medium border-none text-white" style={{
+            background: 'linear-gradient(135deg, hsl(225, 90%, 60%), hsl(225, 80%, 65%))',
+            boxShadow: '0 4px 20px hsl(225, 90%, 60%, 0.35)',
           }}>
             <Link to="/signup">Get Started Now <ArrowRight className="ml-2 h-4 w-4" /></Link>
           </Button>

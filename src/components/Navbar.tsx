@@ -44,12 +44,12 @@ const Navbar = () => {
             <div className="w-7 h-7 rounded-lg gradient-primary flex items-center justify-center">
               <span className="text-white font-bold text-xs">E</span>
             </div>
-            <span className="font-bold text-sm text-white">Event Nest</span>
+            <span className="font-bold text-sm text-foreground dark:text-white">Event Nest</span>
           </Link>
         </div>
 
         {/* Desktop nav - centered pill */}
-        <div className="hidden md:flex items-center gap-1 bg-white/8 backdrop-blur-xl border border-white/10 rounded-full px-1.5 py-1">
+        <div className="hidden md:flex items-center gap-1 bg-card/80 dark:bg-white/8 backdrop-blur-xl border border-border dark:border-white/10 rounded-full px-1.5 py-1 shadow-card">
           {navItems.map((item) => {
             const isActive = location.pathname === item.to || (item.to === "/" && location.pathname === "/");
             return (
@@ -58,8 +58,8 @@ const Navbar = () => {
                 to={item.to}
                 className={`px-4 py-1.5 text-xs font-medium rounded-full transition-all duration-200 ${
                   isActive
-                    ? "bg-white/15 text-white"
-                    : "text-white/60 hover:text-white hover:bg-white/5"
+                    ? "bg-primary/15 dark:bg-white/15 text-primary dark:text-white"
+                    : "text-muted-foreground hover:text-foreground dark:hover:text-white hover:bg-secondary dark:hover:bg-white/5"
                 }`}
               >
                 {item.label}
@@ -80,53 +80,44 @@ const Navbar = () => {
         >
           <button
             onClick={toggleTheme}
-            className="w-8 h-8 rounded-full flex items-center justify-center transition-colors hover:bg-white/10"
-            style={{ background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.1)' }}
+            className="w-8 h-8 rounded-full flex items-center justify-center transition-colors border border-border dark:border-white/10 bg-card dark:bg-white/6 hover:bg-secondary dark:hover:bg-white/10"
           >
-            {theme === 'dark' ? <Sun className="w-3.5 h-3.5 text-yellow-400" /> : <Moon className="w-3.5 h-3.5 text-blue-300" />}
+            {theme === 'dark' ? <Sun className="w-3.5 h-3.5 text-yellow-400" /> : <Moon className="w-3.5 h-3.5 text-primary" />}
           </button>
-          <Button size="sm" asChild className="h-8 text-xs rounded-full whitespace-nowrap" style={{
-            background: 'rgba(255,255,255,0.06)',
-            border: '1px solid rgba(255,255,255,0.12)',
-            color: 'rgba(255,255,255,0.8)',
-          }}>
+          <Button size="sm" asChild className="h-8 text-xs rounded-full whitespace-nowrap border border-border dark:border-white/12 bg-card dark:bg-white/6 text-foreground dark:text-white/80 hover:bg-secondary dark:hover:bg-white/10">
             <Link to="/signin">Log in</Link>
           </Button>
-          <Button size="sm" asChild className="h-8 text-xs rounded-full whitespace-nowrap" style={{
-            background: 'linear-gradient(135deg, #4F7CF7, #5B8DFB)',
-            border: 'none',
-            color: 'white',
-            boxShadow: '0 4px 15px rgba(79,124,247,0.3)',
+          <Button size="sm" asChild className="h-8 text-xs rounded-full whitespace-nowrap border-none text-white" style={{
+            background: 'linear-gradient(135deg, hsl(225, 90%, 60%), hsl(225, 80%, 65%))',
+            boxShadow: '0 4px 15px hsl(225, 90%, 60%, 0.3)',
           }}>
             <Link to="/signup">Sign up</Link>
           </Button>
         </div>
 
         {/* Mobile toggle */}
-        <button className="md:hidden text-white/80" onClick={() => setMobileOpen(!mobileOpen)}>
+        <button className="md:hidden text-foreground" onClick={() => setMobileOpen(!mobileOpen)}>
           {mobileOpen ? <X size={20} /> : <Menu size={20} />}
         </button>
       </div>
 
       {/* Mobile menu */}
       {mobileOpen && (
-        <div className="md:hidden bg-white/10 backdrop-blur-xl border border-white/10 rounded-2xl mt-2 px-5 pb-4 pt-2 space-y-2">
+        <div className="md:hidden bg-card/95 dark:bg-white/10 backdrop-blur-xl border border-border dark:border-white/10 rounded-2xl mt-2 px-5 pb-4 pt-2 space-y-2 shadow-elevated">
           {navItems.map((item) => (
-            <Link key={item.label} to={item.to} className="block text-xs font-medium text-white/70 py-2 hover:text-white" onClick={() => setMobileOpen(false)}>
+            <Link key={item.label} to={item.to} className="block text-xs font-medium text-muted-foreground py-2 hover:text-foreground" onClick={() => setMobileOpen(false)}>
               {item.label}
             </Link>
           ))}
           <div className="flex gap-2 pt-2 items-center">
-            <button onClick={toggleTheme} className="w-8 h-8 rounded-full flex items-center justify-center" style={{ background: 'rgba(255,255,255,0.06)' }}>
-              {theme === 'dark' ? <Sun className="w-3.5 h-3.5 text-yellow-400" /> : <Moon className="w-3.5 h-3.5 text-blue-300" />}
+            <button onClick={toggleTheme} className="w-8 h-8 rounded-full flex items-center justify-center bg-secondary dark:bg-white/6 border border-border">
+              {theme === 'dark' ? <Sun className="w-3.5 h-3.5 text-yellow-400" /> : <Moon className="w-3.5 h-3.5 text-primary" />}
             </button>
-            <Button size="sm" asChild className="h-8 text-xs rounded-full" style={{
-              background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.12)', color: 'rgba(255,255,255,0.8)'
-            }}>
+            <Button size="sm" asChild className="h-8 text-xs rounded-full border border-border bg-card text-foreground">
               <Link to="/signin">Log in</Link>
             </Button>
-            <Button size="sm" asChild className="h-8 text-xs rounded-full" style={{
-              background: 'linear-gradient(135deg, #4F7CF7, #5B8DFB)', border: 'none', color: 'white'
+            <Button size="sm" asChild className="h-8 text-xs rounded-full border-none text-white" style={{
+              background: 'linear-gradient(135deg, hsl(225, 90%, 60%), hsl(225, 80%, 65%))',
             }}>
               <Link to="/signup">Sign up</Link>
             </Button>

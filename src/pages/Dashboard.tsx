@@ -1,11 +1,11 @@
 import DashboardSidebar from "@/components/DashboardSidebar";
 import { Routes, Route, useNavigate } from "react-router-dom";
 import {
-  Calendar, DollarSign, Users, TrendingUp, MoreHorizontal, Bell, Search, Sparkles, CheckCircle, Clock, ArrowRight,
+  Calendar, DollarSign, Users, TrendingUp, MoreHorizontal, Bell, Search, Sparkles, CheckCircle, Clock, ArrowRight, Sun, Moon,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
+import { useTheme } from "@/contexts/ThemeContext";
 import EventsPage from "./dashboard/EventsPage";
 import EventDetailPage from "./dashboard/EventDetailPage";
 import VendorsPage from "./dashboard/VendorsPage";
@@ -51,9 +51,9 @@ const DashboardHome = () => {
       {/* Stat cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         {statCards.map(stat => (
-          <div key={stat.label} className="bg-card rounded-xl border border-border p-5 shadow-card">
+          <div key={stat.label} className="bg-card rounded-xl border-2 border-border p-5 hover:border-primary/30 transition-colors">
             <div className="flex items-center justify-between mb-3">
-              <div className="w-10 h-10 rounded-lg bg-accent flex items-center justify-center">
+              <div className="w-10 h-10 rounded-lg bg-secondary border border-border flex items-center justify-center">
                 <stat.icon className={`h-5 w-5 ${stat.color}`} />
               </div>
               <span className="text-xs font-medium text-success">{stat.change}</span>
@@ -65,28 +65,28 @@ const DashboardHome = () => {
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <div className="lg:col-span-2 bg-card rounded-xl border border-border p-5 shadow-card">
+        <div className="lg:col-span-2 bg-card rounded-xl border-2 border-border p-5 hover:border-primary/30 transition-colors">
           <div className="flex items-center justify-between mb-4">
             <h2 className="font-semibold text-foreground">Event Trends</h2>
             <button className="text-muted-foreground hover:text-foreground"><MoreHorizontal className="h-5 w-5" /></button>
           </div>
           <ResponsiveContainer width="100%" height={240}>
             <BarChart data={chartData}>
-              <CartesianGrid strokeDasharray="3 3" stroke="hsl(220, 13%, 91%)" />
-              <XAxis dataKey="name" tick={{ fontSize: 12 }} stroke="hsl(220, 10%, 46%)" />
-              <YAxis tick={{ fontSize: 12 }} stroke="hsl(220, 10%, 46%)" />
-              <Tooltip />
+              <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
+              <XAxis dataKey="name" tick={{ fontSize: 12, fill: 'hsl(var(--muted-foreground))' }} stroke="hsl(var(--border))" />
+              <YAxis tick={{ fontSize: 12, fill: 'hsl(var(--muted-foreground))' }} stroke="hsl(var(--border))" />
+              <Tooltip contentStyle={{ background: 'hsl(var(--card))', border: '1px solid hsl(var(--border))', borderRadius: '8px', color: 'hsl(var(--foreground))' }} />
               <Bar dataKey="events" fill="hsl(225, 90%, 60%)" radius={[4, 4, 0, 0]} />
             </BarChart>
           </ResponsiveContainer>
         </div>
 
-        <div className="bg-card rounded-xl border border-border p-5 shadow-card">
+        <div className="bg-card rounded-xl border-2 border-border p-5 hover:border-primary/30 transition-colors">
           <h2 className="font-semibold text-foreground mb-4">Your Budget Insights</h2>
           <div className="flex items-center justify-center py-6">
             <div className="relative w-32 h-32">
               <svg viewBox="0 0 36 36" className="w-full h-full -rotate-90">
-                <path d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="hsl(220, 13%, 91%)" strokeWidth="3" />
+                <path d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="hsl(var(--border))" strokeWidth="3" />
                 <path d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="hsl(225, 90%, 60%)" strokeWidth="3" strokeDasharray="75, 100" />
               </svg>
               <div className="absolute inset-0 flex items-center justify-center">
@@ -100,7 +100,7 @@ const DashboardHome = () => {
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <div className="lg:col-span-2 bg-card rounded-xl border border-border p-5 shadow-card">
+        <div className="lg:col-span-2 bg-card rounded-xl border-2 border-border p-5 hover:border-primary/30 transition-colors">
           <h2 className="font-semibold text-foreground mb-4">Top Vendors</h2>
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
@@ -126,7 +126,7 @@ const DashboardHome = () => {
           </div>
         </div>
 
-        <div className="bg-card rounded-xl border border-border p-5 shadow-card">
+        <div className="bg-card rounded-xl border-2 border-border p-5 hover:border-primary/30 transition-colors">
           <h2 className="font-semibold text-foreground mb-4">Monthly Spend</h2>
           <div className="space-y-3">
             {["Venue", "Catering", "Decor", "Photo", "Audio"].map((cat, i) => (
@@ -135,7 +135,7 @@ const DashboardHome = () => {
                   <span className="text-muted-foreground">{cat}</span>
                   <span className="text-foreground font-medium">{[35, 25, 20, 12, 8][i]}%</span>
                 </div>
-                <div className="w-full h-2 bg-border rounded-full overflow-hidden">
+                <div className="w-full h-2 bg-secondary rounded-full overflow-hidden border border-border">
                   <div className="h-full gradient-primary rounded-full transition-all" style={{ width: `${[35, 25, 20, 12, 8][i]}%` }} />
                 </div>
               </div>
@@ -145,7 +145,7 @@ const DashboardHome = () => {
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <div className="lg:col-span-2 bg-card rounded-xl border border-border p-5 shadow-card">
+        <div className="lg:col-span-2 bg-card rounded-xl border-2 border-border p-5 hover:border-primary/30 transition-colors">
           <h2 className="font-semibold text-foreground mb-4">Upcoming Tasks</h2>
           <div className="space-y-3">
             {tasks.map((task, i) => (
@@ -157,7 +157,7 @@ const DashboardHome = () => {
           </div>
         </div>
 
-        <div className="bg-primary rounded-xl p-5 text-primary-foreground shadow-elevated cursor-pointer hover:opacity-95 transition-opacity" onClick={() => navigate('/dashboard/ai')}>
+        <div className="bg-primary rounded-xl border-2 border-primary p-5 text-primary-foreground cursor-pointer hover:opacity-95 transition-opacity" onClick={() => navigate('/dashboard/ai')}>
           <div className="flex items-center gap-2 mb-3">
             <Sparkles className="h-5 w-5" />
             <h2 className="font-semibold">AI Assistant</h2>
@@ -179,12 +179,13 @@ const DashboardHome = () => {
 
 const Dashboard = () => {
   const navigate = useNavigate();
+  const { theme, toggleTheme } = useTheme();
 
   return (
-    <div className="flex min-h-screen bg-secondary">
+    <div className="flex min-h-screen bg-background">
       <DashboardSidebar />
       <div className="flex-1 overflow-auto">
-        <header className="h-16 bg-card border-b border-border flex items-center justify-between px-6 sticky top-0 z-10">
+        <header className="h-16 bg-card border-b-2 border-border flex items-center justify-between px-6 sticky top-0 z-10">
           <div className="flex items-center gap-3">
             <h1 className="text-lg font-bold text-foreground">Dashboard</h1>
             <span className="text-sm text-muted-foreground">All Plans</span>
@@ -192,10 +193,13 @@ const Dashboard = () => {
           <div className="flex items-center gap-3">
             <div className="relative hidden sm:block">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-              <Input placeholder="Search events, vendors..." className="pl-9 w-64 bg-secondary" />
+              <input placeholder="Search events, vendors..." className="pl-9 w-64 h-9 rounded-lg bg-secondary border border-border text-sm text-foreground placeholder:text-muted-foreground outline-none focus:ring-2 focus:ring-primary/20" />
             </div>
+            <button onClick={toggleTheme} className="p-2 rounded-lg text-muted-foreground hover:bg-secondary border border-border transition-colors">
+              {theme === 'dark' ? <Sun className="h-4 w-4 text-yellow-400" /> : <Moon className="h-4 w-4" />}
+            </button>
             <button
-              className="relative p-2 rounded-lg text-muted-foreground hover:bg-secondary transition-colors"
+              className="relative p-2 rounded-lg text-muted-foreground hover:bg-secondary border border-border transition-colors"
               onClick={() => navigate('/dashboard/notifications')}
             >
               <Bell className="h-5 w-5" />
