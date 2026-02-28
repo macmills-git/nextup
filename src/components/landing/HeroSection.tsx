@@ -25,7 +25,7 @@ const FrameLines = () => (
         backgroundSize: '100% 200%', animation: 'ambientLineGlow 7s ease infinite alternate',
       }} />
     </div>
-    {/* Right frame line (mirrored) */}
+    {/* Right frame line */}
     <div className="absolute right-[5%] top-[10%] bottom-[15%] w-px hidden lg:block" style={{ zIndex: 2 }}>
       <div className="absolute inset-0 bg-gradient-to-b from-primary/15 to-primary/5" style={{ boxShadow: '0 0 8px hsl(225 90% 60% / 0.05)' }} />
       <div className="absolute top-[30%] right-0 w-6 h-px bg-primary/10" style={{ transform: 'rotate(-35deg)', transformOrigin: 'right center' }} />
@@ -46,6 +46,39 @@ const FrameLines = () => (
   </>
 );
 
+/* Light mode floating elements */
+const LightModeElements = () => (
+  <>
+    {/* Floating gradient blobs */}
+    <div className="absolute top-[20%] left-[10%] w-72 h-72 rounded-full opacity-[0.07] pointer-events-none" style={{
+      background: 'radial-gradient(circle, hsl(225, 90%, 60%), transparent)',
+      animation: 'floatY 6s ease-in-out infinite',
+    }} />
+    <div className="absolute bottom-[20%] right-[8%] w-96 h-96 rounded-full opacity-[0.05] pointer-events-none" style={{
+      background: 'radial-gradient(circle, hsl(280, 70%, 60%), transparent)',
+      animation: 'floatY 8s ease-in-out infinite 2s',
+    }} />
+    <div className="absolute top-[40%] right-[25%] w-48 h-48 rounded-full opacity-[0.06] pointer-events-none" style={{
+      background: 'radial-gradient(circle, hsl(180, 80%, 50%), transparent)',
+      animation: 'floatY 5s ease-in-out infinite 1s',
+    }} />
+    
+    {/* Animated dots */}
+    {[...Array(8)].map((_, i) => (
+      <div key={i} className="absolute w-1.5 h-1.5 rounded-full bg-primary/20 pointer-events-none" style={{
+        top: `${15 + Math.random() * 70}%`,
+        left: `${5 + Math.random() * 90}%`,
+        animation: `floatY ${3 + Math.random() * 4}s ease-in-out infinite ${Math.random() * 3}s`,
+      }} />
+    ))}
+
+    {/* Subtle light rays */}
+    <div className="absolute inset-0 pointer-events-none opacity-[0.04]" style={{
+      background: 'conic-gradient(from 180deg at 50% 40%, transparent 0deg, hsl(225, 90%, 60%) 45deg, transparent 90deg, hsl(280, 70%, 60%) 180deg, transparent 225deg, hsl(180, 80%, 50%) 315deg, transparent 360deg)',
+    }} />
+  </>
+);
+
 const HeroSection = () => {
   const { theme } = useTheme();
   const isDark = theme === 'dark';
@@ -63,9 +96,12 @@ const HeroSection = () => {
       )}
 
       {!isDark && (
-        <div className="absolute inset-0 z-0" style={{
-          background: 'radial-gradient(ellipse at center top, hsl(225, 90%, 97%) 0%, hsl(0, 0%, 98%) 60%, hsl(220, 14%, 96%) 100%)',
-        }} />
+        <>
+          <div className="absolute inset-0 z-0" style={{
+            background: 'radial-gradient(ellipse at center top, hsl(225, 90%, 97%) 0%, hsl(0, 0%, 98%) 60%, hsl(220, 14%, 96%) 100%)',
+          }} />
+          <LightModeElements />
+        </>
       )}
 
       {/* Globe */}
@@ -91,7 +127,7 @@ const HeroSection = () => {
 
       <div className="relative z-10 container mx-auto px-4 lg:px-8 pt-44 pb-20 lg:pt-60 lg:pb-32">
         <div className="text-center max-w-4xl mx-auto animate-fade-in">
-          <h1 className="text-4xl md:text-6xl font-bold mb-6 bg-gradient-to-b from-foreground to-muted-foreground bg-clip-text text-transparent">
+          <h1 className="text-4xl md:text-6xl font-bold mb-6 bg-gradient-to-b from-foreground to-muted-foreground bg-clip-text text-transparent" style={{ fontFamily: "'DM Sans', system-ui, sans-serif", fontWeight: 700 }}>
             Plan all your events in one place
           </h1>
           <p className="text-sm md:text-base mb-10 max-w-xl mx-auto text-muted-foreground">

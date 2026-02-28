@@ -2,10 +2,12 @@ import DashboardSidebar from "@/components/DashboardSidebar";
 import { Routes, Route, useNavigate } from "react-router-dom";
 import {
   Calendar, DollarSign, Users, TrendingUp, MoreHorizontal, Bell, Search, Sparkles, CheckCircle, Clock, ArrowRight, Sun, Moon,
+  User, Settings, LogOut, X,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
 import { useTheme } from "@/contexts/ThemeContext";
+import { useState } from "react";
 import EventsPage from "./dashboard/EventsPage";
 import EventDetailPage from "./dashboard/EventDetailPage";
 import VendorsPage from "./dashboard/VendorsPage";
@@ -43,6 +45,90 @@ const statCards = [
   { icon: TrendingUp, label: "Budget Spent", value: "78%", change: "-3%", color: "text-destructive" },
 ];
 
+/* Profile Dropdown */
+const ProfileDropdown = ({ onClose, onNavigate }: { onClose: () => void; onNavigate: (path: string) => void }) => (
+  <div className="fixed inset-0 z-50 flex items-start justify-end pt-16 pr-6" onClick={onClose}>
+    <div className="w-[420px] bg-card rounded-3xl border border-border shadow-elevated p-6 animate-scale-in" onClick={e => e.stopPropagation()}>
+      {/* Header */}
+      <div className="flex items-center justify-between mb-5">
+        <span className="text-xs font-semibold text-muted-foreground tracking-wider uppercase">Welcome Back</span>
+        <button onClick={onClose} className="w-8 h-8 rounded-full border border-border flex items-center justify-center text-muted-foreground hover:text-foreground">
+          <X className="w-4 h-4" />
+        </button>
+      </div>
+
+      {/* User info */}
+      <div className="flex items-center gap-3 mb-6">
+        <div className="w-12 h-12 rounded-full flex items-center justify-center text-white font-bold text-lg" style={{ background: 'hsl(340, 60%, 45%)' }}>
+          K
+        </div>
+        <div>
+          <p className="font-semibold text-foreground">Kusi Boateng Mills</p>
+          <p className="text-xs text-muted-foreground">No bio yet</p>
+        </div>
+      </div>
+
+      {/* Subscription */}
+      <div className="flex items-center justify-between mb-5">
+        <span className="text-sm text-foreground">Subscription</span>
+        <span className="text-xs px-2.5 py-1 rounded-full bg-secondary dark:bg-accent text-muted-foreground">Free</span>
+      </div>
+
+      {/* Usage */}
+      <div className="space-y-4 mb-5">
+        <div>
+          <div className="flex items-center justify-between mb-1.5">
+            <span className="text-sm text-foreground flex items-center gap-1">Daily prompts <span className="text-muted-foreground text-xs cursor-help">ⓘ</span></span>
+            <span className="text-sm text-muted-foreground">0/3</span>
+          </div>
+          <div className="w-full h-1.5 bg-secondary dark:bg-accent rounded-full overflow-hidden">
+            <div className="h-full bg-border rounded-full" style={{ width: '0%' }} />
+          </div>
+        </div>
+        <div>
+          <div className="flex items-center justify-between mb-1.5">
+            <span className="text-sm text-foreground flex items-center gap-1">Monthly prompts <span className="text-muted-foreground text-xs cursor-help">ⓘ</span></span>
+            <span className="text-sm text-muted-foreground">3/10</span>
+          </div>
+          <div className="w-full h-1.5 bg-secondary dark:bg-accent rounded-full overflow-hidden">
+            <div className="h-full bg-primary/40 rounded-full" style={{ width: '30%' }} />
+          </div>
+        </div>
+      </div>
+
+      {/* Usage Reset */}
+      <div className="bg-secondary dark:bg-accent rounded-xl p-4 mb-5">
+        <p className="text-sm font-medium text-foreground">Usage Reset</p>
+        <div className="flex items-center justify-between mt-1">
+          <span className="text-xs text-muted-foreground">Next Monthly Reset:</span>
+          <span className="text-xs text-muted-foreground">23/03/2026</span>
+        </div>
+      </div>
+
+      <div className="border-t border-border my-4" />
+
+      {/* Menu */}
+      <div className="space-y-1">
+        {[
+          { icon: User, label: "Profile", path: "/dashboard/settings" },
+          { icon: Settings, label: "Settings", path: "/dashboard/settings" },
+          { icon: Users, label: "Team", path: "/dashboard/team" },
+          { icon: LogOut, label: "Log out", path: "/" },
+        ].map(item => (
+          <button
+            key={item.label}
+            className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-muted-foreground hover:text-foreground hover:bg-secondary dark:hover:bg-accent transition-colors"
+            onClick={() => { onNavigate(item.path); onClose(); }}
+          >
+            <item.icon className="w-4 h-4" />
+            {item.label}
+          </button>
+        ))}
+      </div>
+    </div>
+  </div>
+);
+
 const DashboardHome = () => {
   const navigate = useNavigate();
 
@@ -53,7 +139,7 @@ const DashboardHome = () => {
         {statCards.map(stat => (
           <div key={stat.label} className="bg-card rounded-xl border-2 border-border p-5 hover:border-primary/30 transition-colors">
             <div className="flex items-center justify-between mb-3">
-              <div className="w-10 h-10 rounded-lg bg-secondary border border-border flex items-center justify-center">
+              <div className="w-10 h-10 rounded-lg bg-secondary dark:bg-accent border border-border flex items-center justify-center">
                 <stat.icon className={`h-5 w-5 ${stat.color}`} />
               </div>
               <span className="text-xs font-medium text-success">{stat.change}</span>
@@ -114,7 +200,7 @@ const DashboardHome = () => {
               </thead>
               <tbody>
                 {vendors.map(v => (
-                  <tr key={v.name} className="border-b border-border last:border-0 hover:bg-secondary/50 transition-colors">
+                  <tr key={v.name} className="border-b border-border last:border-0 hover:bg-secondary/50 dark:hover:bg-accent/50 transition-colors">
                     <td className="py-3 px-2 font-medium text-foreground">{v.name}</td>
                     <td className="py-3 px-2 text-muted-foreground">{v.category}</td>
                     <td className="py-3 px-2"><span className="px-2 py-0.5 rounded-full bg-success/10 text-success text-xs font-medium">{v.rating}</span></td>
@@ -135,7 +221,7 @@ const DashboardHome = () => {
                   <span className="text-muted-foreground">{cat}</span>
                   <span className="text-foreground font-medium">{[35, 25, 20, 12, 8][i]}%</span>
                 </div>
-                <div className="w-full h-2 bg-secondary rounded-full overflow-hidden border border-border">
+                <div className="w-full h-2 bg-secondary dark:bg-accent rounded-full overflow-hidden border border-border">
                   <div className="h-full gradient-primary rounded-full transition-all" style={{ width: `${[35, 25, 20, 12, 8][i]}%` }} />
                 </div>
               </div>
@@ -149,7 +235,7 @@ const DashboardHome = () => {
           <h2 className="font-semibold text-foreground mb-4">Upcoming Tasks</h2>
           <div className="space-y-3">
             {tasks.map((task, i) => (
-              <div key={i} className="flex items-start gap-3 p-3 rounded-lg hover:bg-secondary/50 transition-colors">
+              <div key={i} className="flex items-start gap-3 p-3 rounded-lg hover:bg-secondary/50 dark:hover:bg-accent/50 transition-colors">
                 {task.done ? <CheckCircle className="h-5 w-5 text-success flex-shrink-0 mt-0.5" /> : <Clock className="h-5 w-5 text-warning flex-shrink-0 mt-0.5" />}
                 <span className={`text-sm ${task.done ? "text-muted-foreground line-through" : "text-foreground"}`}>{task.title}</span>
               </div>
@@ -157,7 +243,7 @@ const DashboardHome = () => {
           </div>
         </div>
 
-        <div className="bg-primary rounded-xl border-2 border-primary p-5 text-primary-foreground cursor-pointer hover:opacity-95 transition-opacity" onClick={() => navigate('/dashboard/ai')}>
+        <div className="bg-primary rounded-xl border-2 border-primary p-5 text-white cursor-pointer hover:opacity-95 transition-opacity" onClick={() => navigate('/dashboard/ai')}>
           <div className="flex items-center gap-2 mb-3">
             <Sparkles className="h-5 w-5" />
             <h2 className="font-semibold">AI Assistant</h2>
@@ -180,6 +266,7 @@ const DashboardHome = () => {
 const Dashboard = () => {
   const navigate = useNavigate();
   const { theme, toggleTheme } = useTheme();
+  const [showProfile, setShowProfile] = useState(false);
 
   return (
     <div className="flex min-h-screen bg-background">
@@ -193,13 +280,13 @@ const Dashboard = () => {
           <div className="flex items-center gap-3">
             <div className="relative hidden sm:block">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-              <input placeholder="Search events, vendors..." className="pl-9 w-64 h-9 rounded-lg bg-secondary border border-border text-sm text-foreground placeholder:text-muted-foreground outline-none focus:ring-2 focus:ring-primary/20" />
+              <input placeholder="Search events, vendors..." className="pl-9 w-64 h-9 rounded-lg bg-secondary dark:bg-accent border border-border text-sm text-foreground placeholder:text-muted-foreground outline-none focus:ring-2 focus:ring-primary/20" />
             </div>
-            <button onClick={toggleTheme} className="p-2 rounded-lg text-muted-foreground hover:bg-secondary border border-border transition-colors">
+            <button onClick={toggleTheme} className="p-2 rounded-lg text-muted-foreground hover:bg-secondary dark:hover:bg-accent border border-border transition-colors">
               {theme === 'dark' ? <Sun className="h-4 w-4 text-yellow-400" /> : <Moon className="h-4 w-4" />}
             </button>
             <button
-              className="relative p-2 rounded-lg text-muted-foreground hover:bg-secondary border border-border transition-colors"
+              className="relative p-2 rounded-lg text-muted-foreground hover:bg-secondary dark:hover:bg-accent border border-border transition-colors"
               onClick={() => navigate('/dashboard/notifications')}
             >
               <Bell className="h-5 w-5" />
@@ -207,12 +294,14 @@ const Dashboard = () => {
             </button>
             <button
               className="w-8 h-8 rounded-full gradient-primary flex items-center justify-center hover:opacity-90 transition-opacity"
-              onClick={() => navigate('/dashboard/settings')}
+              onClick={() => setShowProfile(true)}
             >
-              <span className="text-primary-foreground text-xs font-bold">JD</span>
+              <span className="text-white text-xs font-bold">JD</span>
             </button>
           </div>
         </header>
+
+        {showProfile && <ProfileDropdown onClose={() => setShowProfile(false)} onNavigate={navigate} />}
 
         <main className="p-6">
           <Routes>

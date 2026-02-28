@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Search, Filter, Plus, Star, MapPin, Phone, Mail, MoreHorizontal, Heart, X, Eye, MessageSquare, Trash2, Edit } from "lucide-react";
+import { Search, Plus, Star, MapPin, Heart, X, Eye, MessageSquare, Trash2, MoreHorizontal, ListFilter, CalendarDays, Shuffle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
@@ -38,6 +38,7 @@ const VendorsPage = () => {
   const [showFavorites, setShowFavorites] = useState(false);
   const [menuOpen, setMenuOpen] = useState<number | null>(null);
   const [showAdd, setShowAdd] = useState(false);
+  const [activeSort, setActiveSort] = useState("Popular");
   const [newVendor, setNewVendor] = useState({ name: "", category: "Photography", location: "", phone: "", email: "" });
   const navigate = useNavigate();
 
@@ -69,17 +70,20 @@ const VendorsPage = () => {
 
   return (
     <div className="space-y-6">
+      {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
           <h1 className="text-2xl font-bold text-foreground">Vendor Marketplace</h1>
           <p className="text-sm text-muted-foreground">Browse and manage your vendor network</p>
         </div>
         <div className="flex gap-2">
-          <Button variant={showFavorites ? "default" : "outline"} className="gap-2" onClick={() => setShowFavorites(!showFavorites)}>
-            <Heart className={`h-4 w-4 ${showFavorites ? 'fill-current' : ''}`} /> Favorites
+          <Button variant={showFavorites ? "default" : "outline"} size="sm" className="gap-2 rounded-full" onClick={() => setShowFavorites(!showFavorites)}>
+            <Heart className={`h-3.5 w-3.5 ${showFavorites ? 'fill-current' : ''}`} /> Favorites
           </Button>
-          <Button className="gradient-primary text-primary-foreground gap-2" onClick={() => setShowAdd(true)}>
-            <Plus className="h-4 w-4" /> Add Vendor
+          <Button size="sm" className="gap-2 rounded-full border-none text-white" style={{
+            background: 'linear-gradient(135deg, hsl(225, 90%, 60%), hsl(225, 80%, 65%))',
+          }} onClick={() => setShowAdd(true)}>
+            <Plus className="h-3.5 w-3.5" /> Add Vendor
           </Button>
         </div>
       </div>
@@ -98,7 +102,7 @@ const VendorsPage = () => {
                 <label className="text-sm font-medium text-foreground">Category</label>
                 <div className="flex gap-2 mt-1 flex-wrap">
                   {categories.filter(c => c !== "All").map(cat => (
-                    <Button key={cat} variant={newVendor.category === cat ? "default" : "outline"} size="sm" onClick={() => setNewVendor({ ...newVendor, category: cat })}>{cat}</Button>
+                    <button key={cat} className={`px-3 py-1 rounded-full text-xs border transition-colors ${newVendor.category === cat ? 'border-primary bg-primary/5 text-primary' : 'border-border text-muted-foreground hover:text-foreground'}`} onClick={() => setNewVendor({ ...newVendor, category: cat })}>{cat}</button>
                   ))}
                 </div>
               </div>
@@ -107,88 +111,113 @@ const VendorsPage = () => {
                 <div><label className="text-sm font-medium text-foreground">Phone</label><Input className="mt-1" value={newVendor.phone} onChange={e => setNewVendor({ ...newVendor, phone: e.target.value })} /></div>
                 <div><label className="text-sm font-medium text-foreground">Email</label><Input className="mt-1" value={newVendor.email} onChange={e => setNewVendor({ ...newVendor, email: e.target.value })} /></div>
               </div>
-              <Button className="w-full gradient-primary text-primary-foreground" onClick={addVendor}>Add Vendor</Button>
+              <Button className="w-full rounded-full border-none text-white" style={{ background: 'linear-gradient(135deg, hsl(225, 90%, 60%), hsl(225, 80%, 65%))' }} onClick={addVendor}>Add Vendor</Button>
             </div>
           </div>
         </div>
       )}
 
-      <div className="flex flex-col sm:flex-row gap-3">
-        <div className="relative flex-1">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-          <Input placeholder="Search vendors..." className="pl-9" value={search} onChange={e => setSearch(e.target.value)} />
-        </div>
-      </div>
-
-      <div className="flex gap-2 flex-wrap">
-        {categories.map(cat => (
-          <Button key={cat} variant={activeCategory === cat ? "default" : "outline"} size="sm" onClick={() => setActiveCategory(cat)}>{cat}</Button>
-        ))}
-      </div>
-
-      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
-        {filtered.map(vendor => (
-          <div key={vendor.id} className="bg-card rounded-xl border border-border overflow-hidden shadow-card hover:shadow-elevated transition-shadow relative">
-            {/* Vendor image */}
-            <div className="relative h-40 overflow-hidden">
-              <img src={vendor.image} alt={vendor.name} className="w-full h-full object-cover" />
-              <button
-                className="absolute top-3 right-3 w-8 h-8 rounded-full bg-white/80 backdrop-blur flex items-center justify-center hover:bg-white transition-colors"
-                onClick={() => toggleFavorite(vendor.id)}
-              >
-                <Heart className={`h-4 w-4 ${vendor.favorited ? 'fill-red-500 text-red-500' : 'text-gray-600'}`} />
-              </button>
-            </div>
-
-            <div className="p-5">
-              <div className="flex items-start justify-between mb-3">
-                <div>
-                  <h3 className="font-semibold text-foreground">{vendor.name}</h3>
-                  <p className="text-sm text-muted-foreground">{vendor.category}</p>
-                </div>
-                <div className="relative">
-                  <button className="text-muted-foreground hover:text-foreground" onClick={() => setMenuOpen(menuOpen === vendor.id ? null : vendor.id)}>
-                    <MoreHorizontal className="h-4 w-4" />
-                  </button>
-                  {menuOpen === vendor.id && (
-                    <div className="absolute right-0 top-6 bg-card border border-border rounded-lg shadow-elevated z-20 py-1 min-w-[140px]">
-                      <button className="w-full flex items-center gap-2 px-3 py-2 text-sm text-foreground hover:bg-secondary" onClick={() => { navigate(`/dashboard/vendors/${vendor.id}`); setMenuOpen(null); }}>
-                        <Eye className="h-3.5 w-3.5" /> View Profile
-                      </button>
-                      <button className="w-full flex items-center gap-2 px-3 py-2 text-sm text-foreground hover:bg-secondary" onClick={() => { navigate('/dashboard/messages'); setMenuOpen(null); }}>
-                        <MessageSquare className="h-3.5 w-3.5" /> Send Message
-                      </button>
-                      <button className="w-full flex items-center gap-2 px-3 py-2 text-sm text-foreground hover:bg-secondary" onClick={() => toggleFavorite(vendor.id)}>
-                        <Heart className="h-3.5 w-3.5" /> {vendor.favorited ? 'Unfavorite' : 'Favorite'}
-                      </button>
-                      <button className="w-full flex items-center gap-2 px-3 py-2 text-sm text-destructive hover:bg-secondary" onClick={() => deleteVendor(vendor.id)}>
-                        <Trash2 className="h-3.5 w-3.5" /> Remove
-                      </button>
-                    </div>
-                  )}
-                </div>
-              </div>
-
-              <div className="flex items-center gap-2 mb-3">
-                <div className="flex items-center gap-1">
-                  <Star className="h-4 w-4 fill-warning text-warning" />
-                  <span className="text-sm font-medium text-foreground">{vendor.rating}</span>
-                </div>
-                <span className="text-sm text-muted-foreground">({vendor.reviews} reviews)</span>
-                <Badge variant="outline" className="ml-auto">{vendor.price}</Badge>
-              </div>
-
-              <div className="space-y-1.5 text-sm text-muted-foreground mb-4">
-                <div className="flex items-center gap-2"><MapPin className="h-3.5 w-3.5" />{vendor.location}</div>
-              </div>
-
-              <div className="flex gap-2">
-                <Button variant="outline" size="sm" className="flex-1" onClick={() => navigate(`/dashboard/vendors/${vendor.id}`)}>View Profile</Button>
-                <Button size="sm" className="flex-1" onClick={() => navigate('/dashboard/messages')}>Contact</Button>
-              </div>
-            </div>
+      {/* Search + Sort (matching template UI) */}
+      <div className="bg-card border border-border rounded-2xl p-5">
+        <div className="flex items-center gap-4 mb-5">
+          <div className="flex-1 relative">
+            <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+            <input
+              placeholder={`Search ${vendors.length} vendors...`}
+              className="w-full h-11 rounded-full bg-secondary dark:bg-accent pl-11 pr-4 text-sm text-foreground placeholder:text-muted-foreground outline-none border-none focus:ring-2 focus:ring-primary/20"
+              value={search}
+              onChange={e => setSearch(e.target.value)}
+            />
           </div>
-        ))}
+          <div className="flex gap-1 bg-secondary dark:bg-accent rounded-lg p-0.5">
+            {[{ label: "Popular", icon: ListFilter }, { label: "Recent", icon: CalendarDays }].map(sort => (
+              <button
+                key={sort.label}
+                onClick={() => setActiveSort(sort.label)}
+                className={`flex items-center gap-1.5 px-3.5 py-2 rounded-lg text-sm font-medium transition-all ${
+                  activeSort === sort.label
+                    ? 'bg-card border border-border shadow-sm text-foreground'
+                    : 'text-muted-foreground hover:text-foreground'
+                }`}
+              >
+                <sort.icon className="w-3.5 h-3.5" />
+                {sort.label}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        {/* Category pills */}
+        <div className="flex flex-wrap gap-2 mb-5">
+          {categories.map(cat => (
+            <button
+              key={cat}
+              onClick={() => setActiveCategory(cat)}
+              className={`px-4 py-1.5 text-sm font-medium rounded-full border transition-all duration-200 ${
+                activeCategory === cat
+                  ? 'border-foreground/20 bg-foreground/5 text-foreground'
+                  : 'border-border text-muted-foreground hover:text-foreground hover:bg-secondary dark:hover:bg-accent'
+              }`}
+            >
+              {cat}
+            </button>
+          ))}
+        </div>
+
+        {/* Vendor grid - 5 columns like templates */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-5">
+          {filtered.map(vendor => (
+            <div key={vendor.id} className="rounded-xl border border-border overflow-hidden bg-card hover:shadow-elevated transition-all duration-200 group relative">
+              <div className="relative h-44 overflow-hidden">
+                <img src={vendor.image} alt={vendor.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
+                <button
+                  className="absolute top-2.5 right-2.5 w-7 h-7 rounded-full bg-white/80 dark:bg-black/40 backdrop-blur flex items-center justify-center hover:bg-white dark:hover:bg-black/60 transition-colors"
+                  onClick={() => toggleFavorite(vendor.id)}
+                >
+                  <Heart className={`h-3.5 w-3.5 ${vendor.favorited ? 'fill-red-500 text-red-500' : 'text-muted-foreground'}`} />
+                </button>
+              </div>
+              <div className="p-3">
+                <div className="flex justify-between items-start gap-1 mb-1">
+                  <h3 className="text-sm font-semibold text-foreground truncate flex-1">{vendor.name}</h3>
+                  <div className="relative flex-shrink-0">
+                    <button className="text-muted-foreground hover:text-foreground" onClick={e => { e.stopPropagation(); setMenuOpen(menuOpen === vendor.id ? null : vendor.id); }}>
+                      <MoreHorizontal className="h-3.5 w-3.5" />
+                    </button>
+                    {menuOpen === vendor.id && (
+                      <div className="absolute right-0 top-5 bg-card border border-border rounded-lg shadow-elevated z-20 py-1 min-w-[130px]">
+                        <button className="w-full flex items-center gap-2 px-3 py-1.5 text-xs text-foreground hover:bg-secondary" onClick={() => { navigate(`/dashboard/vendors/${vendor.id}`); setMenuOpen(null); }}>
+                          <Eye className="h-3 w-3" /> View Profile
+                        </button>
+                        <button className="w-full flex items-center gap-2 px-3 py-1.5 text-xs text-foreground hover:bg-secondary" onClick={() => { navigate('/dashboard/messages'); setMenuOpen(null); }}>
+                          <MessageSquare className="h-3 w-3" /> Message
+                        </button>
+                        <button className="w-full flex items-center gap-2 px-3 py-1.5 text-xs text-foreground hover:bg-secondary" onClick={() => toggleFavorite(vendor.id)}>
+                          <Heart className="h-3 w-3" /> {vendor.favorited ? 'Unfavorite' : 'Favorite'}
+                        </button>
+                        <button className="w-full flex items-center gap-2 px-3 py-1.5 text-xs text-destructive hover:bg-secondary" onClick={() => deleteVendor(vendor.id)}>
+                          <Trash2 className="h-3 w-3" /> Remove
+                        </button>
+                      </div>
+                    )}
+                  </div>
+                </div>
+                <div className="flex items-center gap-1.5 mb-2">
+                  <Star className="h-3 w-3 fill-warning text-warning" />
+                  <span className="text-xs font-medium text-foreground">{vendor.rating}</span>
+                  <span className="text-xs text-muted-foreground">• {vendor.category}</span>
+                </div>
+                <div className="flex justify-between items-center text-xs text-muted-foreground">
+                  <div className="flex items-center gap-1">
+                    <MapPin className="w-3 h-3" />
+                    <span className="truncate">{vendor.location}</span>
+                  </div>
+                  <Badge variant="outline" className="text-[10px] px-1.5 py-0">{vendor.price}</Badge>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
       </div>
     </div>
   );
