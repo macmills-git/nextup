@@ -2,6 +2,11 @@ import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { ArrowRight, Bot, User } from "lucide-react";
 import { useState, useEffect, useRef } from "react";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { useTilt3D } from "@/hooks/useGSAP";
+
+gsap.registerPlugin(ScrollTrigger);
 
 const chatMessages = [
   { role: "user" as const, text: "I need to plan a corporate event for 200 people next month." },
@@ -16,6 +21,7 @@ const AIInteraction = () => {
   const [visibleCount, setVisibleCount] = useState(0);
   const [scrollPhase, setScrollPhase] = useState(0);
   const chatRef = useRef<HTMLDivElement>(null);
+  const cardRef = useTilt3D();
 
   useEffect(() => {
     if (visibleCount < chatMessages.length) {
@@ -48,9 +54,10 @@ const AIInteraction = () => {
   }, [scrollPhase]);
 
   return (
-    <div className="max-w-2xl mx-auto rounded-2xl p-6 overflow-hidden bg-card border border-border" style={{
+    <div ref={cardRef} className="max-w-2xl mx-auto rounded-2xl p-6 overflow-hidden bg-card border border-border" style={{
       height: '420px',
       animation: 'gradientCardFlow 4s ease-in-out infinite',
+      transformStyle: 'preserve-3d',
     }}>
       <div className="flex items-center gap-2 mb-4">
         <div className="w-2 h-2 rounded-full bg-success animate-pulse" />
@@ -65,9 +72,7 @@ const AIInteraction = () => {
               {msg.role === 'ai' ? <Bot className="w-3.5 h-3.5 text-primary" /> : <User className="w-3.5 h-3.5 text-muted-foreground" />}
             </div>
             <div className={`rounded-2xl px-4 py-2.5 text-sm max-w-[75%] ${
-              msg.role === 'user'
-                ? 'bg-primary/15 text-foreground rounded-br-sm'
-                : 'bg-secondary text-foreground rounded-bl-sm'
+              msg.role === 'user' ? 'bg-primary/15 text-foreground rounded-br-sm' : 'bg-secondary text-foreground rounded-bl-sm'
             }`}>
               {msg.text}
             </div>
@@ -91,40 +96,73 @@ const AIInteraction = () => {
 };
 
 const CTASection = () => {
+  const aiRef = useRef<HTMLDivElement>(null);
+  const ctaRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (!aiRef.current) return;
+    const els = aiRef.current.querySelectorAll('.gsap-el');
+    gsap.fromTo(els, { y: 50, opacity: 0 }, {
+      y: 0, opacity: 1, duration: 0.8, stagger: 0.12, ease: 'power3.out',
+      scrollTrigger: { trigger: aiRef.current, start: 'top 85%' },
+    });
+  }, []);
+
+  useEffect(() => {
+    if (!ctaRef.current) return;
+    gsap.fromTo(ctaRef.current.querySelectorAll('.cta-el'), { y: 80, opacity: 0, scale: 0.9 }, {
+      y: 0, opacity: 1, scale: 1, duration: 1, stagger: 0.15, ease: 'power3.out',
+      scrollTrigger: { trigger: ctaRef.current, start: 'top 80%' },
+    });
+  }, []);
+
   return (
     <>
       {/* AI Interaction Section */}
       <section className="py-20 bg-background">
-        <div className="container mx-auto px-4 lg:px-8">
+        <div ref={aiRef} className="container mx-auto px-4 lg:px-8">
           <div className="text-center mb-10">
-            <span className="text-xs font-semibold uppercase tracking-wider text-primary">Interactive AI Assistant</span>
-            <h2 className="text-3xl md:text-4xl font-bold text-foreground mt-2 mb-4">
+            <span className="gsap-el text-xs font-semibold uppercase tracking-wider text-primary">Interactive AI Assistant</span>
+            <h2 className="gsap-el text-3xl md:text-4xl font-bold text-foreground mt-2 mb-4">
               Your AI event planner in action
             </h2>
           </div>
-          <AIInteraction />
+          <div className="gsap-el">
+            <AIInteraction />
+          </div>
         </div>
       </section>
 
-      {/* CTA Section */}
+      {/* CTA Section with parallax */}
       <section className="relative py-32 overflow-hidden bg-background">
         <div className="absolute inset-0 pointer-events-none grid-bg opacity-50" />
         <div className="absolute inset-0 pointer-events-none" style={{ background: 'radial-gradient(ellipse at center top, hsl(var(--primary) / 0.05) 0%, transparent 60%)' }} />
-        <div className="relative z-10 text-center max-w-3xl mx-auto px-4">
-          <h2 className="text-4xl md:text-6xl font-bold mb-6 bg-gradient-to-b from-foreground to-muted-foreground bg-clip-text text-transparent">
+        {/* Floating abstract shapes */}
+        <div className="absolute top-20 left-10 w-20 h-20 rounded-full border border-primary/10 pointer-events-none" style={{ animation: 'floatY 6s ease-in-out infinite' }} />
+        <div className="absolute bottom-20 right-16 w-16 h-16 rotate-45 border border-primary/10 pointer-events-none" style={{ animation: 'floatY 5s ease-in-out infinite 2s' }} />
+        <div className="absolute top-1/3 right-[20%] w-3 h-3 rounded-full bg-primary/20 pointer-events-none" style={{ animation: 'floatY 4s ease-in-out infinite 1s' }} />
+
+        <div ref={ctaRef} className="relative z-10 text-center max-w-3xl mx-auto px-4">
+          <h2 className="cta-el text-4xl md:text-6xl font-bold mb-6" style={{
+            backgroundImage: 'linear-gradient(180deg, hsl(var(--foreground)), hsl(var(--muted-foreground)))',
+            WebkitBackgroundClip: 'text',
+            WebkitTextFillColor: 'transparent',
+          }}>
             Your All-in-One Event Companion
           </h2>
-          <p className="text-sm md:text-base mb-10 max-w-xl mx-auto text-muted-foreground">
+          <p className="cta-el text-sm md:text-base mb-10 max-w-xl mx-auto text-muted-foreground">
             Simplify event planning, vendor management, and team coordination with cutting-edge tools designed for everyone — from beginners to pros.
           </p>
-          <Button size="lg" asChild className="rounded-full px-8 py-3 text-sm font-medium border-none text-white" style={{
-            background: 'linear-gradient(135deg, hsl(225, 90%, 60%), hsl(225, 80%, 65%))',
-            boxShadow: '0 4px 20px hsl(225, 90%, 60%, 0.35)',
-          }}>
-            <Link to="/signup">
-              Get Started Now <ArrowRight className="ml-2 h-4 w-4" />
-            </Link>
-          </Button>
+          <div className="cta-el">
+            <Button size="lg" asChild className="rounded-full px-8 py-3 text-sm font-medium border-none text-white transition-transform duration-200 hover:scale-105" style={{
+              background: 'linear-gradient(135deg, hsl(225, 90%, 60%), hsl(225, 80%, 65%))',
+              boxShadow: '0 4px 20px hsl(225, 90%, 60%, 0.35)',
+            }}>
+              <Link to="/signup">
+                Get Started Now <ArrowRight className="ml-2 h-4 w-4" />
+              </Link>
+            </Button>
+          </div>
         </div>
       </section>
     </>

@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Menu, X, Sun, Moon } from "lucide-react";
 import { useState, useEffect } from "react";
 import { useTheme } from "@/contexts/ThemeContext";
+import AnimatedLogo from "@/components/AnimatedLogo";
 
 const navItems = [
   { label: "Home", to: "/" },
@@ -30,7 +31,7 @@ const Navbar = () => {
   return (
     <nav className="fixed top-4 left-1/2 -translate-x-1/2 z-50 w-[95%] max-w-5xl">
       <div className="flex items-center justify-between h-14 px-2">
-        {/* Logo - squeeze animation */}
+        {/* Logo */}
         <div
           className="flex items-center transition-all duration-500 ease-in-out overflow-hidden"
           style={{
@@ -41,14 +42,12 @@ const Navbar = () => {
           }}
         >
           <Link to="/" className="flex items-center gap-2 whitespace-nowrap">
-            <div className="w-7 h-7 rounded-lg gradient-primary flex items-center justify-center">
-              <span className="text-white font-bold text-xs">E</span>
-            </div>
+            <AnimatedLogo size={28} />
             <span className="font-bold text-sm text-foreground dark:text-white">Event Nest</span>
           </Link>
         </div>
 
-        {/* Desktop nav - centered pill */}
+        {/* Desktop nav */}
         <div className="hidden md:flex items-center gap-1 bg-card/80 dark:bg-white/8 backdrop-blur-xl border border-border dark:border-white/10 rounded-full px-1.5 py-1 shadow-card">
           {navItems.map((item) => {
             const isActive = location.pathname === item.to || (item.to === "/" && location.pathname === "/");
@@ -68,7 +67,7 @@ const Navbar = () => {
           })}
         </div>
 
-        {/* Auth buttons + theme toggle - squeeze animation */}
+        {/* Auth + theme */}
         <div
           className="hidden md:flex items-center gap-2 transition-all duration-500 ease-in-out overflow-hidden"
           style={{
@@ -80,14 +79,14 @@ const Navbar = () => {
         >
           <button
             onClick={toggleTheme}
-            className="w-8 h-8 rounded-full flex items-center justify-center transition-colors border border-border dark:border-white/10 bg-card dark:bg-white/6 hover:bg-secondary dark:hover:bg-white/10"
+            className="w-8 h-8 rounded-full flex items-center justify-center transition-all duration-200 border border-border dark:border-white/10 bg-card dark:bg-white/6 hover:bg-secondary dark:hover:bg-white/10 hover:scale-110 hover:rotate-180"
           >
             {theme === 'dark' ? <Sun className="w-3.5 h-3.5 text-yellow-400" /> : <Moon className="w-3.5 h-3.5 text-primary" />}
           </button>
-          <Button size="sm" asChild className="h-8 text-xs rounded-full whitespace-nowrap border border-border dark:border-white/12 bg-card dark:bg-white/6 text-foreground dark:text-white/80 hover:bg-secondary dark:hover:bg-white/10">
+          <Button size="sm" asChild className="h-8 text-xs rounded-full whitespace-nowrap border border-border dark:border-white/12 bg-card dark:bg-white/6 text-foreground dark:text-white/80 hover:bg-secondary dark:hover:bg-white/10 transition-transform duration-200 hover:scale-105">
             <Link to="/signin">Log in</Link>
           </Button>
-          <Button size="sm" asChild className="h-8 text-xs rounded-full whitespace-nowrap border-none text-white" style={{
+          <Button size="sm" asChild className="h-8 text-xs rounded-full whitespace-nowrap border-none text-white transition-transform duration-200 hover:scale-105" style={{
             background: 'linear-gradient(135deg, hsl(225, 90%, 60%), hsl(225, 80%, 65%))',
             boxShadow: '0 4px 15px hsl(225, 90%, 60%, 0.3)',
           }}>
@@ -95,15 +94,13 @@ const Navbar = () => {
           </Button>
         </div>
 
-        {/* Mobile toggle */}
         <button className="md:hidden text-foreground" onClick={() => setMobileOpen(!mobileOpen)}>
           {mobileOpen ? <X size={20} /> : <Menu size={20} />}
         </button>
       </div>
 
-      {/* Mobile menu */}
       {mobileOpen && (
-        <div className="md:hidden bg-card/95 dark:bg-white/10 backdrop-blur-xl border border-border dark:border-white/10 rounded-2xl mt-2 px-5 pb-4 pt-2 space-y-2 shadow-elevated">
+        <div className="md:hidden bg-card/95 dark:bg-white/10 backdrop-blur-xl border border-border dark:border-white/10 rounded-2xl mt-2 px-5 pb-4 pt-2 space-y-2 shadow-elevated animate-fade-in">
           {navItems.map((item) => (
             <Link key={item.label} to={item.to} className="block text-xs font-medium text-muted-foreground py-2 hover:text-foreground" onClick={() => setMobileOpen(false)}>
               {item.label}
