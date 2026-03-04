@@ -308,6 +308,7 @@ const Dashboard = () => {
           <Routes>
             <Route index element={<DashboardHome />} />
             <Route path="events" element={<EventsPage />} />
+            <Route path="events/new" element={<EventWorkspacePage />} />
             <Route path="events/:eventId" element={<EventDetailPage />} />
             <Route path="vendors" element={<VendorsPage />} />
             <Route path="vendors/:vendorId" element={<VendorProfilePage />} />
