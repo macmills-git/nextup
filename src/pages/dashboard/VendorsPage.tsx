@@ -8,7 +8,7 @@ import { useNavigate } from "react-router-dom";
 type Vendor = {
   id: number; name: string; category: string; rating: number; reviews: number;
   location: string; phone: string; email: string; status: string; price: string;
-  image: string; favorited: boolean;
+  image: string; favorited: boolean; author: string; uses: string; isPro?: boolean; priceTag?: string;
 };
 
 const vendorImages = [
@@ -18,18 +18,26 @@ const vendorImages = [
   "https://images.unsplash.com/photo-1478146059778-26028b07395a?w=400&h=300&fit=crop",
   "https://images.unsplash.com/photo-1429962714451-bb934ecdc4ec?w=400&h=300&fit=crop",
   "https://images.unsplash.com/photo-1530103862676-de8c9debad1d?w=400&h=300&fit=crop",
+  "https://images.unsplash.com/photo-1511578314322-379afb476865?w=400&h=300&fit=crop",
+  "https://images.unsplash.com/photo-1475721027785-f74eccf877e2?w=400&h=300&fit=crop",
+  "https://images.unsplash.com/photo-1517048676732-d65bc937f952?w=400&h=300&fit=crop",
+  "https://images.unsplash.com/photo-1528605248644-14dd04022da1?w=400&h=300&fit=crop",
 ];
 
 const initialVendors: Vendor[] = [
-  { id: 1, name: "Akolo Studio", category: "Photography", rating: 4.9, reviews: 124, location: "Downtown", phone: "+1 555-0101", email: "hello@akolo.com", status: "verified", price: "$$$$", image: vendorImages[0], favorited: false },
-  { id: 2, name: "Bake It Right", category: "Catering", rating: 4.7, reviews: 89, location: "Midtown", phone: "+1 555-0102", email: "info@bakeitright.com", status: "verified", price: "$$$", image: vendorImages[1], favorited: true },
-  { id: 3, name: "Prime Audio", category: "Audio/Visual", rating: 4.8, reviews: 56, location: "West End", phone: "+1 555-0103", email: "book@primeaudio.com", status: "verified", price: "$$$", image: vendorImages[2], favorited: false },
-  { id: 4, name: "Event Bloom", category: "Decoration", rating: 4.6, reviews: 102, location: "East Side", phone: "+1 555-0104", email: "design@eventbloom.com", status: "verified", price: "$$", image: vendorImages[3], favorited: false },
-  { id: 5, name: "DJ Maxwell", category: "Entertainment", rating: 4.5, reviews: 73, location: "Central", phone: "+1 555-0105", email: "max@djmaxwell.com", status: "pending", price: "$$", image: vendorImages[4], favorited: false },
-  { id: 6, name: "Luxe Rentals", category: "Equipment", rating: 4.4, reviews: 41, location: "Northside", phone: "+1 555-0106", email: "rent@luxerentals.com", status: "verified", price: "$$$", image: vendorImages[5], favorited: false },
+  { id: 1, name: "Akolo Studio", category: "Photography", rating: 4.9, reviews: 124, location: "Downtown", phone: "+1 555-0101", email: "hello@akolo.com", status: "verified", price: "$$$$", image: vendorImages[0], favorited: false, author: "EventPro", uses: "12.4k", isPro: true },
+  { id: 2, name: "Bake It Right", category: "Catering", rating: 4.7, reviews: 89, location: "Midtown", phone: "+1 555-0102", email: "info@bakeitright.com", status: "verified", price: "$$$", image: vendorImages[1], favorited: true, author: "Sam", uses: "8.2k", priceTag: "$39" },
+  { id: 3, name: "Prime Audio", category: "Audio/Visual", rating: 4.8, reviews: 56, location: "West End", phone: "+1 555-0103", email: "book@primeaudio.com", status: "verified", price: "$$$", image: vendorImages[2], favorited: false, author: "Meng To", uses: "15.1k", isPro: true },
+  { id: 4, name: "Event Bloom", category: "Decoration", rating: 4.6, reviews: 102, location: "East Side", phone: "+1 555-0104", email: "design@eventbloom.com", status: "verified", price: "$$", image: vendorImages[3], favorited: false, author: "EventPro", uses: "9.3k", priceTag: "$29" },
+  { id: 5, name: "DJ Maxwell", category: "Entertainment", rating: 4.5, reviews: 73, location: "Central", phone: "+1 555-0105", email: "max@djmaxwell.com", status: "pending", price: "$$", image: vendorImages[4], favorited: false, author: "Sam", uses: "11.7k", isPro: true },
+  { id: 6, name: "Luxe Rentals", category: "Equipment", rating: 4.4, reviews: 41, location: "Northside", phone: "+1 555-0106", email: "rent@luxerentals.com", status: "verified", price: "$$$", image: vendorImages[5], favorited: false, author: "Meng To", uses: "6.5k", priceTag: "$49" },
+  { id: 7, name: "Floral Dreams", category: "Decoration", rating: 4.8, reviews: 95, location: "Uptown", phone: "+1 555-0107", email: "info@floraldreams.com", status: "verified", price: "$$$", image: vendorImages[6], favorited: false, author: "EventPro", uses: "7.8k", isPro: true },
+  { id: 8, name: "Stage Masters", category: "Audio/Visual", rating: 4.7, reviews: 68, location: "South Bay", phone: "+1 555-0108", email: "book@stagemasters.com", status: "verified", price: "$$$$", image: vendorImages[7], favorited: false, author: "Sam", uses: "5.9k", priceTag: "$39" },
+  { id: 9, name: "Gourmet Bites", category: "Catering", rating: 4.9, reviews: 112, location: "Harbor", phone: "+1 555-0109", email: "chef@gourmetbites.com", status: "verified", price: "$$$$", image: vendorImages[8], favorited: false, author: "Meng To", uses: "10.2k", isPro: true },
+  { id: 10, name: "Party Lights Co", category: "Equipment", rating: 4.3, reviews: 37, location: "West Side", phone: "+1 555-0110", email: "info@partylights.com", status: "verified", price: "$$", image: vendorImages[9], favorited: false, author: "EventPro", uses: "13.0k", priceTag: "$29" },
 ];
 
-const categories = ["All", "Photography", "Catering", "Audio/Visual", "Decoration", "Entertainment", "Equipment"];
+const categories = ["All", "Photography", "Catering", "Audio/Visual", "Decoration", "Entertainment", "Equipment", "Featured Vendors"];
 
 const VendorsPage = () => {
   const [vendors, setVendors] = useState(initialVendors);
@@ -42,20 +50,15 @@ const VendorsPage = () => {
   const [newVendor, setNewVendor] = useState({ name: "", category: "Photography", location: "", phone: "", email: "" });
   const navigate = useNavigate();
 
-  const toggleFavorite = (id: number) => {
-    setVendors(prev => prev.map(v => v.id === id ? { ...v, favorited: !v.favorited } : v));
-  };
-
-  const deleteVendor = (id: number) => {
-    setVendors(prev => prev.filter(v => v.id !== id));
-    setMenuOpen(null);
-  };
+  const toggleFavorite = (id: number) => setVendors(prev => prev.map(v => v.id === id ? { ...v, favorited: !v.favorited } : v));
+  const deleteVendor = (id: number) => { setVendors(prev => prev.filter(v => v.id !== id)); setMenuOpen(null); };
 
   const addVendor = () => {
     if (!newVendor.name.trim()) return;
     setVendors(prev => [...prev, {
       id: Date.now(), ...newVendor, rating: 0, reviews: 0, status: "pending", price: "$$",
       image: vendorImages[Math.floor(Math.random() * vendorImages.length)], favorited: false,
+      author: "You", uses: "0", isPro: false,
     }]);
     setNewVendor({ name: "", category: "Photography", location: "", phone: "", email: "" });
     setShowAdd(false);
@@ -63,14 +66,13 @@ const VendorsPage = () => {
 
   const filtered = vendors.filter(v => {
     const matchSearch = v.name.toLowerCase().includes(search.toLowerCase());
-    const matchCat = activeCategory === "All" || v.category === activeCategory;
+    const matchCat = activeCategory === "All" || activeCategory === "Featured Vendors" ? (activeCategory === "Featured Vendors" ? v.status === "verified" : true) : v.category === activeCategory;
     const matchFav = !showFavorites || v.favorited;
     return matchSearch && matchCat && matchFav;
   });
 
   return (
     <div className="space-y-6">
-      {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
           <h1 className="text-2xl font-bold text-foreground">Vendor Marketplace</h1>
@@ -80,9 +82,7 @@ const VendorsPage = () => {
           <Button variant={showFavorites ? "default" : "outline"} size="sm" className="gap-2 rounded-full" onClick={() => setShowFavorites(!showFavorites)}>
             <Heart className={`h-3.5 w-3.5 ${showFavorites ? 'fill-current' : ''}`} /> Favorites
           </Button>
-          <Button size="sm" className="gap-2 rounded-full border-none text-white" style={{
-            background: 'linear-gradient(135deg, hsl(225, 90%, 60%), hsl(225, 80%, 65%))',
-          }} onClick={() => setShowAdd(true)}>
+          <Button size="sm" className="gap-2 rounded-full gradient-primary text-white border-none" onClick={() => setShowAdd(true)}>
             <Plus className="h-3.5 w-3.5" /> Add Vendor
           </Button>
         </div>
@@ -101,7 +101,7 @@ const VendorsPage = () => {
               <div>
                 <label className="text-sm font-medium text-foreground">Category</label>
                 <div className="flex gap-2 mt-1 flex-wrap">
-                  {categories.filter(c => c !== "All").map(cat => (
+                  {categories.filter(c => c !== "All" && c !== "Featured Vendors").map(cat => (
                     <button key={cat} className={`px-3 py-1 rounded-full text-xs border transition-colors ${newVendor.category === cat ? 'border-primary bg-primary/5 text-primary' : 'border-border text-muted-foreground hover:text-foreground'}`} onClick={() => setNewVendor({ ...newVendor, category: cat })}>{cat}</button>
                   ))}
                 </div>
@@ -111,20 +111,20 @@ const VendorsPage = () => {
                 <div><label className="text-sm font-medium text-foreground">Phone</label><Input className="mt-1" value={newVendor.phone} onChange={e => setNewVendor({ ...newVendor, phone: e.target.value })} /></div>
                 <div><label className="text-sm font-medium text-foreground">Email</label><Input className="mt-1" value={newVendor.email} onChange={e => setNewVendor({ ...newVendor, email: e.target.value })} /></div>
               </div>
-              <Button className="w-full rounded-full border-none text-white" style={{ background: 'linear-gradient(135deg, hsl(225, 90%, 60%), hsl(225, 80%, 65%))' }} onClick={addVendor}>Add Vendor</Button>
+              <Button className="w-full rounded-full gradient-primary text-white border-none" onClick={addVendor}>Add Vendor</Button>
             </div>
           </div>
         </div>
       )}
 
-      {/* Search + Sort (matching template UI) */}
+      {/* Search + Sort - exact same as templates */}
       <div className="bg-card border border-border rounded-2xl p-5">
         <div className="flex items-center gap-4 mb-5">
           <div className="flex-1 relative">
             <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
             <input
               placeholder={`Search ${vendors.length} vendors...`}
-              className="w-full h-11 rounded-full bg-secondary dark:bg-accent pl-11 pr-4 text-sm text-foreground placeholder:text-muted-foreground outline-none border-none focus:ring-2 focus:ring-primary/20"
+              className="w-full h-11 rounded-full bg-secondary dark:bg-accent pl-11 pr-4 text-sm text-foreground placeholder:text-muted-foreground outline-none border-none focus:ring-2 focus:ring-primary/20 transition-shadow"
               value={search}
               onChange={e => setSearch(e.target.value)}
             />
@@ -147,77 +147,69 @@ const VendorsPage = () => {
           </div>
         </div>
 
-        {/* Category pills */}
-        <div className="flex flex-wrap gap-2 mb-5">
-          {categories.map(cat => (
-            <button
-              key={cat}
-              onClick={() => setActiveCategory(cat)}
-              className={`px-4 py-1.5 text-sm font-medium rounded-full border transition-all duration-200 ${
-                activeCategory === cat
-                  ? 'border-foreground/20 bg-foreground/5 text-foreground'
-                  : 'border-border text-muted-foreground hover:text-foreground hover:bg-secondary dark:hover:bg-accent'
-              }`}
-            >
-              {cat}
+        {/* Category pills + right filters - exact same as templates */}
+        <div className="flex items-center justify-between mb-5">
+          <div className="flex flex-wrap items-center gap-2">
+            {categories.map(cat => (
+              <button
+                key={cat}
+                onClick={() => setActiveCategory(cat)}
+                className={`px-4 py-1.5 text-sm font-medium rounded-full border transition-all duration-200 ${
+                  activeCategory === cat
+                    ? cat === "Featured Vendors"
+                      ? 'border-primary/40 bg-primary/5 text-primary'
+                      : 'border-foreground/20 bg-foreground/5 text-foreground'
+                    : 'border-border text-muted-foreground hover:text-foreground hover:bg-secondary dark:hover:bg-accent'
+                }`}
+              >
+                {cat}
+              </button>
+            ))}
+          </div>
+          <div className="hidden md:flex items-center gap-3">
+            <span className="text-sm text-muted-foreground cursor-pointer hover:text-foreground">Mine</span>
+            <button className="flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-border text-sm text-muted-foreground hover:text-foreground">
+              <ListFilter className="w-3.5 h-3.5" /> All Types
             </button>
-          ))}
+          </div>
         </div>
 
-        {/* Vendor grid - 5 columns like templates */}
+        {/* Vendor grid - 5 columns, same card style as templates */}
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-5">
           {filtered.map(vendor => (
-            <div key={vendor.id} className="rounded-xl border border-border overflow-hidden bg-card hover:shadow-elevated transition-all duration-200 group relative">
-              <div className="relative h-44 overflow-hidden">
+            <div key={vendor.id} className="rounded-xl border border-border overflow-hidden bg-card hover:shadow-elevated transition-all duration-200 group cursor-pointer" onClick={() => navigate(`/dashboard/vendors/${vendor.id}`)}>
+              <div className="relative h-44 bg-secondary overflow-hidden">
                 <img src={vendor.image} alt={vendor.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
-                <button
-                  className="absolute top-2.5 right-2.5 w-7 h-7 rounded-full bg-white/80 dark:bg-black/40 backdrop-blur flex items-center justify-center hover:bg-white dark:hover:bg-black/60 transition-colors"
-                  onClick={() => toggleFavorite(vendor.id)}
-                >
-                  <Heart className={`h-3.5 w-3.5 ${vendor.favorited ? 'fill-red-500 text-red-500' : 'text-muted-foreground'}`} />
-                </button>
               </div>
               <div className="p-3">
-                <div className="flex justify-between items-start gap-1 mb-1">
+                <div className="flex justify-between items-start gap-2 mb-2">
                   <h3 className="text-sm font-semibold text-foreground truncate flex-1">{vendor.name}</h3>
-                  <div className="relative flex-shrink-0">
-                    <button className="text-muted-foreground hover:text-foreground" onClick={e => { e.stopPropagation(); setMenuOpen(menuOpen === vendor.id ? null : vendor.id); }}>
-                      <MoreHorizontal className="h-3.5 w-3.5" />
-                    </button>
-                    {menuOpen === vendor.id && (
-                      <div className="absolute right-0 top-5 bg-card border border-border rounded-lg shadow-elevated z-20 py-1 min-w-[130px]">
-                        <button className="w-full flex items-center gap-2 px-3 py-1.5 text-xs text-foreground hover:bg-secondary" onClick={() => { navigate(`/dashboard/vendors/${vendor.id}`); setMenuOpen(null); }}>
-                          <Eye className="h-3 w-3" /> View Profile
-                        </button>
-                        <button className="w-full flex items-center gap-2 px-3 py-1.5 text-xs text-foreground hover:bg-secondary" onClick={() => { navigate('/dashboard/messages'); setMenuOpen(null); }}>
-                          <MessageSquare className="h-3 w-3" /> Message
-                        </button>
-                        <button className="w-full flex items-center gap-2 px-3 py-1.5 text-xs text-foreground hover:bg-secondary" onClick={() => toggleFavorite(vendor.id)}>
-                          <Heart className="h-3 w-3" /> {vendor.favorited ? 'Unfavorite' : 'Favorite'}
-                        </button>
-                        <button className="w-full flex items-center gap-2 px-3 py-1.5 text-xs text-destructive hover:bg-secondary" onClick={() => deleteVendor(vendor.id)}>
-                          <Trash2 className="h-3 w-3" /> Remove
-                        </button>
-                      </div>
-                    )}
-                  </div>
-                </div>
-                <div className="flex items-center gap-1.5 mb-2">
-                  <Star className="h-3 w-3 fill-warning text-warning" />
-                  <span className="text-xs font-medium text-foreground">{vendor.rating}</span>
-                  <span className="text-xs text-muted-foreground">• {vendor.category}</span>
+                  {vendor.isPro ? (
+                    <span className="text-[11px] bg-secondary dark:bg-accent px-2 py-0.5 rounded-md text-muted-foreground flex-shrink-0 font-medium">PRO</span>
+                  ) : (
+                    <span className="text-sm font-semibold text-foreground flex-shrink-0">{vendor.priceTag}</span>
+                  )}
                 </div>
                 <div className="flex justify-between items-center text-xs text-muted-foreground">
-                  <div className="flex items-center gap-1">
-                    <MapPin className="w-3 h-3" />
-                    <span className="truncate">{vendor.location}</span>
+                  <div className="flex items-center gap-1.5">
+                    <div className="w-5 h-5 rounded-full bg-secondary dark:bg-accent overflow-hidden flex-shrink-0" />
+                    <span className="truncate">{vendor.author}</span>
                   </div>
-                  <Badge variant="outline" className="text-[10px] px-1.5 py-0">{vendor.price}</Badge>
+                  <div className="flex items-center gap-3">
+                    <span className="flex items-center gap-1 hover:text-foreground cursor-pointer"><Shuffle className="w-3 h-3" /> Remix</span>
+                    <span className="flex items-center gap-1"><Eye className="w-3 h-3" /> {vendor.uses}</span>
+                  </div>
                 </div>
               </div>
             </div>
           ))}
         </div>
+
+        {filtered.length === 0 && (
+          <div className="text-center py-20">
+            <p className="text-muted-foreground">No vendors found. Try adjusting your filters.</p>
+          </div>
+        )}
       </div>
     </div>
   );

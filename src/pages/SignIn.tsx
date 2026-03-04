@@ -25,35 +25,22 @@ const SignIn = () => {
           <div className="space-y-5">
             <div>
               <label className="text-sm font-medium text-foreground">Email</label>
-              <input
-                type="email"
-                value={email}
-                onChange={e => setEmail(e.target.value)}
-                placeholder="name@example.com"
-                className="w-full mt-1.5 pb-2.5 bg-transparent border-b border-border text-sm text-foreground placeholder:text-muted-foreground outline-none focus:border-primary transition-colors"
-              />
+              <input type="email" value={email} onChange={e => setEmail(e.target.value)} placeholder="name@example.com"
+                className="w-full mt-1.5 pb-2.5 bg-transparent border-b border-border text-sm text-foreground placeholder:text-muted-foreground outline-none focus:border-primary transition-colors" />
             </div>
             <div>
               <label className="text-sm font-medium text-foreground">Password</label>
               <div className="relative">
-                <input
-                  type={showPassword ? "text" : "password"}
-                  value={password}
-                  onChange={e => setPassword(e.target.value)}
-                  placeholder="••••••••"
-                  className="w-full mt-1.5 pb-2.5 bg-transparent border-b border-border text-sm text-foreground placeholder:text-muted-foreground outline-none focus:border-primary transition-colors pr-8"
-                />
+                <input type={showPassword ? "text" : "password"} value={password} onChange={e => setPassword(e.target.value)} placeholder="••••••••"
+                  className="w-full mt-1.5 pb-2.5 bg-transparent border-b border-border text-sm text-foreground placeholder:text-muted-foreground outline-none focus:border-primary transition-colors pr-8" />
                 <button type="button" className="absolute right-0 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground" onClick={() => setShowPassword(!showPassword)}>
                   {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
                 </button>
               </div>
             </div>
 
-            <button
-              className="w-full h-11 rounded-full text-sm font-medium text-white transition-opacity hover:opacity-90"
-              style={{ background: 'linear-gradient(135deg, hsl(220, 15%, 15%), hsl(220, 15%, 20%))' }}
-              onClick={() => window.location.href = "/dashboard"}
-            >
+            <button className="w-full h-11 rounded-full text-sm font-medium text-white transition-opacity hover:opacity-90 gradient-primary"
+              onClick={() => window.location.href = "/dashboard"}>
               Sign in
             </button>
 
@@ -75,13 +62,10 @@ const SignIn = () => {
 
         {/* Right - Visual */}
         <div className="hidden md:flex flex-1 relative overflow-hidden items-center justify-center" style={{
-          background: 'linear-gradient(135deg, hsl(30, 40%, 85%), hsl(340, 30%, 80%), hsl(260, 40%, 75%))',
+          background: 'linear-gradient(135deg, hsl(225, 85%, 95%), hsl(225, 80%, 88%), hsl(240, 70%, 85%))',
         }}>
-          {/* Log in button top right */}
           <div className="absolute top-6 right-6 z-10">
-            <Link to="/signup" className="px-5 py-2 rounded-full text-xs font-medium text-white" style={{
-              background: 'linear-gradient(135deg, hsl(220, 15%, 15%), hsl(220, 15%, 25%))',
-            }}>
+            <Link to="/signup" className="px-5 py-2 rounded-full text-xs font-medium text-white gradient-primary">
               Sign up
             </Link>
           </div>
@@ -111,7 +95,6 @@ const SignIn = () => {
             </div>
           </div>
 
-          {/* Floating cards */}
           <div className="absolute top-20 left-6 bg-card/90 backdrop-blur rounded-xl p-3 shadow-elevated border border-border" style={{ animation: 'floatY 4s ease-in-out infinite' }}>
             <p className="text-[10px] font-semibold text-foreground">Budget Tracker</p>
             <p className="text-lg font-bold text-primary">$4,206</p>

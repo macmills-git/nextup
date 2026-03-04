@@ -26,45 +26,27 @@ const SignUp = () => {
           <div className="space-y-5">
             <div>
               <label className="text-sm font-medium text-foreground">Name</label>
-              <input
-                type="text"
-                value={name}
-                onChange={e => setName(e.target.value)}
-                placeholder="Your full name"
-                className="w-full mt-1.5 pb-2.5 bg-transparent border-b border-border text-sm text-foreground placeholder:text-muted-foreground outline-none focus:border-primary transition-colors"
-              />
+              <input type="text" value={name} onChange={e => setName(e.target.value)} placeholder="Your full name"
+                className="w-full mt-1.5 pb-2.5 bg-transparent border-b border-border text-sm text-foreground placeholder:text-muted-foreground outline-none focus:border-primary transition-colors" />
             </div>
             <div>
               <label className="text-sm font-medium text-foreground">Email</label>
-              <input
-                type="email"
-                value={email}
-                onChange={e => setEmail(e.target.value)}
-                placeholder="name@example.com"
-                className="w-full mt-1.5 pb-2.5 bg-transparent border-b border-border text-sm text-foreground placeholder:text-muted-foreground outline-none focus:border-primary transition-colors"
-              />
+              <input type="email" value={email} onChange={e => setEmail(e.target.value)} placeholder="name@example.com"
+                className="w-full mt-1.5 pb-2.5 bg-transparent border-b border-border text-sm text-foreground placeholder:text-muted-foreground outline-none focus:border-primary transition-colors" />
             </div>
             <div>
               <label className="text-sm font-medium text-foreground">Password</label>
               <div className="relative">
-                <input
-                  type={showPassword ? "text" : "password"}
-                  value={password}
-                  onChange={e => setPassword(e.target.value)}
-                  placeholder="••••••••"
-                  className="w-full mt-1.5 pb-2.5 bg-transparent border-b border-border text-sm text-foreground placeholder:text-muted-foreground outline-none focus:border-primary transition-colors pr-8"
-                />
+                <input type={showPassword ? "text" : "password"} value={password} onChange={e => setPassword(e.target.value)} placeholder="••••••••"
+                  className="w-full mt-1.5 pb-2.5 bg-transparent border-b border-border text-sm text-foreground placeholder:text-muted-foreground outline-none focus:border-primary transition-colors pr-8" />
                 <button type="button" className="absolute right-0 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground" onClick={() => setShowPassword(!showPassword)}>
                   {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
                 </button>
               </div>
             </div>
 
-            <button
-              className="w-full h-11 rounded-full text-sm font-medium text-white transition-opacity hover:opacity-90"
-              style={{ background: 'linear-gradient(135deg, hsl(220, 15%, 15%), hsl(220, 15%, 20%))' }}
-              onClick={() => window.location.href = "/dashboard"}
-            >
+            <button className="w-full h-11 rounded-full text-sm font-medium text-white transition-opacity hover:opacity-90 gradient-primary"
+              onClick={() => window.location.href = "/dashboard"}>
               Create account
             </button>
 
@@ -86,17 +68,14 @@ const SignUp = () => {
 
         {/* Right - Visual */}
         <div className="hidden md:flex flex-1 relative overflow-hidden items-center justify-center" style={{
-          background: 'linear-gradient(135deg, hsl(30, 40%, 85%), hsl(340, 30%, 80%), hsl(260, 40%, 75%))',
+          background: 'linear-gradient(135deg, hsl(225, 85%, 95%), hsl(225, 80%, 88%), hsl(240, 70%, 85%))',
         }}>
           <div className="absolute top-6 right-6 z-10">
-            <Link to="/signin" className="px-5 py-2 rounded-full text-xs font-medium text-white" style={{
-              background: 'linear-gradient(135deg, hsl(220, 15%, 15%), hsl(220, 15%, 25%))',
-            }}>
+            <Link to="/signin" className="px-5 py-2 rounded-full text-xs font-medium text-white gradient-primary">
               Log in
             </Link>
           </div>
 
-          {/* Phone mockup */}
           <div className="relative w-64 h-[420px] bg-card dark:bg-background rounded-[32px] shadow-elevated border border-border p-3">
             <div className="w-full h-full rounded-[24px] bg-card overflow-hidden flex flex-col">
               <div className="px-4 pt-6 pb-3">

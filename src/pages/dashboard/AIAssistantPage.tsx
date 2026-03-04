@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from "react";
-import { Sparkles, Send, Lightbulb, TrendingUp, Calendar, DollarSign, Search, Paperclip, AtSign, ArrowUp, Layers } from "lucide-react";
+import { Sparkles, Send, Lightbulb, TrendingUp, Calendar, DollarSign, Search, Paperclip, AtSign, ArrowUp, Layers, Plus, MessageSquare } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const suggestions = [
@@ -9,66 +9,88 @@ const suggestions = [
   { icon: Lightbulb, text: "Suggest creative themes for a product launch" },
 ];
 
-type Message = { id: number; role: "user" | "assistant"; text: string; event?: string };
-
-const events = [
-  { id: 1, name: "Annual Corporate Gala" },
-  { id: 2, name: "Product Launch Party" },
-  { id: 3, name: "Team Building Retreat" },
-  { id: 4, name: "Charity Fundraiser" },
-  { id: 5, name: "Summer Music Festival" },
-];
-
-const recentChats = [
-  { title: "Corporate Gala Budget Plan", time: "Feb 23, 2:02 AM", color: "bg-primary" },
-  { title: "Vendor Selection Analysis", time: "Feb 22, 11:30 AM", color: "bg-success" },
-  { title: "Team Assignment Optimization", time: "Feb 21, 4:15 PM", color: "bg-warning" },
-];
+type Message = { id: number; role: "user" | "assistant"; text: string };
+type Conversation = { id: string; title: string; messages: Message[]; time: string };
 
 const AIAssistantPage = () => {
-  const [activeEvent, setActiveEvent] = useState<number | null>(null);
-  const [messages, setMessages] = useState<Message[]>([]);
+  const [conversations, setConversations] = useState<Conversation[]>([
+    { id: "1", title: "Corporate Gala Budget Plan", messages: [
+      { id: 1, role: "user", text: "Help me plan the budget for our corporate gala" },
+      { id: 2, role: "assistant", text: "I'd be happy to help with your corporate gala budget! Based on typical events of this scale, here's a recommended budget breakdown..." },
+    ], time: "Feb 23, 2:02 AM" },
+    { id: "2", title: "Vendor Selection Analysis", messages: [
+      { id: 1, role: "user", text: "Compare our top 3 catering vendors" },
+      { id: 2, role: "assistant", text: "Here's a detailed comparison of your top catering vendors based on pricing, reviews, and past performance..." },
+    ], time: "Feb 22, 11:30 AM" },
+    { id: "3", title: "Team Assignment Optimization", messages: [
+      { id: 1, role: "user", text: "How should I assign team roles for the product launch?" },
+      { id: 2, role: "assistant", text: "Based on your team's strengths, I recommend the following role assignments for the product launch event..." },
+    ], time: "Feb 21, 4:15 PM" },
+  ]);
+  const [activeConversation, setActiveConversation] = useState<string | null>(null);
   const [input, setInput] = useState("");
-  const [activeTab, setActiveTab] = useState("Recent Chats");
   const [isExpanded, setIsExpanded] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
   const chatEndRef = useRef<HTMLDivElement>(null);
 
-  const eventName = activeEvent ? events.find(e => e.id === activeEvent)?.name || "General" : "General";
+  const activeConvo = conversations.find(c => c.id === activeConversation);
 
   const handleSend = (text?: string) => {
     const msg = text || input;
     if (!msg.trim()) return;
+
     if (!isExpanded) setIsExpanded(true);
-    setMessages(prev => [
-      ...prev,
-      { id: Date.now(), role: "user", text: msg, event: eventName },
-      { id: Date.now() + 1, role: "assistant", text: `I'm analyzing your request for "${eventName}". This is a demo — in the full version, I'd provide detailed recommendations based on your event data, vendor history, and budget constraints.`, event: eventName },
-    ]);
+
+    const userMsg: Message = { id: Date.now(), role: "user", text: msg };
+    const aiMsg: Message = { id: Date.now() + 1, role: "assistant", text: `I'm analyzing your request. Here are my recommendations based on your event data and current planning context...` };
+
+    if (activeConversation) {
+      setConversations(prev => prev.map(c =>
+        c.id === activeConversation ? { ...c, messages: [...c.messages, userMsg, aiMsg] } : c
+      ));
+    } else {
+      const newId = Date.now().toString();
+      const title = msg.length > 40 ? msg.slice(0, 40) + "..." : msg;
+      setConversations(prev => [{ id: newId, title, messages: [userMsg, aiMsg], time: "Just now" }, ...prev]);
+      setActiveConversation(newId);
+    }
     setInput("");
+  };
+
+  const createNewChat = () => {
+    setActiveConversation(null);
+    setIsExpanded(false);
+    setInput("");
+  };
+
+  const switchConversation = (id: string) => {
+    setActiveConversation(id);
+    setIsExpanded(true);
   };
 
   useEffect(() => {
     chatEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [messages]);
+  }, [activeConvo?.messages]);
 
   const hasInput = input.trim().length > 0;
+  const displayMessages = activeConvo?.messages || [];
 
-  // Filter messages by active event
-  const filteredMessages = activeEvent
-    ? messages.filter(m => m.event === eventName)
-    : messages;
+  const filteredConvos = conversations.filter(c =>
+    searchQuery === "" || c.title.toLowerCase().includes(searchQuery.toLowerCase())
+  );
 
   return (
     <div className="flex h-[calc(100vh-5rem)] gap-4">
+      {/* Main area */}
       <div className="flex-1 flex flex-col">
-        {/* Hero section - animates up when expanded */}
         <div className={cn(
-          "flex flex-col items-center transition-all duration-700 ease-in-out",
-          isExpanded ? "pt-2" : "flex-1 justify-center"
+          "flex flex-col transition-all duration-700 ease-in-out",
+          isExpanded ? "flex-1" : "flex-1 justify-center items-center"
         )}>
+          {/* Hero - hidden when expanded */}
           {!isExpanded && (
             <>
-              <span className="inline-flex items-center gap-2 text-sm text-muted-foreground border border-border rounded-full px-3 py-1 mb-6 bg-secondary dark:bg-accent animate-fade-in">
+              <span className="inline-flex items-center gap-2 text-sm text-muted-foreground border border-border rounded-full px-3 py-1 mb-6 bg-secondary dark:bg-accent animate-fade-in self-center">
                 <TrendingUp className="w-3.5 h-3.5" />
                 AI-powered event planning assistant
               </span>
@@ -81,19 +103,20 @@ const AIAssistantPage = () => {
             </>
           )}
 
+          {/* Chat header when expanded */}
           {isExpanded && (
-            <div className="flex items-center gap-2 mb-3 self-start animate-fade-in">
+            <div className="flex items-center gap-2 mb-3 animate-fade-in">
               <Sparkles className="h-5 w-5 text-primary" />
               <h2 className="text-lg font-bold text-foreground">AI Assistant</h2>
-              <span className="text-xs text-muted-foreground">• {eventName}</span>
+              {activeConvo && <span className="text-xs text-muted-foreground">• {activeConvo.title}</span>}
             </div>
           )}
 
-          {/* Chat workspace - appears with animation */}
+          {/* Chat workspace */}
           {isExpanded && (
-            <div className="w-full flex-1 mb-3 bg-card rounded-xl border border-border overflow-hidden flex flex-col animate-scale-in" style={{ minHeight: '300px', maxHeight: 'calc(100vh - 20rem)' }}>
+            <div className="w-full flex-1 mb-3 bg-card rounded-xl border border-border overflow-hidden flex flex-col animate-scale-in" style={{ minHeight: '250px' }}>
               <div className="flex-1 overflow-y-auto p-5 space-y-4">
-                {filteredMessages.map(msg => (
+                {displayMessages.map(msg => (
                   <div key={msg.id} className={cn("flex", msg.role === "user" ? "justify-end" : "justify-start")}>
                     {msg.role === "assistant" && (
                       <div className="w-7 h-7 rounded-lg gradient-primary flex items-center justify-center mr-3 shrink-0 mt-1">
@@ -118,8 +141,7 @@ const AIAssistantPage = () => {
           {/* Prompt box */}
           <div className={cn(
             "w-full bg-card border border-border rounded-2xl shadow-card p-4 flex flex-col transition-all duration-500",
-            isExpanded ? "max-w-full" : "max-w-3xl mt-6",
-            isExpanded ? "min-h-[80px]" : "min-h-[140px]"
+            isExpanded ? "max-w-full min-h-[80px]" : "max-w-3xl mt-6 min-h-[140px] self-center"
           )}>
             <textarea
               value={input}
@@ -148,8 +170,8 @@ const AIAssistantPage = () => {
                   className={cn(
                     "w-8 h-8 rounded-full flex items-center justify-center transition-all duration-300",
                     hasInput
-                      ? "bg-primary text-white shadow-md"
-                      : "bg-secondary border border-border text-muted-foreground hover:text-foreground"
+                      ? "bg-primary text-white shadow-md scale-110"
+                      : "bg-secondary border border-border text-muted-foreground"
                   )}
                 >
                   <ArrowUp className="w-4 h-4" />
@@ -160,80 +182,58 @@ const AIAssistantPage = () => {
 
           {/* Suggestions + Bottom tabs - hidden when expanded */}
           {!isExpanded && (
-            <>
-              <div className="w-full max-w-3xl mt-6 grid grid-cols-2 gap-2 animate-fade-in">
-                {suggestions.map((s, i) => (
-                  <button
-                    key={i}
-                    onClick={() => handleSend(s.text)}
-                    className="flex items-center gap-3 p-3 rounded-lg border border-border text-left hover:bg-secondary dark:hover:bg-accent transition-colors text-sm text-foreground bg-card"
-                  >
-                    <s.icon className="h-4 w-4 text-primary shrink-0" />
-                    {s.text}
-                  </button>
-                ))}
-              </div>
-
-              <div className="w-full max-w-3xl mt-10">
-                <div className="flex items-center justify-between border-b border-border pb-3">
-                  <div className="flex gap-6">
-                    {["Recent Chats", "Collaborations", "Iterations"].map(tab => (
-                      <button
-                        key={tab}
-                        onClick={() => setActiveTab(tab)}
-                        className={`text-base transition-colors ${activeTab === tab ? 'font-medium text-foreground' : 'text-muted-foreground hover:text-foreground'}`}
-                      >
-                        {tab}
-                      </button>
-                    ))}
-                  </div>
-                  <div className="flex items-center gap-3">
-                    <button className="p-1.5 bg-secondary dark:bg-accent rounded-md"><Layers className="w-4 h-4 text-muted-foreground" /></button>
-                    <div className="flex items-center gap-2 border border-border rounded-full px-3 py-1.5 bg-card text-sm">
-                      <Search className="w-3.5 h-3.5 text-muted-foreground" />
-                      <span className="text-muted-foreground text-xs">Search projects...</span>
-                    </div>
-                  </div>
-                </div>
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-5">
-                  {recentChats.map((chat, i) => (
-                    <div key={i} className="bg-secondary dark:bg-accent border border-border rounded-xl p-3 flex gap-4 items-center cursor-pointer hover:bg-accent dark:hover:bg-accent/80 transition-colors">
-                      <div className={`w-14 h-14 rounded-lg ${chat.color} flex-shrink-0`} />
-                      <div>
-                        <p className="text-sm font-medium text-foreground leading-tight">{chat.title}</p>
-                        <p className="text-xs text-muted-foreground mt-1">{chat.time}</p>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </>
+            <div className="w-full max-w-3xl mt-6 grid grid-cols-2 gap-2 animate-fade-in self-center">
+              {suggestions.map((s, i) => (
+                <button key={i} onClick={() => handleSend(s.text)}
+                  className="flex items-center gap-3 p-3 rounded-lg border border-border text-left hover:bg-secondary dark:hover:bg-accent transition-colors text-sm text-foreground bg-card">
+                  <s.icon className="h-4 w-4 text-primary shrink-0" />
+                  {s.text}
+                </button>
+              ))}
+            </div>
           )}
         </div>
       </div>
 
-      {/* Event sidebar */}
-      <div className="w-52 hidden lg:flex flex-col bg-card rounded-xl border border-border p-4">
-        <h3 className="font-semibold text-foreground text-sm mb-3">Events</h3>
-        <p className="text-xs text-muted-foreground mb-3">Select event context</p>
-        <div className="space-y-1 flex-1 overflow-y-auto">
-          <button
-            className={cn("w-full text-left px-3 py-2 rounded-lg text-sm transition-colors",
-              activeEvent === null ? "bg-primary/10 text-primary font-medium" : "text-muted-foreground hover:bg-secondary dark:hover:bg-accent"
-            )}
-            onClick={() => setActiveEvent(null)}
-          >
-            General
+      {/* Sidebar - conversations */}
+      <div className="w-56 hidden lg:flex flex-col bg-card rounded-xl border border-border p-4">
+        <div className="flex items-center justify-between mb-3">
+          <h3 className="font-semibold text-foreground text-sm">Chats</h3>
+          <button onClick={createNewChat} className="w-6 h-6 rounded-md bg-primary/10 flex items-center justify-center text-primary hover:bg-primary/20 transition-colors" title="New Chat">
+            <Plus className="w-3.5 h-3.5" />
           </button>
-          {events.map(event => (
+        </div>
+
+        {/* Search */}
+        <div className="relative mb-3">
+          <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 w-3 h-3 text-muted-foreground" />
+          <input
+            value={searchQuery}
+            onChange={e => setSearchQuery(e.target.value)}
+            placeholder="Search chats..."
+            className="w-full h-8 pl-7 pr-2 rounded-lg bg-secondary dark:bg-accent text-xs text-foreground placeholder:text-muted-foreground outline-none border-none"
+          />
+        </div>
+
+        <button onClick={createNewChat}
+          className="w-full text-left px-3 py-2 rounded-lg text-sm text-primary font-medium hover:bg-primary/5 transition-colors flex items-center gap-2 mb-2">
+          <MessageSquare className="w-3.5 h-3.5" /> New Chat
+        </button>
+
+        <div className="border-t border-border my-2" />
+
+        <p className="text-[10px] text-muted-foreground uppercase tracking-wider mb-2">Recent</p>
+        <div className="space-y-1 flex-1 overflow-y-auto">
+          {filteredConvos.map(convo => (
             <button
-              key={event.id}
-              className={cn("w-full text-left px-3 py-2 rounded-lg text-sm transition-colors",
-                activeEvent === event.id ? "bg-primary/10 text-primary font-medium" : "text-muted-foreground hover:bg-secondary dark:hover:bg-accent"
+              key={convo.id}
+              className={cn("w-full text-left px-3 py-2 rounded-lg text-xs transition-colors",
+                activeConversation === convo.id ? "bg-primary/10 text-primary font-medium" : "text-muted-foreground hover:bg-secondary dark:hover:bg-accent hover:text-foreground"
               )}
-              onClick={() => setActiveEvent(event.id)}
+              onClick={() => switchConversation(convo.id)}
             >
-              {event.name}
+              <p className="truncate">{convo.title}</p>
+              <p className="text-[10px] mt-0.5 opacity-60">{convo.time}</p>
             </button>
           ))}
         </div>
