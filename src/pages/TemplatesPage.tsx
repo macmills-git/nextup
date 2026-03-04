@@ -16,6 +16,11 @@ const templates = [
   { name: "Destination Wedding Planner", category: "Weddings", budget: "Luxury", image: "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=400&h=300&fit=crop", uses: "5.9k", author: "Sam", price: "$39" },
   { name: "Product Launch Playbook", category: "Corporate", budget: "Premium", image: "https://images.unsplash.com/photo-1475721027785-f74eccf877e2?w=400&h=300&fit=crop", uses: "10.2k", author: "Meng To", isPro: true },
   { name: "Networking Mixer Template", category: "Social", budget: "Regular", image: "https://images.unsplash.com/photo-1511578314322-379afb476865?w=400&h=300&fit=crop", uses: "13.0k", author: "EventPro", price: "$29" },
+  { name: "Charity Gala Organizer", category: "Social", budget: "Premium", image: "https://images.unsplash.com/photo-1519671482749-fd09be7ccebf?w=400&h=300&fit=crop", uses: "4.1k", author: "Sam", isPro: true },
+  { name: "Annual Board Meeting", category: "Corporate", budget: "Regular", image: "https://images.unsplash.com/photo-1556761175-5973dc0f32e7?w=400&h=300&fit=crop", uses: "3.8k", author: "Meng To", price: "$19" },
+  { name: "Kids Party Planner", category: "Birthday", budget: "Regular", image: "https://images.unsplash.com/photo-1464349153735-7db50ed83c84?w=400&h=300&fit=crop", uses: "16.2k", author: "EventPro", isPro: true },
+  { name: "Hackathon Blueprint", category: "Conferences", budget: "Regular", image: "https://images.unsplash.com/photo-1504384308090-c894fdcc538d?w=400&h=300&fit=crop", uses: "7.3k", author: "Sam", price: "$29" },
+  { name: "Cocktail Reception Kit", category: "Social", budget: "Premium", image: "https://images.unsplash.com/photo-1470337458703-46ad1756a187?w=400&h=300&fit=crop", uses: "5.5k", author: "Meng To", isPro: true },
 ];
 
 const TemplatesPage = () => {
@@ -37,47 +42,26 @@ const TemplatesPage = () => {
           <div className="flex items-center gap-4 mb-6">
             <div className="flex-1 relative">
               <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-              <input
-                type="text"
-                placeholder={`Search ${templates.length} templates...`}
+              <input type="text" placeholder={`Search ${templates.length} templates...`}
                 className="w-full h-11 rounded-full bg-secondary dark:bg-accent pl-11 pr-4 text-sm text-foreground placeholder:text-muted-foreground outline-none border-none focus:ring-2 focus:ring-primary/20 transition-shadow"
-                value={searchQuery}
-                onChange={e => setSearchQuery(e.target.value)}
-              />
+                value={searchQuery} onChange={e => setSearchQuery(e.target.value)} />
             </div>
             <div className="flex gap-1 bg-secondary dark:bg-accent rounded-lg p-0.5">
               {[{ label: "Popular", icon: ListFilter }, { label: "Recent", icon: CalendarDays }].map(sort => (
-                <button
-                  key={sort.label}
-                  onClick={() => setActiveSort(sort.label)}
-                  className={`flex items-center gap-1.5 px-3.5 py-2 rounded-lg text-sm font-medium transition-all ${
-                    activeSort === sort.label
-                      ? 'bg-card border border-border shadow-sm text-foreground'
-                      : 'text-muted-foreground hover:text-foreground'
-                  }`}
-                >
-                  <sort.icon className="w-3.5 h-3.5" />
-                  {sort.label}
+                <button key={sort.label} onClick={() => setActiveSort(sort.label)}
+                  className={`flex items-center gap-1.5 px-3.5 py-2 rounded-lg text-sm font-medium transition-all ${activeSort === sort.label ? 'bg-card border border-border shadow-sm text-foreground' : 'text-muted-foreground hover:text-foreground'}`}>
+                  <sort.icon className="w-3.5 h-3.5" />{sort.label}
                 </button>
               ))}
             </div>
           </div>
 
-          {/* Category pills + right filters */}
+          {/* Category pills */}
           <div className="flex items-center justify-between mb-6">
             <div className="flex flex-wrap items-center gap-2">
               {categories.map(cat => (
-                <button
-                  key={cat}
-                  onClick={() => setActiveCategory(cat)}
-                  className={`px-4 py-1.5 text-sm font-medium rounded-full border transition-all duration-200 ${
-                    activeCategory === cat
-                      ? cat === "Paid Templates"
-                        ? 'border-primary/40 bg-primary/5 text-primary'
-                        : 'border-foreground/20 bg-foreground/5 text-foreground'
-                      : 'border-border text-muted-foreground hover:text-foreground hover:bg-secondary dark:hover:bg-accent'
-                  }`}
-                >
+                <button key={cat} onClick={() => setActiveCategory(cat)}
+                  className={`px-4 py-1.5 text-sm font-medium rounded-full border transition-all duration-200 ${activeCategory === cat ? cat === "Paid Templates" ? 'border-primary/40 bg-primary/5 text-primary' : 'border-foreground/20 bg-foreground/5 text-foreground' : 'border-border text-muted-foreground hover:text-foreground hover:bg-secondary dark:hover:bg-accent'}`}>
                   {cat}
                 </button>
               ))}
@@ -90,7 +74,7 @@ const TemplatesPage = () => {
             </div>
           </div>
 
-          {/* Templates grid - 5 columns */}
+          {/* Grid */}
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-5">
             {filtered.map((t, i) => (
               <div key={i} className="rounded-xl border border-border overflow-hidden bg-card hover:shadow-elevated transition-all duration-200 group cursor-pointer">
@@ -123,7 +107,7 @@ const TemplatesPage = () => {
 
           {filtered.length === 0 && (
             <div className="text-center py-20">
-              <p className="text-muted-foreground">No templates found. Try adjusting your filters.</p>
+              <p className="text-muted-foreground">No templates found.</p>
             </div>
           )}
         </div>

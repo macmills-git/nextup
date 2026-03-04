@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Calendar, Plus, Search, Filter, MapPin, Clock, Users, MoreHorizontal, X, Trash2, Edit, Eye } from "lucide-react";
+import { Calendar, Plus, Search, MapPin, Clock, Users, MoreHorizontal, X, Trash2, Edit, Eye, DollarSign } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
@@ -34,9 +34,7 @@ const EventsPage = () => {
   const [events, setEvents] = useState(initialEvents);
   const [search, setSearch] = useState("");
   const [categoryFilter, setCategoryFilter] = useState("All");
-  const [showCreate, setShowCreate] = useState(false);
   const [menuOpen, setMenuOpen] = useState<number | null>(null);
-  const [newEvent, setNewEvent] = useState({ title: "", date: "", time: "", location: "", guests: "", budget: "", category: "Corporate" });
   const navigate = useNavigate();
 
   const filtered = events.filter(e => {
@@ -44,18 +42,6 @@ const EventsPage = () => {
     const matchCat = categoryFilter === "All" || e.category === categoryFilter;
     return matchSearch && matchCat;
   });
-
-  const handleCreate = () => {
-    if (!newEvent.title.trim()) return;
-    const created: Event = {
-      id: Date.now(), title: newEvent.title, date: newEvent.date || "TBD", time: newEvent.time || "TBD",
-      location: newEvent.location || "TBD", guests: parseInt(newEvent.guests) || 0, status: "draft",
-      budget: newEvent.budget || "$0", category: newEvent.category,
-    };
-    setEvents(prev => [created, ...prev]);
-    setNewEvent({ title: "", date: "", time: "", location: "", guests: "", budget: "", category: "Corporate" });
-    setShowCreate(false);
-  };
 
   const handleDelete = (id: number) => {
     setEvents(prev => prev.filter(e => e.id !== id));
@@ -113,63 +99,10 @@ const EventsPage = () => {
           <h1 className="text-2xl font-bold text-foreground">Events</h1>
           <p className="text-sm text-muted-foreground">Manage and track all your events</p>
         </div>
-        <Button className="gradient-primary text-primary-foreground gap-2" onClick={() => setShowCreate(true)}>
+        <Button className="gradient-primary text-primary-foreground gap-2" onClick={() => navigate('/dashboard/events/new')}>
           <Plus className="h-4 w-4" /> Create Event
         </Button>
       </div>
-
-      {/* Create modal */}
-      {showCreate && (
-        <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4" onClick={() => setShowCreate(false)}>
-          <div className="bg-card rounded-2xl border border-border p-6 w-full max-w-lg shadow-elevated" onClick={e => e.stopPropagation()}>
-            <div className="flex items-center justify-between mb-6">
-              <h2 className="text-lg font-bold text-foreground">Create Event</h2>
-              <button onClick={() => setShowCreate(false)} className="text-muted-foreground hover:text-foreground"><X className="h-5 w-5" /></button>
-            </div>
-            <div className="space-y-4">
-              <div>
-                <label className="text-sm font-medium text-foreground">Event Name *</label>
-                <Input className="mt-1" value={newEvent.title} onChange={e => setNewEvent({ ...newEvent, title: e.target.value })} placeholder="Enter event name" />
-              </div>
-              <div className="grid grid-cols-2 gap-3">
-                <div>
-                  <label className="text-sm font-medium text-foreground">Date</label>
-                  <Input className="mt-1" type="date" value={newEvent.date} onChange={e => setNewEvent({ ...newEvent, date: e.target.value })} />
-                </div>
-                <div>
-                  <label className="text-sm font-medium text-foreground">Time</label>
-                  <Input className="mt-1" type="time" value={newEvent.time} onChange={e => setNewEvent({ ...newEvent, time: e.target.value })} />
-                </div>
-              </div>
-              <div>
-                <label className="text-sm font-medium text-foreground">Location</label>
-                <Input className="mt-1" value={newEvent.location} onChange={e => setNewEvent({ ...newEvent, location: e.target.value })} placeholder="Venue name" />
-              </div>
-              <div className="grid grid-cols-2 gap-3">
-                <div>
-                  <label className="text-sm font-medium text-foreground">Guests</label>
-                  <Input className="mt-1" type="number" value={newEvent.guests} onChange={e => setNewEvent({ ...newEvent, guests: e.target.value })} />
-                </div>
-                <div>
-                  <label className="text-sm font-medium text-foreground">Budget</label>
-                  <Input className="mt-1" value={newEvent.budget} onChange={e => setNewEvent({ ...newEvent, budget: e.target.value })} placeholder="$0" />
-                </div>
-              </div>
-              <div>
-                <label className="text-sm font-medium text-foreground">Category</label>
-                <div className="flex gap-2 mt-1 flex-wrap">
-                  {categories.filter(c => c !== "All").map(cat => (
-                    <Button key={cat} variant={newEvent.category === cat ? "default" : "outline"} size="sm" onClick={() => setNewEvent({ ...newEvent, category: cat })}>
-                      {cat}
-                    </Button>
-                  ))}
-                </div>
-              </div>
-              <Button className="w-full gradient-primary text-primary-foreground" onClick={handleCreate}>Create Event</Button>
-            </div>
-          </div>
-        </div>
-      )}
 
       <div className="flex flex-col sm:flex-row gap-3">
         <div className="relative flex-1">

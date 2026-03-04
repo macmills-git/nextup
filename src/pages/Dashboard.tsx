@@ -10,6 +10,7 @@ import { useTheme } from "@/contexts/ThemeContext";
 import { useState } from "react";
 import EventsPage from "./dashboard/EventsPage";
 import EventDetailPage from "./dashboard/EventDetailPage";
+import EventWorkspacePage from "./dashboard/EventWorkspacePage";
 import VendorsPage from "./dashboard/VendorsPage";
 import VendorProfilePage from "./dashboard/VendorProfilePage";
 import TeamPage from "./dashboard/TeamPage";
@@ -307,6 +308,7 @@ const Dashboard = () => {
           <Routes>
             <Route index element={<DashboardHome />} />
             <Route path="events" element={<EventsPage />} />
+            <Route path="events/new" element={<EventWorkspacePage />} />
             <Route path="events/:eventId" element={<EventDetailPage />} />
             <Route path="vendors" element={<VendorsPage />} />
             <Route path="vendors/:vendorId" element={<VendorProfilePage />} />
