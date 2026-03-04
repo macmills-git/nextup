@@ -10,6 +10,7 @@ import { useTheme } from "@/contexts/ThemeContext";
 import { useState } from "react";
 import EventsPage from "./dashboard/EventsPage";
 import EventDetailPage from "./dashboard/EventDetailPage";
+import EventWorkspacePage from "./dashboard/EventWorkspacePage";
 import VendorsPage from "./dashboard/VendorsPage";
 import VendorProfilePage from "./dashboard/VendorProfilePage";
 import TeamPage from "./dashboard/TeamPage";
