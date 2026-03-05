@@ -5,12 +5,10 @@ import DashboardShowcase from "@/components/landing/DashboardShowcase";
 import FeaturesSection from "@/components/landing/FeaturesSection";
 import CTASection from "@/components/landing/CTASection";
 import PageTransition from "@/components/PageTransition";
-import MouseFollower from "@/components/MouseFollower";
 
 const Index = () => {
   return (
     <div className="min-h-screen bg-background">
-      <MouseFollower />
       <Navbar />
       <PageTransition>
         <HeroSection />
