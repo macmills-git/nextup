@@ -1,225 +1,49 @@
-import { TrendingUp, Users, MessageSquare, Calendar, Send, Plus, Minus, ChevronLeft, ChevronRight } from "lucide-react";
-import { useState, useEffect, useRef } from "react";
+import { useEffect, useRef } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { useCountUp } from "@/hooks/useGSAP";
 
 gsap.registerPlugin(ScrollTrigger);
 
+const trustedLogos = [
+  { name: "Aceternity UI", icon: "◆" },
+  { name: "Gamity", icon: "●" },
+  { name: "Host IT", icon: "◎" },
+  { name: "Asteroid Kit", icon: "▲" },
+  { name: "PlanPro", icon: "⬡" },
+];
+
 const DashboardShowcase = () => {
-  const [goalValue, setGoalValue] = useState(350);
   const sectionRef = useRef<HTMLDivElement>(null);
-  const headingRef = useRef<HTMLDivElement>(null);
-  const cardsRef = useRef<HTMLDivElement>(null);
-  const revenueRef = useCountUp(15231, 2);
-  const subsRef = useCountUp(2350, 2);
 
   useEffect(() => {
-    if (!headingRef.current) return;
-    const els = headingRef.current.querySelectorAll('.gsap-el');
-    gsap.fromTo(els, { y: 50, opacity: 0 }, {
-      y: 0, opacity: 1, duration: 0.8, stagger: 0.12, ease: 'power3.out',
-      scrollTrigger: { trigger: headingRef.current, start: 'top 85%' },
-    });
-  }, []);
-
-  useEffect(() => {
-    if (!cardsRef.current) return;
-    const cards = cardsRef.current.querySelectorAll('.dash-card');
-    gsap.fromTo(cards, { y: 60, opacity: 0, scale: 0.9 }, {
-      y: 0, opacity: 1, scale: 1, duration: 0.7, stagger: 0.1, ease: 'back.out(1.2)',
-      scrollTrigger: { trigger: cardsRef.current, start: 'top 80%' },
-    });
-  }, []);
-
-  // Bar growth animation
-  useEffect(() => {
-    if (!cardsRef.current) return;
-    const bars = cardsRef.current.querySelectorAll('.bar-grow');
-    gsap.fromTo(bars, { scaleY: 0, transformOrigin: 'bottom' }, {
-      scaleY: 1, duration: 0.8, stagger: 0.05, ease: 'power2.out',
-      scrollTrigger: { trigger: cardsRef.current, start: 'top 75%' },
-    });
-  }, []);
-
-  // Line graph draw
-  useEffect(() => {
-    if (!cardsRef.current) return;
-    const lines = cardsRef.current.querySelectorAll('.line-draw');
-    lines.forEach(line => {
-      const length = (line as SVGPathElement).getTotalLength?.() || 200;
-      gsap.fromTo(line, { strokeDasharray: length, strokeDashoffset: length }, {
-        strokeDashoffset: 0, duration: 2, ease: 'power2.out',
-        scrollTrigger: { trigger: line, start: 'top 85%' },
-      });
+    if (!sectionRef.current) return;
+    const els = sectionRef.current.querySelectorAll('.trust-el');
+    gsap.fromTo(els, { y: 30, opacity: 0 }, {
+      y: 0, opacity: 1, duration: 0.6, stagger: 0.1, ease: 'power2.out',
+      scrollTrigger: { trigger: sectionRef.current, start: 'top 85%' },
     });
   }, []);
 
   return (
     <section ref={sectionRef} className="py-20 bg-background relative">
-      {/* Subtle parallax bg */}
-      <div className="absolute inset-0 pointer-events-none opacity-[0.02]" style={{
-        backgroundImage: `linear-gradient(hsl(var(--foreground) / 0.15) 1px, transparent 1px), linear-gradient(90deg, hsl(var(--foreground) / 0.15) 1px, transparent 1px)`,
-        backgroundSize: '40px 40px',
-      }} />
-
-      <div className="container mx-auto px-4 lg:px-8 relative z-10">
-        <div ref={headingRef} className="text-center mb-14">
-          <span className="gsap-el text-xs font-semibold uppercase tracking-wider text-primary">Facts & Colors</span>
-          <h2 className="gsap-el text-3xl md:text-4xl font-bold text-foreground mt-2 mb-4">
-            Give your planning a makeover
-          </h2>
-          <p className="gsap-el text-muted-foreground max-w-2xl mx-auto">
-            A powerful dashboard that puts everything at your fingertips — revenue tracking, team management, messaging, scheduling, and goal setting.
-          </p>
-        </div>
-
-        <div ref={cardsRef} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3.5 max-w-[85%] mx-auto" style={{ fontSize: '0.9em' }}>
-
-          {/* Total Revenue Card */}
-          <div className="dash-card lg:col-span-1 bg-card border border-border rounded-2xl p-6 flex flex-col justify-between min-h-[220px] transition-all duration-300 hover:shadow-elevated hover:-translate-y-1"
-            style={{ animation: 'cardGlow1 6s ease-in-out infinite' }}>
-            <div>
-              <p className="text-sm text-muted-foreground mb-1">Total Revenue</p>
-              <p className="text-3xl font-bold text-foreground">$<span ref={revenueRef}>0</span>.89</p>
-              <p className="text-xs text-success mt-1">+20.1% from last month</p>
+      <div className="container mx-auto px-4 lg:px-8 text-center">
+        <h2 className="trust-el text-3xl md:text-4xl font-bold mb-3" style={{
+          backgroundImage: 'linear-gradient(180deg, hsl(var(--foreground)), hsl(var(--muted-foreground)))',
+          WebkitBackgroundClip: 'text',
+          WebkitTextFillColor: 'transparent',
+        }}>
+          Trusted by Industry Leaders
+        </h2>
+        <p className="trust-el text-sm text-muted-foreground max-w-lg mx-auto mb-12">
+          Join the ranks of forward-thinking companies already leveraging our AI technology
+        </p>
+        <div className="trust-el flex items-center justify-center gap-10 md:gap-16 flex-wrap">
+          {trustedLogos.map((logo, i) => (
+            <div key={i} className="flex items-center gap-2 opacity-60 hover:opacity-100 transition-opacity duration-300">
+              <span className="text-xl text-foreground">{logo.icon}</span>
+              <span className="text-sm font-semibold text-foreground tracking-tight">{logo.name}</span>
             </div>
-            <div className="mt-4">
-              <svg viewBox="0 0 200 50" className="w-full h-12" fill="none">
-                <polyline className="line-draw" points="0,40 20,38 40,35 60,30 80,32 100,25 120,28 140,20 160,15 180,18 200,8" stroke="hsl(225, 90%, 60%)" strokeWidth="2" fill="none" />
-                {[[0,40],[20,38],[40,35],[60,30],[80,32],[100,25],[120,28],[140,20],[160,15],[180,18],[200,8]].map(([cx, cy], i) => (
-                  <circle key={i} cx={cx} cy={cy} r="3" fill="hsl(225, 90%, 60%)" opacity="0" className="line-dot" />
-                ))}
-              </svg>
-            </div>
-          </div>
-
-          {/* Subscriptions Card */}
-          <div className="dash-card lg:col-span-1 bg-card border border-border rounded-2xl p-6 min-h-[220px] transition-all duration-300 hover:shadow-elevated hover:-translate-y-1"
-            style={{ animation: 'cardGlow2 6s ease-in-out infinite' }}>
-            <p className="text-sm text-muted-foreground mb-1">Subscriptions</p>
-            <p className="text-3xl font-bold text-foreground">+<span ref={subsRef}>0</span></p>
-            <p className="text-xs text-success mt-1">+180.1% from last month</p>
-            <div className="flex items-end gap-1.5 mt-6 h-20">
-              {[60, 75, 85, 70, 90, 65, 80, 55, 95, 72, 88, 60].map((h, i) => (
-                <div key={i} className="bar-grow flex-1 bg-foreground/80 dark:bg-white/90 rounded-sm" style={{ height: `${h}%` }} />
-              ))}
-            </div>
-          </div>
-
-          {/* Calendar Card */}
-          <div className="dash-card lg:col-span-1 bg-card border border-border rounded-2xl p-5 min-h-[220px] transition-all duration-300 hover:shadow-elevated hover:-translate-y-1"
-            style={{ animation: 'cardGlow3 6s ease-in-out infinite' }}>
-            <div className="flex items-center justify-between mb-3">
-              <ChevronLeft className="w-4 h-4 text-muted-foreground cursor-pointer hover:text-foreground transition-colors" />
-              <span className="text-sm font-semibold text-foreground">June 2023</span>
-              <ChevronRight className="w-4 h-4 text-muted-foreground cursor-pointer hover:text-foreground transition-colors" />
-            </div>
-            <div className="grid grid-cols-7 gap-1 text-center text-[10px] text-muted-foreground mb-2">
-              {["Su","Mo","Tu","We","Th","Fr","Sa"].map(d => <span key={d}>{d}</span>)}
-            </div>
-            <div className="grid grid-cols-7 gap-1 text-center text-xs">
-              {[28,29,30,31,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,1].map((day, i) => {
-                const isHighlighted = i >= 7 && i <= 11;
-                const isToday = day === 13 && i === 14;
-                const isOutside = i < 3 || i > 32;
-                return (
-                  <span key={i} className={`w-6 h-6 flex items-center justify-center rounded-md text-[11px] mx-auto transition-colors ${
-                    isToday ? "bg-primary text-primary-foreground font-bold" : isHighlighted ? "bg-primary/20 text-foreground" : isOutside ? "text-muted-foreground/50" : "text-muted-foreground hover:bg-secondary"
-                  }`}>{day}</span>
-                );
-              })}
-            </div>
-          </div>
-
-          {/* Move Goal Card with pie chart fill */}
-          <div className="dash-card lg:col-span-1 bg-card border border-border rounded-2xl p-6 min-h-[220px] transition-all duration-300 hover:shadow-elevated hover:-translate-y-1"
-            style={{ animation: 'cardGlow4 6s ease-in-out infinite' }}>
-            <p className="text-sm font-semibold text-foreground mb-1">Move Goal</p>
-            <p className="text-xs text-muted-foreground mb-4">Set your daily activity goal.</p>
-            <div className="flex items-center justify-center gap-6 mb-3">
-              <button onClick={() => setGoalValue(Math.max(100, goalValue - 10))} className="w-8 h-8 rounded-full border border-border flex items-center justify-center text-muted-foreground hover:text-foreground hover:border-foreground/30 transition-all duration-200 hover:scale-110">
-                <Minus className="w-3 h-3" />
-              </button>
-              <div className="text-center">
-                <p className="text-4xl font-bold text-foreground">{goalValue}</p>
-                <p className="text-[10px] text-muted-foreground tracking-widest uppercase">Calories/Day</p>
-              </div>
-              <button onClick={() => setGoalValue(goalValue + 10)} className="w-8 h-8 rounded-full border border-border flex items-center justify-center text-muted-foreground hover:text-foreground hover:border-foreground/30 transition-all duration-200 hover:scale-110">
-                <Plus className="w-3 h-3" />
-              </button>
-            </div>
-            <div className="flex items-end gap-1 h-8 mb-4">
-              {[40,60,80,50,70,90,45,65,85,55,75,95,50].map((h, i) => (
-                <div key={i} className="bar-grow flex-1 bg-foreground/70 dark:bg-white/80 rounded-sm" style={{ height: `${h}%` }} />
-              ))}
-            </div>
-            <button className="w-full py-2 text-sm text-foreground bg-secondary border border-border rounded-lg hover:bg-accent transition-all duration-200 hover:scale-[1.02]">Set Goal</button>
-          </div>
-
-          {/* Team Members Card */}
-          <div className="dash-card lg:col-span-1 bg-card border border-border rounded-2xl p-6 min-h-[260px] transition-all duration-300 hover:shadow-elevated hover:-translate-y-1">
-            <p className="text-sm font-semibold text-foreground mb-1">Team Members</p>
-            <p className="text-xs text-muted-foreground mb-5">Invite your team members to collaborate.</p>
-            {[
-              { name: "Sofia Davis", email: "m@example.com", role: "Owner" },
-              { name: "Jackson Lee", email: "p@example.com", role: "Member" },
-              { name: "Isabella Nguyen", email: "i@example.com", role: "Member" },
-            ].map((member, i) => (
-              <div key={i} className="flex items-center justify-between py-2.5 transition-all duration-200 hover:bg-secondary/50 rounded-lg px-2 -mx-2">
-                <div className="flex items-center gap-3">
-                  <div className="w-8 h-8 rounded-full bg-secondary flex items-center justify-center">
-                    <Users className="w-3.5 h-3.5 text-muted-foreground" />
-                  </div>
-                  <div>
-                    <p className="text-sm text-foreground font-medium">{member.name}</p>
-                    <p className="text-[11px] text-muted-foreground">{member.email}</p>
-                  </div>
-                </div>
-                <span className="text-[11px] text-muted-foreground bg-secondary px-2.5 py-1 rounded-md border border-border">{member.role} ▾</span>
-              </div>
-            ))}
-          </div>
-
-          {/* Chat Card */}
-          <div className="dash-card lg:col-span-1 bg-card border border-border rounded-2xl p-6 flex flex-col min-h-[260px] transition-all duration-300 hover:shadow-elevated hover:-translate-y-1">
-            <div className="flex items-center gap-3 mb-5">
-              <div className="w-8 h-8 rounded-full bg-secondary flex items-center justify-center">
-                <MessageSquare className="w-3.5 h-3.5 text-muted-foreground" />
-              </div>
-              <div>
-                <p className="text-sm text-foreground font-medium">Sofia Davis</p>
-                <p className="text-[11px] text-muted-foreground">m@example.com</p>
-              </div>
-              <button className="ml-auto w-7 h-7 rounded-full border border-border flex items-center justify-center text-muted-foreground hover:text-foreground transition-all duration-200 hover:scale-110 hover:rotate-90">
-                <Plus className="w-3 h-3" />
-              </button>
-            </div>
-            <div className="flex-1 space-y-3 mb-4">
-              <div className="bg-secondary rounded-xl rounded-bl-sm px-3 py-2 text-sm text-foreground max-w-[80%]">Hi, how can I help you today?</div>
-              <div className="bg-primary/10 rounded-xl rounded-br-sm px-3 py-2 text-sm text-foreground max-w-[80%] ml-auto">Hey, I'm having trouble with my account.</div>
-              <div className="bg-secondary rounded-xl rounded-bl-sm px-3 py-2 text-sm text-foreground max-w-[80%]">What seems to be the problem?</div>
-              <div className="bg-primary/10 rounded-xl rounded-br-sm px-3 py-2 text-sm text-foreground max-w-[80%] ml-auto">I can't log in.</div>
-            </div>
-            <div className="flex items-center gap-2">
-              <input type="text" placeholder="Type your message..." className="flex-1 bg-secondary border border-border rounded-lg px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground outline-none focus:border-primary/30 transition-colors" />
-              <button className="w-8 h-8 rounded-lg bg-secondary flex items-center justify-center text-muted-foreground hover:text-foreground hover:bg-accent transition-all duration-200 hover:scale-110">
-                <Send className="w-3.5 h-3.5" />
-              </button>
-            </div>
-          </div>
-
-          {/* Event Analytics Card */}
-          <div className="dash-card lg:col-span-2 bg-card border border-border rounded-2xl p-6 min-h-[260px] transition-all duration-300 hover:shadow-elevated hover:-translate-y-1">
-            <p className="text-sm font-semibold text-foreground mb-1">Event Analytics</p>
-            <p className="text-xs text-muted-foreground mb-6">Your event performance is ahead of where you normally are.</p>
-            <div className="relative">
-              <svg viewBox="0 0 400 120" className="w-full h-32" fill="none">
-                <path className="line-draw" d="M0,90 C30,85 60,70 100,50 C140,30 160,20 200,15 C240,10 260,45 300,55 C340,65 370,50 400,45" stroke="hsl(var(--foreground))" strokeWidth="2.5" fill="none" />
-                <path className="line-draw" d="M0,70 C30,75 60,80 100,75 C140,70 160,60 200,65 C240,70 260,55 300,50 C340,45 370,55 400,60" stroke="hsl(var(--foreground))" strokeWidth="1" opacity="0.3" fill="none" />
-              </svg>
-            </div>
-          </div>
+          ))}
         </div>
       </div>
     </section>

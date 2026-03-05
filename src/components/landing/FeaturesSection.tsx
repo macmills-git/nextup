@@ -20,59 +20,58 @@ const destinations = [
 
 const FeaturesSection = () => {
   const sectionRef = useRef<HTMLDivElement>(null);
-  const carouselRef = useRef<HTMLDivElement>(null);
+  const trackRef = useRef<HTMLDivElement>(null);
   const headingRef = useRef<HTMLDivElement>(null);
-  const [activeIndex, setActiveIndex] = useState(0);
-  const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
+  const animRef = useRef<gsap.core.Tween | null>(null);
 
-  // Heading scroll animation
+  // Heading animation
   useEffect(() => {
     if (!headingRef.current) return;
     const els = headingRef.current.querySelectorAll('.gsap-el');
-    gsap.fromTo(els, { y: 40, opacity: 0 }, {
-      y: 0, opacity: 1, duration: 0.7, stagger: 0.1, ease: 'power2.out',
+    gsap.fromTo(els, { y: 30, opacity: 0 }, {
+      y: 0, opacity: 1, duration: 0.6, stagger: 0.1, ease: 'power2.out',
       scrollTrigger: { trigger: headingRef.current, start: 'top 85%' },
     });
-    return () => { ScrollTrigger.getAll().forEach(t => t.kill()); };
   }, []);
 
-  // Simple carousel auto-advance - very slow
+  // Infinite scroll marquee
   useEffect(() => {
-    intervalRef.current = setInterval(() => {
-      setActiveIndex(prev => (prev + 1) % destinations.length);
-    }, 5000); // 5 seconds between transitions
-    return () => { if (intervalRef.current) clearInterval(intervalRef.current); };
-  }, []);
+    if (!trackRef.current) return;
+    const track = trackRef.current;
+    // Total width of one set
+    const setWidth = destinations.length * 228; // 220px card + 8px gap
 
-  // Smooth scroll carousel position
-  useEffect(() => {
-    if (!carouselRef.current) return;
-    const cards = carouselRef.current.querySelectorAll('.venue-card');
-    const total = destinations.length;
-
-    cards.forEach((card, i) => {
-      const offset = ((i - activeIndex + total) % total);
-      const centered = offset - Math.floor(total / 2);
-      const isActive = offset === 0;
-      const absPos = Math.abs(centered);
-
-      gsap.to(card, {
-        x: centered * 240,
-        scale: isActive ? 1.05 : Math.max(0.75, 1 - absPos * 0.06),
-        opacity: absPos > 3 ? 0 : Math.max(0.3, 1 - absPos * 0.2),
-        zIndex: isActive ? 20 : 10 - absPos,
-        y: isActive ? -8 : 0,
-        duration: 1.5, // Very slow, smooth
-        ease: 'power2.inOut',
-      });
+    animRef.current = gsap.to(track, {
+      x: -setWidth,
+      duration: 40,
+      ease: 'none',
+      repeat: -1,
+      modifiers: {
+        x: gsap.utils.unitize(x => parseFloat(x) % setWidth),
+      },
     });
-  }, [activeIndex]);
+
+    return () => { animRef.current?.kill(); };
+  }, []);
+
+  const handleMouseEnter = useCallback((i: number) => {
+    setHoveredIndex(i);
+    animRef.current?.pause();
+  }, []);
+
+  const handleMouseLeave = useCallback(() => {
+    setHoveredIndex(null);
+    animRef.current?.resume();
+  }, []);
+
+  // Double the items for seamless loop
+  const doubledDestinations = [...destinations, ...destinations];
 
   return (
-    <section ref={sectionRef} className="py-28 relative overflow-hidden bg-secondary dark:bg-background">
+    <section ref={sectionRef} className="py-24 relative overflow-hidden bg-secondary dark:bg-background">
       <div className="container mx-auto px-4 lg:px-8 relative z-10">
-        {/* Heading */}
-        <div ref={headingRef} className="text-center mb-16">
+        <div ref={headingRef} className="text-center mb-14">
           <span className="gsap-el inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-primary bg-primary/10 px-4 py-1.5 rounded-full mb-4">
             <Sparkles className="w-3.5 h-3.5" /> Discover Venues
           </span>
@@ -83,58 +82,54 @@ const FeaturesSection = () => {
             Browse curated venues and event spaces trusted by thousands of planners worldwide.
           </p>
         </div>
+      </div>
 
-        {/* Carousel */}
-        <div className="relative flex items-center justify-center h-[400px] overflow-hidden">
-          <div ref={carouselRef} className="relative flex items-center justify-center w-full h-full">
-            {destinations.map((dest, i) => (
+      {/* Marquee track */}
+      <div className="relative overflow-hidden">
+        {/* Edge fades */}
+        <div className="absolute left-0 top-0 bottom-0 w-24 z-10 bg-gradient-to-r from-secondary dark:from-background to-transparent pointer-events-none" />
+        <div className="absolute right-0 top-0 bottom-0 w-24 z-10 bg-gradient-to-l from-secondary dark:from-background to-transparent pointer-events-none" />
+
+        <div ref={trackRef} className="flex gap-2 will-change-transform" style={{ width: 'max-content' }}>
+          {doubledDestinations.map((dest, i) => {
+            const isHovered = hoveredIndex === i;
+            return (
               <div
                 key={i}
-                className="venue-card absolute cursor-pointer"
-                onClick={() => setActiveIndex(i)}
+                className="flex-shrink-0 cursor-pointer"
+                onMouseEnter={() => handleMouseEnter(i)}
+                onMouseLeave={handleMouseLeave}
+                style={{ width: '220px' }}
               >
-                <div className="w-[200px] h-[300px] md:w-[210px] md:h-[320px] rounded-[20px] overflow-hidden relative group transition-shadow duration-500"
-                  style={{ boxShadow: '0 12px 30px hsl(var(--foreground) / 0.1)' }}>
-                  <img src={dest.image} alt={dest.city} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" loading="lazy" />
+                <div className={`w-[220px] h-[300px] rounded-[18px] overflow-hidden relative group transition-all duration-500 ${isHovered ? 'scale-105 shadow-elevated' : ''}`}
+                  style={{ boxShadow: isHovered ? '0 20px 40px hsl(var(--foreground) / 0.15)' : '0 8px 20px hsl(var(--foreground) / 0.06)' }}>
+                  <img src={dest.image} alt={dest.city} className={`w-full h-full object-cover transition-transform duration-700 ${isHovered ? 'scale-110' : ''}`} loading="lazy" />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
 
                   <div className="absolute top-3 right-3 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                    <Heart className="w-5 h-5 text-white/80 hover:text-red-400 transition-colors cursor-pointer" />
+                    <Heart className="w-4 h-4 text-white/80 hover:text-red-400 transition-colors cursor-pointer" />
                   </div>
-                  <div className="absolute top-3 left-3 w-9 h-9 rounded-full bg-white/90 dark:bg-black/50 flex items-center justify-center text-base shadow-lg backdrop-blur-sm">
+                  <div className="absolute top-3 left-3 w-8 h-8 rounded-full bg-white/90 dark:bg-black/50 flex items-center justify-center text-sm shadow-lg backdrop-blur-sm">
                     {dest.flag}
                   </div>
 
-                  <div className="absolute bottom-0 left-0 right-0 p-4">
+                  <div className="absolute bottom-0 left-0 right-0 p-3.5">
                     <div className="flex items-center gap-1 mb-1">
-                      <Star className="w-3 h-3 text-yellow-400 fill-yellow-400" />
-                      <span className="text-[11px] text-white/90 font-medium">{dest.rating}</span>
+                      <Star className="w-2.5 h-2.5 text-yellow-400 fill-yellow-400" />
+                      <span className="text-[10px] text-white/90 font-medium">{dest.rating}</span>
                     </div>
-                    <h3 className="text-white font-bold text-sm leading-tight">{dest.city}</h3>
-                    <div className="flex items-center justify-between mt-1">
-                      <span className="text-white/60 text-[11px]">{dest.country}</span>
-                      <span className="text-white/50 text-[10px] flex items-center gap-0.5">
-                        <Users className="w-2.5 h-2.5" /> {dest.visitors}
+                    <h3 className="text-white font-bold text-xs leading-tight">{dest.city}</h3>
+                    <div className="flex items-center justify-between mt-0.5">
+                      <span className="text-white/60 text-[10px]">{dest.country}</span>
+                      <span className="text-white/50 text-[9px] flex items-center gap-0.5">
+                        <Users className="w-2 h-2" /> {dest.visitors}
                       </span>
                     </div>
                   </div>
                 </div>
               </div>
-            ))}
-          </div>
-        </div>
-
-        {/* Dots */}
-        <div className="flex justify-center gap-2 mt-8">
-          {destinations.map((_, i) => (
-            <button
-              key={i}
-              onClick={() => setActiveIndex(i)}
-              className={`h-1.5 rounded-full transition-all duration-700 ${
-                i === activeIndex ? 'bg-primary w-8' : 'bg-muted-foreground/30 w-1.5'
-              }`}
-            />
-          ))}
+            );
+          })}
         </div>
       </div>
     </section>
