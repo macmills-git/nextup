@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
-import { ArrowRight, TrendingUp, Users, MessageSquare, Calendar, Send, Plus, Minus, ChevronLeft, ChevronRight } from "lucide-react";
+import { ArrowRight, TrendingUp, Users, Calendar, MessageSquare } from "lucide-react";
 import { Cobe } from "@/components/eldoraui/cobe-globe";
 import { useTheme } from "@/contexts/ThemeContext";
 import { useEffect, useRef, useState } from "react";
@@ -9,7 +9,6 @@ import gsap from "gsap";
 const HeroSection = () => {
   const { theme } = useTheme();
   const isDark = theme === 'dark';
-  const heroRef = useRef<HTMLDivElement>(null);
   const contentRef = useRef<HTMLDivElement>(null);
   const cardsRef = useRef<HTMLDivElement>(null);
   const [goalValue, setGoalValue] = useState(350);
@@ -32,8 +31,19 @@ const HeroSection = () => {
   }, []);
 
   return (
-    <section ref={heroRef} className="relative min-h-screen overflow-hidden bg-background">
-      {/* Subtle gradient bg */}
+    <section className="relative min-h-screen overflow-hidden bg-background">
+      {/* Lamp glow effect */}
+      <div className="absolute inset-0 z-0 overflow-hidden">
+        <div className="absolute top-[40%] left-1/2 -translate-x-1/2 w-[600px] md:w-[900px] h-[400px]" style={{
+          background: isDark
+            ? 'conic-gradient(from 180deg at 50% 50%, hsl(225, 90%, 25%) 0deg, transparent 60deg, transparent 300deg, hsl(225, 90%, 25%) 360deg)'
+            : 'conic-gradient(from 180deg at 50% 50%, hsl(225, 90%, 85%) 0deg, transparent 60deg, transparent 300deg, hsl(225, 90%, 85%) 360deg)',
+          filter: 'blur(60px)',
+          opacity: isDark ? 0.5 : 0.4,
+        }} />
+      </div>
+
+      {/* Bg gradient */}
       <div className="absolute inset-0 z-0" style={{
         background: isDark
           ? 'radial-gradient(ellipse at center top, hsl(225, 30%, 8%) 0%, hsl(240, 10%, 4%) 60%)'
@@ -69,7 +79,7 @@ const HeroSection = () => {
             </span>
           </h1>
           <p className="hero-anim text-sm md:text-base mb-8 max-w-xl mx-auto text-muted-foreground">
-            Simplify event planning, vendor management, and team coordination with cutting-edge tools designed for everyone — from beginners to pros.
+            Simplify event planning, vendor management, and team coordination with cutting-edge tools designed for everyone.
           </p>
           <div className="hero-anim flex flex-col sm:flex-row items-center justify-center gap-3 mb-12">
             <Button size="lg" asChild className="rounded-full px-8 py-3 text-sm font-medium border-none text-white transition-transform duration-200 hover:scale-105 gradient-primary" style={{
@@ -82,7 +92,6 @@ const HeroSection = () => {
 
         {/* Mini dashboard cards */}
         <div ref={cardsRef} className="grid grid-cols-2 md:grid-cols-4 gap-2.5 max-w-4xl mx-auto">
-          {/* Revenue */}
           <div className="mini-card bg-card/80 backdrop-blur-sm border border-border rounded-xl p-4 transition-all duration-200 hover:-translate-y-1 hover:shadow-elevated">
             <div className="flex items-center gap-2 mb-2">
               <div className="w-6 h-6 rounded-md bg-primary/10 flex items-center justify-center">
@@ -97,7 +106,6 @@ const HeroSection = () => {
             </svg>
           </div>
 
-          {/* Subscriptions */}
           <div className="mini-card bg-card/80 backdrop-blur-sm border border-border rounded-xl p-4 transition-all duration-200 hover:-translate-y-1 hover:shadow-elevated">
             <div className="flex items-center gap-2 mb-2">
               <div className="w-6 h-6 rounded-md bg-primary/10 flex items-center justify-center">
@@ -114,7 +122,6 @@ const HeroSection = () => {
             </div>
           </div>
 
-          {/* Calendar */}
           <div className="mini-card bg-card/80 backdrop-blur-sm border border-border rounded-xl p-4 transition-all duration-200 hover:-translate-y-1 hover:shadow-elevated">
             <div className="flex items-center gap-2 mb-2">
               <div className="w-6 h-6 rounded-md bg-primary/10 flex items-center justify-center">
@@ -130,7 +137,6 @@ const HeroSection = () => {
             </div>
           </div>
 
-          {/* Goal */}
           <div className="mini-card bg-card/80 backdrop-blur-sm border border-border rounded-xl p-4 transition-all duration-200 hover:-translate-y-1 hover:shadow-elevated">
             <div className="flex items-center gap-2 mb-2">
               <div className="w-6 h-6 rounded-md bg-primary/10 flex items-center justify-center">
