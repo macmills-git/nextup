@@ -14,6 +14,7 @@ const trustedLogos = [
 
 const DashboardShowcase = () => {
   const sectionRef = useRef<HTMLDivElement>(null);
+  const canvasRef = useRef<HTMLCanvasElement>(null);
 
   useEffect(() => {
     if (!sectionRef.current) return;
@@ -24,9 +25,68 @@ const DashboardShowcase = () => {
     });
   }, []);
 
+  // Sparkle particles
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+
+    let animId: number;
+    const particles: { x: number; y: number; vx: number; vy: number; size: number; alpha: number; decay: number }[] = [];
+
+    const resize = () => {
+      canvas.width = canvas.offsetWidth * 2;
+      canvas.height = canvas.offsetHeight * 2;
+      ctx.scale(2, 2);
+    };
+    resize();
+    window.addEventListener('resize', resize);
+
+    const spawn = () => {
+      if (particles.length < 60) {
+        particles.push({
+          x: Math.random() * canvas.offsetWidth,
+          y: Math.random() * canvas.offsetHeight,
+          vx: (Math.random() - 0.5) * 0.3,
+          vy: -Math.random() * 0.5 - 0.1,
+          size: Math.random() * 1.5 + 0.5,
+          alpha: Math.random() * 0.6 + 0.2,
+          decay: Math.random() * 0.003 + 0.001,
+        });
+      }
+    };
+
+    const animate = () => {
+      ctx.clearRect(0, 0, canvas.offsetWidth, canvas.offsetHeight);
+      spawn();
+      for (let i = particles.length - 1; i >= 0; i--) {
+        const p = particles[i];
+        p.x += p.vx;
+        p.y += p.vy;
+        p.alpha -= p.decay;
+        if (p.alpha <= 0) { particles.splice(i, 1); continue; }
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+        ctx.fillStyle = `hsla(225, 90%, 70%, ${p.alpha})`;
+        ctx.fill();
+      }
+      animId = requestAnimationFrame(animate);
+    };
+    animate();
+
+    return () => {
+      cancelAnimationFrame(animId);
+      window.removeEventListener('resize', resize);
+    };
+  }, []);
+
   return (
-    <section ref={sectionRef} className="py-20 bg-background relative">
-      <div className="container mx-auto px-4 lg:px-8 text-center">
+    <section ref={sectionRef} className="py-20 bg-background relative overflow-hidden">
+      {/* Sparkle canvas */}
+      <canvas ref={canvasRef} className="absolute inset-0 w-full h-full pointer-events-none z-0" />
+
+      <div className="container mx-auto px-4 lg:px-8 text-center relative z-10">
         <h2 className="trust-el text-3xl md:text-4xl font-bold mb-3" style={{
           backgroundImage: 'linear-gradient(180deg, hsl(var(--foreground)), hsl(var(--muted-foreground)))',
           WebkitBackgroundClip: 'text',

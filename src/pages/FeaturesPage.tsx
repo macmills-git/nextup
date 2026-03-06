@@ -1,26 +1,13 @@
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
-import { Calendar, DollarSign, Users, Sparkles, MessageSquare, Clock, Store, CheckCircle, Zap, Shield, Globe, BarChart3, ArrowRight } from "lucide-react";
+import { Calendar, DollarSign, Users, Sparkles, MessageSquare, Clock, Store, CheckCircle, Zap, Shield, Globe, BarChart3, ArrowRight, Bot, Layers, FileText, Bell } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
+import { useEffect, useRef } from "react";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 
-const features = [
-  { icon: Calendar, title: "Event Creation", desc: "Create events with dates, locations, guest counts and budgets in seconds. Manage everything from a single dashboard." },
-  { icon: Store, title: "Vendor Marketplace", desc: "Discover and compare verified vendors with portfolios, reviews, and pricing. Filter by category and location." },
-  { icon: DollarSign, title: "Budget Management", desc: "Allocate budgets, track expenses in real-time, and get alerts before budget overruns happen." },
-  { icon: Clock, title: "Timeline Planning", desc: "Automated timelines with tasks, milestones and deadline tracking. Never miss a critical planning step." },
-  { icon: Sparkles, title: "AI Assistant", desc: "Get AI-generated event plans, budgets and vendor recommendations tailored to your specific needs." },
-  { icon: MessageSquare, title: "Communication Hub", desc: "Centralized messaging with vendors, teams and collaborators. Keep everything in one place." },
-  { icon: Users, title: "Team Collaboration", desc: "Invite team members, assign roles and coordinate effortlessly across all your events." },
-  { icon: CheckCircle, title: "Task Management", desc: "Assign tasks, set milestones and track progress in real-time with smart notifications." },
-];
-
-const advancedFeatures = [
-  { icon: Zap, title: "Real-time Updates", desc: "Get instant notifications when vendors respond, guests RSVP, or deadlines approach." },
-  { icon: Shield, title: "Secure & Private", desc: "Enterprise-grade security with encrypted data storage and role-based access control." },
-  { icon: Globe, title: "Multi-event Support", desc: "Manage multiple events simultaneously with dedicated workspaces for each." },
-  { icon: BarChart3, title: "Analytics Dashboard", desc: "Track event performance with detailed analytics, charts, and exportable reports." },
-];
+gsap.registerPlugin(ScrollTrigger);
 
 const stats = [
   { value: "10,000+", label: "Events Planned" },
@@ -30,34 +17,134 @@ const stats = [
 ];
 
 const FeaturesPage = () => {
+  const heroRef = useRef<HTMLDivElement>(null);
+  const bentoRef = useRef<HTMLDivElement>(null);
+  const gridRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (heroRef.current) {
+      gsap.fromTo(heroRef.current.querySelectorAll('.fp-anim'),
+        { y: 30, opacity: 0 },
+        { y: 0, opacity: 1, duration: 0.6, stagger: 0.1, ease: 'power2.out' }
+      );
+    }
+    if (bentoRef.current) {
+      gsap.fromTo(bentoRef.current.querySelectorAll('.bento-item'),
+        { y: 30, opacity: 0 },
+        { y: 0, opacity: 1, duration: 0.5, stagger: 0.06, ease: 'power2.out',
+          scrollTrigger: { trigger: bentoRef.current, start: 'top 85%' }
+        }
+      );
+    }
+    if (gridRef.current) {
+      gsap.fromTo(gridRef.current.querySelectorAll('.grid-item'),
+        { y: 20, opacity: 0 },
+        { y: 0, opacity: 1, duration: 0.4, stagger: 0.04, ease: 'power2.out',
+          scrollTrigger: { trigger: gridRef.current, start: 'top 85%' }
+        }
+      );
+    }
+  }, []);
+
   return (
     <div className="min-h-screen bg-background">
       <Navbar />
       <div className="pt-32 pb-20 container mx-auto px-4 lg:px-8">
         {/* Hero */}
-        <div className="text-center max-w-3xl mx-auto mb-20">
-          <span className="inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-primary bg-primary/10 px-4 py-1.5 rounded-full mb-4">
+        <div ref={heroRef} className="text-center max-w-3xl mx-auto mb-20">
+          <span className="fp-anim inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-primary bg-primary/10 px-4 py-1.5 rounded-full mb-4">
             <Sparkles className="w-3.5 h-3.5" /> Features
           </span>
-          <h1 className="text-4xl md:text-6xl font-bold mt-3 mb-6 text-foreground tracking-tight">
-            Everything you need to plan perfect events
+          <h1 className="fp-anim text-4xl md:text-6xl font-bold mt-3 mb-6 text-foreground tracking-tight">
+            Packed with thousands of features
           </h1>
-          <p className="text-sm md:text-base text-muted-foreground">
-            Powerful tools that work together to streamline your entire event planning workflow.
+          <p className="fp-anim text-sm md:text-base text-muted-foreground">
+            From event creation to vendor management, Event Nest has tools for literally everything. It can even plan your event for you.
           </p>
         </div>
 
-        {/* Main features grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5 max-w-6xl mx-auto mb-20">
-          {features.map((f, i) => (
-            <div key={i} className="rounded-2xl p-6 transition-all duration-300 hover:-translate-y-1 group bg-card border border-border shadow-card hover:shadow-elevated">
-              <div className="w-10 h-10 rounded-xl mb-4 flex items-center justify-center bg-primary/10">
-                <f.icon className="h-5 w-5 text-primary" />
+        {/* Bento grid - large cards */}
+        <div ref={bentoRef} className="max-w-6xl mx-auto space-y-5 mb-20">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+            {/* AI Chat card */}
+            <div className="bento-item rounded-2xl p-6 bg-card border border-border">
+              <h3 className="text-lg font-semibold text-foreground mb-1">AI-Powered Planning</h3>
+              <p className="text-sm text-muted-foreground mb-4">Generate event plans from a text prompt, a brief, or a simple idea at the speed of light.</p>
+              <div className="rounded-xl bg-secondary p-3 space-y-2">
+                <div className="flex items-start gap-2">
+                  <div className="w-5 h-5 rounded-full bg-primary/20 flex items-center justify-center flex-shrink-0 mt-0.5">
+                    <Bot className="w-2.5 h-2.5 text-primary" />
+                  </div>
+                  <div className="bg-card rounded-lg rounded-bl-sm px-2.5 py-1.5 text-[11px] text-foreground">
+                    I found 3 venues in your budget. Here's a timeline with vendor recommendations.
+                  </div>
+                </div>
+                <div className="flex items-start gap-2 flex-row-reverse">
+                  <div className="w-5 h-5 rounded-full bg-muted flex items-center justify-center flex-shrink-0 mt-0.5">
+                    <span className="text-[8px] text-muted-foreground">U</span>
+                  </div>
+                  <div className="bg-primary/10 rounded-lg rounded-br-sm px-2.5 py-1.5 text-[11px] text-foreground">
+                    Perfect! Share the timeline and vendor picks.
+                  </div>
+                </div>
               </div>
-              <h3 className="text-foreground font-semibold mb-2">{f.title}</h3>
-              <p className="text-sm leading-relaxed text-muted-foreground">{f.desc}</p>
             </div>
-          ))}
+
+            {/* Chat/Bot card */}
+            <div className="bento-item rounded-2xl p-6 bg-card border border-border">
+              <h3 className="text-lg font-semibold text-foreground mb-1">Smart Communication Hub</h3>
+              <p className="text-sm text-muted-foreground mb-4">Create chatbots and auto-responses with a single button click.</p>
+              <div className="rounded-xl bg-secondary p-3 space-y-1.5">
+                {[
+                  { text: "Hello! Give me all the vendor contacts for this event", from: "user", color: "bg-primary" },
+                  { text: "Sure! Here are 12 vendor contacts with ratings.", from: "bot", color: "bg-success" },
+                  { text: "Can you also draft the vendor brief?", from: "user", color: "bg-warning" },
+                  { text: "Done! Brief generated and sent.", from: "bot", color: "bg-primary" },
+                ].map((msg, i) => (
+                  <div key={i} className={`${msg.color} rounded-lg px-2.5 py-1.5 text-[10px] text-white ${msg.from === 'user' ? 'ml-auto max-w-[80%]' : 'mr-auto max-w-[80%]'}`}>
+                    {msg.text}
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+            <div className="bento-item rounded-2xl p-6 bg-card border border-border">
+              <h3 className="text-lg font-semibold text-foreground mb-1">Multi-Vendor Support</h3>
+              <p className="text-sm text-muted-foreground mb-4">Whether it's caterers, photographers or DJs, we support everything.</p>
+              <div className="rounded-xl bg-secondary p-3">
+                <div className="flex items-center justify-between mb-2">
+                  <span className="text-[10px] font-semibold text-foreground">Add Vendor</span>
+                  <span className="text-[9px] text-primary font-medium cursor-pointer">+ Add</span>
+                </div>
+                {[
+                  { name: "Elite Catering", date: "23rd March", active: false },
+                  { name: "Lens Studio Pro", date: "21st March", active: true },
+                  { name: "Sound Systems", date: "3rd May", active: false },
+                  { name: "Floral Dreams", date: "1st April", active: true },
+                ].map((v, i) => (
+                  <div key={i} className="flex items-center justify-between py-1.5 border-t border-border/50">
+                    <div>
+                      <span className="text-[10px] text-foreground">{v.name}</span>
+                      <span className="text-[8px] text-muted-foreground ml-2">{v.date}</span>
+                    </div>
+                    <div className={`w-6 h-3 rounded-full ${v.active ? 'bg-primary' : 'bg-muted'}`} />
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            <div className="bento-item rounded-2xl p-6 bg-card border border-border">
+              <h3 className="text-lg font-semibold text-foreground mb-1">Deploy in seconds</h3>
+              <p className="text-sm text-muted-foreground mb-4">With our blazing fast platform, you can create and publish event pages instantly.</p>
+              <div className="flex flex-wrap gap-1.5">
+                {["📅 Events", "👥 Teams", "📊 Analytics", "💬 Messages", "🎯 Goals", "🏪 Vendors", "📋 Tasks", "💰 Budget", "🎨 Templates", "🔔 Alerts"].map((tag) => (
+                  <span key={tag} className="text-[10px] px-2.5 py-1 rounded-full border border-border bg-secondary text-foreground">{tag}</span>
+                ))}
+              </div>
+            </div>
+          </div>
         </div>
 
         {/* Stats */}
@@ -72,22 +159,27 @@ const FeaturesPage = () => {
           </div>
         </div>
 
-        {/* Advanced features */}
-        <div className="max-w-4xl mx-auto mb-20">
+        {/* Feature grid - 8 small cards */}
+        <div ref={gridRef} className="max-w-6xl mx-auto mb-20">
           <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold text-foreground mb-4">Advanced Capabilities</h2>
+            <h2 className="text-3xl font-bold text-foreground mb-3">Everything you need</h2>
             <p className="text-muted-foreground">Built for professionals who demand the best tools.</p>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-            {advancedFeatures.map((f, i) => (
-              <div key={i} className="flex gap-4 p-5 rounded-xl bg-card border border-border hover:shadow-elevated transition-all">
-                <div className="w-10 h-10 rounded-xl flex items-center justify-center bg-primary/10 flex-shrink-0">
-                  <f.icon className="h-5 w-5 text-primary" />
-                </div>
-                <div>
-                  <h3 className="text-foreground font-semibold mb-1">{f.title}</h3>
-                  <p className="text-sm text-muted-foreground">{f.desc}</p>
-                </div>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-5">
+            {[
+              { icon: Calendar, title: "Event Creation", desc: "Create events with dates, locations, and budgets in seconds." },
+              { icon: Store, title: "Vendor Marketplace", desc: "Discover and compare verified vendors with reviews." },
+              { icon: DollarSign, title: "Budget Tracking", desc: "No cap, no lock, no credit card required." },
+              { icon: Clock, title: "Timeline Planning", desc: "Automated timelines with milestones and deadlines." },
+              { icon: Zap, title: "Real-time Updates", desc: "Instant notifications for all event changes." },
+              { icon: Shield, title: "Secure & Private", desc: "Enterprise-grade encrypted data storage." },
+              { icon: Users, title: "Team Collaboration", desc: "You can simply share access with your whole team." },
+              { icon: CheckCircle, title: "And everything else", desc: "Everything else you could possibly need." },
+            ].map((f, i) => (
+              <div key={i} className="grid-item rounded-xl p-5 bg-card border border-border hover:shadow-elevated transition-shadow">
+                <f.icon className="w-5 h-5 text-foreground mb-3" />
+                <h4 className="text-sm font-semibold text-foreground mb-1">{f.title}</h4>
+                <p className="text-[11px] text-muted-foreground leading-relaxed">{f.desc}</p>
               </div>
             ))}
           </div>
