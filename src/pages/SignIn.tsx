@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { Eye, EyeOff, ChevronLeft, ChevronRight } from "lucide-react";
 import AnimatedLogo from "@/components/AnimatedLogo";
@@ -24,11 +24,10 @@ const AuthCarousel = () => {
   return (
     <div className="relative w-full h-full flex flex-col items-center justify-center px-6" style={{
       background: isDark
-        ? 'radial-gradient(ellipse at center, hsl(225, 30%, 10%) 0%, hsl(240, 10%, 4%) 100%)'
-        : 'radial-gradient(ellipse at center, hsl(225, 60%, 92%) 0%, hsl(225, 50%, 85%) 100%)',
+        ? 'radial-gradient(ellipse at center, hsl(160, 30%, 8%) 0%, hsl(160, 20%, 3%) 100%)'
+        : 'radial-gradient(ellipse at center, hsl(160, 40%, 92%) 0%, hsl(160, 30%, 85%) 100%)',
     }}>
-      {/* Carousel */}
-      <div className="relative flex items-center justify-center w-full h-[320px]">
+      <div className="relative flex items-center justify-center w-full h-[280px]">
         {carouselCards.map((card, i) => {
           const offset = ((i - activeIndex + carouselCards.length) % carouselCards.length);
           const centered = offset === 0 ? 0 : offset === 1 ? 1 : offset === carouselCards.length - 1 ? -1 : offset > carouselCards.length / 2 ? offset - carouselCards.length : offset;
@@ -37,14 +36,14 @@ const AuthCarousel = () => {
 
           return (
             <div key={i} className="absolute transition-all duration-700 ease-in-out" style={{
-              transform: `translateX(${centered * 160}px) scale(${isActive ? 1 : 0.85})`,
+              transform: `translateX(${centered * 145}px) scale(${isActive ? 1 : 0.85})`,
               opacity: absPos > 1 ? 0 : isActive ? 1 : 0.5,
               zIndex: isActive ? 10 : 5 - absPos,
             }}>
-              <div className="w-[240px] rounded-2xl p-5 border transition-all duration-300"
+              <div className="w-[215px] h-[250px] rounded-2xl p-5 border transition-all duration-300"
                 style={{
                   borderColor: isActive ? card.color : 'hsl(var(--border))',
-                  background: isDark ? 'hsl(240, 10%, 8%)' : 'hsl(0, 0%, 100%)',
+                  background: isDark ? 'hsl(160, 15%, 6%)' : 'hsl(0, 0%, 100%)',
                   boxShadow: isActive ? `0 0 30px ${card.color}30` : 'none',
                 }}
                 onClick={() => setActiveIndex(i)}>
@@ -54,9 +53,9 @@ const AuthCarousel = () => {
                 }}>{card.badge}</span>
                 <h3 className="font-bold text-foreground text-sm mb-2">{card.title}</h3>
                 <p className="text-xs text-muted-foreground leading-relaxed">{card.desc}</p>
-                <div className="mt-4 w-full h-24 rounded-lg bg-secondary/50 dark:bg-accent/50 flex items-center justify-center">
-                  <div className="w-16 h-16 rounded-xl border border-border flex items-center justify-center">
-                    <span className="text-2xl">{["📅", "🏪", "👥", "📊"][i]}</span>
+                <div className="mt-4 w-full h-16 rounded-lg bg-secondary/50 dark:bg-accent/50 flex items-center justify-center">
+                  <div className="w-12 h-12 rounded-xl border border-border flex items-center justify-center">
+                    <span className="text-xl">{["📅", "🏪", "👥", "📊"][i]}</span>
                   </div>
                 </div>
               </div>
@@ -65,7 +64,6 @@ const AuthCarousel = () => {
         })}
       </div>
 
-      {/* Controls */}
       <div className="flex items-center gap-3 mt-6">
         <button onClick={() => setActiveIndex(i => (i - 1 + carouselCards.length) % carouselCards.length)} className="w-8 h-8 rounded-full bg-secondary/50 dark:bg-accent/50 flex items-center justify-center text-muted-foreground hover:text-foreground transition-colors">
           <ChevronLeft className="w-4 h-4" />
@@ -92,7 +90,7 @@ const SignIn = () => {
 
   return (
     <div className="min-h-screen bg-background flex items-center justify-center p-4">
-      <div className="w-full max-w-[960px] bg-card rounded-3xl shadow-elevated border border-border overflow-hidden flex min-h-[600px]">
+      <div className="w-full max-w-[860px] bg-card rounded-3xl shadow-elevated border border-border overflow-hidden flex min-h-[540px]">
         {/* Left - Form */}
         <div className="flex-1 p-10 flex flex-col justify-center max-w-md mx-auto w-full">
           <div className="flex items-center gap-2 mb-10">

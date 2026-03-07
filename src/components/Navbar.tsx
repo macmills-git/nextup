@@ -16,28 +16,40 @@ const navItems = [
 
 const Navbar = () => {
   const [mobileOpen, setMobileOpen] = useState(false);
-  const [isCompact, setIsCompact] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
   const { theme, toggleTheme } = useTheme();
   const location = useLocation();
 
   useEffect(() => {
-    const handleScroll = () => setIsCompact(window.scrollY > window.innerHeight * 0.85);
+    const handleScroll = () => setScrolled(window.scrollY > 100);
     window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
   return (
-    <nav className="fixed top-4 left-1/2 -translate-x-1/2 z-50 w-[95%] max-w-5xl">
-      <div className="flex items-center justify-between h-14 px-2">
-        <div className="flex items-center transition-all duration-500 ease-in-out overflow-hidden"
-          style={{ maxWidth: isCompact ? '0px' : '180px', opacity: isCompact ? 0 : 1, transform: isCompact ? 'scaleX(0)' : 'scaleX(1)', transformOrigin: 'right center' }}>
+    <nav className="fixed top-4 left-1/2 -translate-x-1/2 z-50 transition-all duration-500 ease-in-out"
+      style={{
+        width: scrolled ? '680px' : '95%',
+        maxWidth: scrolled ? '680px' : '1200px',
+      }}>
+      <div className={`flex items-center justify-between h-14 px-2 transition-all duration-500 ease-in-out ${
+        scrolled 
+          ? 'bg-card/90 dark:bg-card/90 backdrop-blur-xl border border-border rounded-full shadow-elevated' 
+          : ''
+      }`}>
+        <div className={`flex items-center transition-all duration-500 ease-in-out overflow-hidden ${scrolled ? 'max-w-0 opacity-0 scale-x-0' : 'max-w-[180px] opacity-100 scale-x-100'}`}
+          style={{ transformOrigin: 'right center' }}>
           <Link to="/" className="flex items-center gap-2 whitespace-nowrap">
             <AnimatedLogo size={24} />
             <span className="font-bold text-sm text-foreground">Event Nest</span>
           </Link>
         </div>
 
-        <div className="hidden md:flex items-center gap-1 bg-card/80 dark:bg-white/8 backdrop-blur-xl border border-border dark:border-white/10 rounded-full px-1.5 py-1 shadow-card">
+        <div className={`hidden md:flex items-center gap-1 backdrop-blur-xl rounded-full px-1.5 py-1 transition-all duration-500 ${
+          scrolled 
+            ? '' 
+            : 'bg-card/80 dark:bg-white/8 border border-border dark:border-white/10 shadow-card'
+        }`}>
           {navItems.map((item) => {
             const isActive = location.pathname === item.to;
             return (
@@ -48,8 +60,8 @@ const Navbar = () => {
           })}
         </div>
 
-        <div className="hidden md:flex items-center gap-2 transition-all duration-500 ease-in-out overflow-hidden"
-          style={{ maxWidth: isCompact ? '0px' : '280px', opacity: isCompact ? 0 : 1, transform: isCompact ? 'scaleX(0)' : 'scaleX(1)', transformOrigin: 'left center' }}>
+        <div className={`hidden md:flex items-center gap-2 transition-all duration-500 ease-in-out overflow-hidden ${scrolled ? 'max-w-0 opacity-0 scale-x-0' : 'max-w-[280px] opacity-100 scale-x-100'}`}
+          style={{ transformOrigin: 'left center' }}>
           <button onClick={toggleTheme} className="w-8 h-8 rounded-full flex items-center justify-center border border-border bg-card hover:bg-secondary transition-colors">
             {theme === 'dark' ? <Sun className="w-3.5 h-3.5 text-yellow-400" /> : <Moon className="w-3.5 h-3.5 text-primary" />}
           </button>

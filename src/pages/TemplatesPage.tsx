@@ -21,6 +21,16 @@ const templates = [
   { name: "Kids Party Planner", category: "Birthday", budget: "Regular", image: "https://images.unsplash.com/photo-1464349153735-7db50ed83c84?w=400&h=300&fit=crop", uses: "16.2k", author: "EventPro", isPro: true },
   { name: "Hackathon Blueprint", category: "Conferences", budget: "Regular", image: "https://images.unsplash.com/photo-1504384308090-c894fdcc538d?w=400&h=300&fit=crop", uses: "7.3k", author: "Sam", price: "$29" },
   { name: "Cocktail Reception Kit", category: "Social", budget: "Premium", image: "https://images.unsplash.com/photo-1470337458703-46ad1756a187?w=400&h=300&fit=crop", uses: "5.5k", author: "Meng To", isPro: true },
+  { name: "Startup Demo Day", category: "Conferences", budget: "Regular", image: "https://images.unsplash.com/photo-1559136555-9303baea8ebd?w=400&h=300&fit=crop", uses: "8.9k", author: "EventPro", price: "$35" },
+  { name: "Outdoor Festival Planner", category: "Social", budget: "Luxury", image: "https://images.unsplash.com/photo-1533174072545-7a4b6ad7a6c3?w=400&h=300&fit=crop", uses: "14.6k", author: "Sam", isPro: true },
+  { name: "Award Ceremony Guide", category: "Corporate", budget: "Premium", image: "https://images.unsplash.com/photo-1492684223066-81342ee5ff30?w=400&h=300&fit=crop", uses: "6.7k", author: "Meng To", price: "$45" },
+  { name: "Bridal Shower Template", category: "Weddings", budget: "Regular", image: "https://images.unsplash.com/photo-1519225421980-715cb0215aed?w=400&h=300&fit=crop", uses: "9.1k", author: "EventPro", isPro: true },
+  { name: "Corporate Retreat Kit", category: "Corporate", budget: "Premium", image: "https://images.unsplash.com/photo-1517457373958-b7bdd4587205?w=400&h=300&fit=crop", uses: "5.3k", author: "Sam", price: "$42" },
+  { name: "Baby Shower Planner", category: "Birthday", budget: "Regular", image: "https://images.unsplash.com/photo-1513151233558-d860c5398176?w=400&h=300&fit=crop", uses: "11.4k", author: "Meng To", isPro: true },
+  { name: "Trade Show Blueprint", category: "Conferences", budget: "Luxury", image: "https://images.unsplash.com/photo-1591115765373-5f9cf1da241c?w=400&h=300&fit=crop", uses: "4.8k", author: "EventPro", price: "$55" },
+  { name: "Holiday Party Template", category: "Social", budget: "Regular", image: "https://images.unsplash.com/photo-1467810563316-b5476525c0f9?w=400&h=300&fit=crop", uses: "17.2k", author: "Sam", isPro: true },
+  { name: "Webinar Setup Guide", category: "Conferences", budget: "Regular", image: "https://images.unsplash.com/photo-1587825140708-dfaf72ae4b04?w=400&h=300&fit=crop", uses: "12.8k", author: "Meng To", price: "$22" },
+  { name: "Anniversary Celebration", category: "Social", budget: "Premium", image: "https://images.unsplash.com/photo-1464349095431-e9a21285b5f3?w=400&h=300&fit=crop", uses: "7.6k", author: "EventPro", isPro: true },
 ];
 
 const TemplatesPage = () => {
@@ -38,7 +48,6 @@ const TemplatesPage = () => {
       <Navbar />
       <div className="pt-28 pb-20 container mx-auto px-4 lg:px-8">
         <div className="bg-card border border-border rounded-2xl p-6">
-          {/* Search + Sort */}
           <div className="flex items-center gap-4 mb-6">
             <div className="flex-1 relative">
               <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
@@ -56,7 +65,6 @@ const TemplatesPage = () => {
             </div>
           </div>
 
-          {/* Category pills */}
           <div className="flex items-center justify-between mb-6">
             <div className="flex flex-wrap items-center gap-2">
               {categories.map(cat => (
@@ -74,12 +82,11 @@ const TemplatesPage = () => {
             </div>
           </div>
 
-          {/* Grid */}
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-5">
             {filtered.map((t, i) => (
               <div key={i} className="rounded-xl border border-border overflow-hidden bg-card hover:shadow-elevated transition-all duration-200 group cursor-pointer">
                 <div className="relative h-44 bg-secondary overflow-hidden">
-                  <img src={t.image} alt={t.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
+                  <img src={t.image} alt={t.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" loading="lazy" />
                 </div>
                 <div className="p-3">
                   <div className="flex justify-between items-start gap-2 mb-2">
