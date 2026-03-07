@@ -2,7 +2,7 @@ import DashboardSidebar from "@/components/DashboardSidebar";
 import { Routes, Route, useNavigate } from "react-router-dom";
 import {
   Calendar, DollarSign, Users, TrendingUp, MoreHorizontal, Bell, Search, Sparkles, CheckCircle, Clock, ArrowRight, Sun, Moon,
-  User, Settings, LogOut, X,
+  User, Settings, LogOut, X, PieChart,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
@@ -46,36 +46,35 @@ const statCards = [
   { icon: TrendingUp, label: "Budget Spent", value: "78%", change: "-3%", color: "text-destructive" },
 ];
 
+const budgetCategories = [
+  { name: "Venue & Space", amount: 6730, share: "32.1%", color: "bg-primary" },
+  { name: "Catering & Food", amount: 4120, share: "19.6%", color: "bg-[hsl(200,80%,50%)]" },
+  { name: "Decoration", amount: 3920, share: "18.6%", color: "bg-[hsl(260,60%,55%)]" },
+  { name: "Photography", amount: 3210, share: "15.3%", color: "bg-[hsl(280,60%,55%)]" },
+  { name: "Entertainment", amount: 3010, share: "14.3%", color: "bg-[hsl(320,60%,55%)]" },
+];
+
 /* Profile Dropdown */
 const ProfileDropdown = ({ onClose, onNavigate }: { onClose: () => void; onNavigate: (path: string) => void }) => (
   <div className="fixed inset-0 z-50 flex items-start justify-end pt-16 pr-6" onClick={onClose}>
     <div className="w-[420px] bg-card rounded-3xl border border-border shadow-elevated p-6 animate-scale-in" onClick={e => e.stopPropagation()}>
-      {/* Header */}
       <div className="flex items-center justify-between mb-5">
         <span className="text-xs font-semibold text-muted-foreground tracking-wider uppercase">Welcome Back</span>
         <button onClick={onClose} className="w-8 h-8 rounded-full border border-border flex items-center justify-center text-muted-foreground hover:text-foreground">
           <X className="w-4 h-4" />
         </button>
       </div>
-
-      {/* User info */}
       <div className="flex items-center gap-3 mb-6">
-        <div className="w-12 h-12 rounded-full flex items-center justify-center text-white font-bold text-lg" style={{ background: 'hsl(340, 60%, 45%)' }}>
-          K
-        </div>
+        <div className="w-12 h-12 rounded-full flex items-center justify-center text-white font-bold text-lg" style={{ background: 'hsl(340, 60%, 45%)' }}>K</div>
         <div>
           <p className="font-semibold text-foreground">Kusi Boateng Mills</p>
           <p className="text-xs text-muted-foreground">No bio yet</p>
         </div>
       </div>
-
-      {/* Subscription */}
       <div className="flex items-center justify-between mb-5">
         <span className="text-sm text-foreground">Subscription</span>
         <span className="text-xs px-2.5 py-1 rounded-full bg-secondary dark:bg-accent text-muted-foreground">Free</span>
       </div>
-
-      {/* Usage */}
       <div className="space-y-4 mb-5">
         <div>
           <div className="flex items-center justify-between mb-1.5">
@@ -96,8 +95,6 @@ const ProfileDropdown = ({ onClose, onNavigate }: { onClose: () => void; onNavig
           </div>
         </div>
       </div>
-
-      {/* Usage Reset */}
       <div className="bg-secondary dark:bg-accent rounded-xl p-4 mb-5">
         <p className="text-sm font-medium text-foreground">Usage Reset</p>
         <div className="flex items-center justify-between mt-1">
@@ -105,10 +102,7 @@ const ProfileDropdown = ({ onClose, onNavigate }: { onClose: () => void; onNavig
           <span className="text-xs text-muted-foreground">23/03/2026</span>
         </div>
       </div>
-
       <div className="border-t border-border my-4" />
-
-      {/* Menu */}
       <div className="space-y-1">
         {[
           { icon: User, label: "Profile", path: "/dashboard/settings" },
@@ -116,11 +110,8 @@ const ProfileDropdown = ({ onClose, onNavigate }: { onClose: () => void; onNavig
           { icon: Users, label: "Team", path: "/dashboard/team" },
           { icon: LogOut, label: "Log out", path: "/" },
         ].map(item => (
-          <button
-            key={item.label}
-            className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-muted-foreground hover:text-foreground hover:bg-secondary dark:hover:bg-accent transition-colors"
-            onClick={() => { onNavigate(item.path); onClose(); }}
-          >
+          <button key={item.label} className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-muted-foreground hover:text-foreground hover:bg-secondary dark:hover:bg-accent transition-colors"
+            onClick={() => { onNavigate(item.path); onClose(); }}>
             <item.icon className="w-4 h-4" />
             {item.label}
           </button>
@@ -132,6 +123,18 @@ const ProfileDropdown = ({ onClose, onNavigate }: { onClose: () => void; onNavig
 
 const DashboardHome = () => {
   const navigate = useNavigate();
+  const [budgetTab, setBudgetTab] = useState<"category" | "employee">("category");
+
+  const budgetByEmployee = [
+    { name: "Jane Doe", amount: 5710, share: "27.2%", color: "bg-primary" },
+    { name: "Michael Chen", amount: 4940, share: "23.5%", color: "bg-[hsl(200,80%,50%)]" },
+    { name: "Sarah Williams", amount: 4523, share: "21.5%", color: "bg-[hsl(260,60%,55%)]" },
+    { name: "David Kim", amount: 3240, share: "15.4%", color: "bg-[hsl(280,60%,55%)]" },
+    { name: "Emily Brown", amount: 2577, share: "12.3%", color: "bg-[hsl(320,60%,55%)]" },
+  ];
+
+  const activeBudgetData = budgetTab === "category" ? budgetCategories : budgetByEmployee;
+  const totalBudget = activeBudgetData.reduce((sum, item) => sum + item.amount, 0);
 
   return (
     <div className="space-y-6">
@@ -168,21 +171,57 @@ const DashboardHome = () => {
           </ResponsiveContainer>
         </div>
 
+        {/* Budget Tracking Donut */}
         <div className="bg-card rounded-xl border-2 border-border p-5 hover:border-primary/30 transition-colors">
-          <h2 className="font-semibold text-foreground mb-4">Your Budget Insights</h2>
-          <div className="flex items-center justify-center py-6">
-            <div className="relative w-32 h-32">
+          <h2 className="font-semibold text-foreground mb-1">Expenses Breakdown</h2>
+          <p className="text-xs text-muted-foreground mb-4">Track your budget allocation</p>
+          
+          <div className="flex gap-1 bg-secondary dark:bg-accent rounded-lg p-0.5 mb-4">
+            {(["category", "employee"] as const).map(tab => (
+              <button key={tab} onClick={() => setBudgetTab(tab)}
+                className={`flex-1 px-3 py-1.5 rounded-md text-xs font-medium transition-all capitalize ${budgetTab === tab ? 'bg-card border border-border shadow-sm text-foreground' : 'text-muted-foreground hover:text-foreground'}`}>
+                By {tab}
+              </button>
+            ))}
+          </div>
+
+          {/* Donut chart */}
+          <div className="flex items-center justify-center mb-4">
+            <div className="relative w-28 h-28">
               <svg viewBox="0 0 36 36" className="w-full h-full -rotate-90">
-                <path d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="hsl(var(--border))" strokeWidth="3" />
-                <path d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="hsl(225, 90%, 60%)" strokeWidth="3" strokeDasharray="75, 100" />
+                {activeBudgetData.map((item, i) => {
+                  const percentage = (item.amount / totalBudget) * 100;
+                  const offset = activeBudgetData.slice(0, i).reduce((sum, d) => sum + (d.amount / totalBudget) * 100, 0);
+                  return (
+                    <circle key={i} cx="18" cy="18" r="14" fill="none"
+                      stroke={`hsl(${[225, 200, 260, 280, 320][i]}, ${[90, 80, 60, 60, 60][i]}%, ${[60, 50, 55, 55, 55][i]}%)`}
+                      strokeWidth="3"
+                      strokeDasharray={`${percentage * 0.88} ${88 - percentage * 0.88}`}
+                      strokeDashoffset={`${-offset * 0.88}`}
+                    />
+                  );
+                })}
               </svg>
               <div className="absolute inset-0 flex items-center justify-center">
-                <span className="text-2xl font-bold text-primary">75%</span>
+                <span className="text-sm font-bold text-foreground">${(totalBudget / 1000).toFixed(1)}k</span>
               </div>
             </div>
           </div>
-          <p className="text-sm text-muted-foreground text-center">$9,340 of $12,453 spent</p>
-          <Button className="w-full mt-4" variant="outline">Full Breakdown</Button>
+
+          <div className="space-y-2">
+            {activeBudgetData.map((item, i) => (
+              <div key={i} className="flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <div className={`w-2.5 h-2.5 rounded-full ${item.color}`} />
+                  <span className="text-xs text-foreground">{item.name}</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <span className="text-xs font-medium text-foreground">${item.amount.toLocaleString()}</span>
+                  <span className="text-[10px] text-muted-foreground">{item.share}</span>
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
       </div>
 
@@ -286,17 +325,13 @@ const Dashboard = () => {
             <button onClick={toggleTheme} className="p-2 rounded-lg text-muted-foreground hover:bg-secondary dark:hover:bg-accent border border-border transition-colors">
               {theme === 'dark' ? <Sun className="h-4 w-4 text-yellow-400" /> : <Moon className="h-4 w-4" />}
             </button>
-            <button
-              className="relative p-2 rounded-lg text-muted-foreground hover:bg-secondary dark:hover:bg-accent border border-border transition-colors"
-              onClick={() => navigate('/dashboard/notifications')}
-            >
+            <button className="relative p-2 rounded-lg text-muted-foreground hover:bg-secondary dark:hover:bg-accent border border-border transition-colors"
+              onClick={() => navigate('/dashboard/notifications')}>
               <Bell className="h-5 w-5" />
               <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-destructive rounded-full" />
             </button>
-            <button
-              className="w-8 h-8 rounded-full gradient-primary flex items-center justify-center hover:opacity-90 transition-opacity"
-              onClick={() => setShowProfile(true)}
-            >
+            <button className="w-8 h-8 rounded-full gradient-primary flex items-center justify-center hover:opacity-90 transition-opacity"
+              onClick={() => setShowProfile(true)}>
               <span className="text-white text-xs font-bold">JD</span>
             </button>
           </div>

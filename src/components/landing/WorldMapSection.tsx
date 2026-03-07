@@ -13,7 +13,6 @@ const avatars = [
   { name: "Chen", top: "35%", left: "82%", delay: 0.25 },
 ];
 
-// Connection lines between avatars
 const connections = [
   { from: 0, to: 2 },
   { from: 0, to: 1 },
@@ -59,74 +58,57 @@ const WorldMapSection = () => {
           Our platform is available in all countries, with support from over 20,000+ event professionals.
         </p>
 
-        {/* Map container */}
-        <div className="relative max-w-5xl mx-auto" style={{ aspectRatio: '2/1' }}>
-          {/* Dot map background */}
-          <svg viewBox="0 0 1000 500" className="w-full h-full opacity-20" fill="hsl(var(--muted-foreground))">
-            {/* Simplified world map dots */}
-            {Array.from({ length: 80 }).map((_, row) =>
-              Array.from({ length: 160 }).map((_, col) => {
-                const x = col * 6.25 + 3;
-                const y = row * 6.25 + 3;
-                // Simple land mass approximation
-                const isLand = (
-                  // North America
-                  (x > 80 && x < 300 && y > 60 && y < 250 && Math.random() > 0.4) ||
-                  // South America
-                  (x > 180 && x < 340 && y > 260 && y < 450 && Math.random() > 0.45) ||
-                  // Europe
-                  (x > 420 && x < 580 && y > 60 && y < 200 && Math.random() > 0.4) ||
-                  // Africa
-                  (x > 430 && x < 600 && y > 180 && y < 420 && Math.random() > 0.45) ||
-                  // Asia
-                  (x > 560 && x < 850 && y > 60 && y < 300 && Math.random() > 0.4) ||
-                  // Australia
-                  (x > 750 && x < 900 && y > 320 && y < 430 && Math.random() > 0.5)
+        {/* Map container - zoomed in */}
+        <div className="relative max-w-5xl mx-auto overflow-hidden rounded-2xl" style={{ aspectRatio: '2/1' }}>
+          <div className="absolute inset-0 scale-[1.15] origin-center">
+            <svg viewBox="0 0 1000 500" className="w-full h-full opacity-20" fill="hsl(var(--muted-foreground))">
+              {Array.from({ length: 80 }).map((_, row) =>
+                Array.from({ length: 160 }).map((_, col) => {
+                  const x = col * 6.25 + 3;
+                  const y = row * 6.25 + 3;
+                  const isLand = (
+                    (x > 80 && x < 300 && y > 60 && y < 250 && Math.random() > 0.4) ||
+                    (x > 180 && x < 340 && y > 260 && y < 450 && Math.random() > 0.45) ||
+                    (x > 420 && x < 580 && y > 60 && y < 200 && Math.random() > 0.4) ||
+                    (x > 430 && x < 600 && y > 180 && y < 420 && Math.random() > 0.45) ||
+                    (x > 560 && x < 850 && y > 60 && y < 300 && Math.random() > 0.4) ||
+                    (x > 750 && x < 900 && y > 320 && y < 430 && Math.random() > 0.5)
+                  );
+                  return isLand ? <circle key={`${row}-${col}`} cx={x} cy={y} r="1.5" /> : null;
+                })
+              )}
+            </svg>
+
+            <svg className="absolute inset-0 w-full h-full pointer-events-none" viewBox="0 0 100 100" preserveAspectRatio="none">
+              {connections.map((conn, i) => {
+                const from = avatars[conn.from];
+                const to = avatars[conn.to];
+                const fromX = parseFloat(from.left);
+                const fromY = parseFloat(from.top);
+                const toX = parseFloat(to.left);
+                const toY = parseFloat(to.top);
+                const midY = Math.min(fromY, toY) - 10;
+                return (
+                  <path key={i} className="connection-line"
+                    d={`M ${fromX} ${fromY} Q ${(fromX + toX) / 2} ${midY} ${toX} ${toY}`}
+                    fill="none" stroke="hsl(var(--primary) / 0.4)" strokeWidth="0.3"
+                    strokeDasharray="500" strokeDashoffset="500" />
                 );
-                return isLand ? (
-                  <circle key={`${row}-${col}`} cx={x} cy={y} r="1.5" />
-                ) : null;
-              })
-            )}
-          </svg>
+              })}
+            </svg>
 
-          {/* Connection lines */}
-          <svg className="absolute inset-0 w-full h-full pointer-events-none" viewBox="0 0 100 100" preserveAspectRatio="none">
-            {connections.map((conn, i) => {
-              const from = avatars[conn.from];
-              const to = avatars[conn.to];
-              const fromX = parseFloat(from.left);
-              const fromY = parseFloat(from.top);
-              const toX = parseFloat(to.left);
-              const toY = parseFloat(to.top);
-              const midY = Math.min(fromY, toY) - 10;
-              return (
-                <path
-                  key={i}
-                  className="connection-line"
-                  d={`M ${fromX} ${fromY} Q ${(fromX + toX) / 2} ${midY} ${toX} ${toY}`}
-                  fill="none"
-                  stroke="hsl(var(--primary) / 0.4)"
-                  strokeWidth="0.3"
-                  strokeDasharray="500"
-                  strokeDashoffset="500"
-                />
-              );
-            })}
-          </svg>
-
-          {/* Avatar pins */}
-          {avatars.map((av, i) => (
-            <div
-              key={i}
-              className="avatar-pin absolute w-10 h-10 -translate-x-1/2 -translate-y-1/2"
-              style={{ top: av.top, left: av.left }}
-            >
-              <div className="w-10 h-10 rounded-full border-2 border-background shadow-elevated overflow-hidden bg-primary/20 flex items-center justify-center">
-                <span className="text-xs font-bold text-primary">{av.name[0]}</span>
+            {avatars.map((av, i) => (
+              <div key={i} className="avatar-pin absolute w-10 h-10 -translate-x-1/2 -translate-y-1/2 group cursor-pointer"
+                style={{ top: av.top, left: av.left }}>
+                <div className="w-10 h-10 rounded-full border-2 border-background shadow-elevated overflow-hidden bg-primary/20 flex items-center justify-center transition-transform duration-200 group-hover:scale-125">
+                  <span className="text-xs font-bold text-primary">{av.name[0]}</span>
+                </div>
+                <div className="absolute -bottom-6 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity bg-card border border-border rounded-md px-2 py-0.5 whitespace-nowrap shadow-sm">
+                  <span className="text-[10px] text-foreground font-medium">{av.name}</span>
+                </div>
               </div>
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
       </div>
     </section>

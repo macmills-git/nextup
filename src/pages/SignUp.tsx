@@ -1,9 +1,8 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { Eye, EyeOff, ChevronLeft, ChevronRight } from "lucide-react";
 import AnimatedLogo from "@/components/AnimatedLogo";
 import { useTheme } from "@/contexts/ThemeContext";
-import { useEffect } from "react";
 
 const carouselCards = [
   { badge: "AI Planning", title: "Smart event planning", desc: "Let AI handle timelines, budgets, and vendor recommendations.", color: "hsl(142, 71%, 45%)" },
@@ -28,7 +27,7 @@ const SignUp = () => {
 
   return (
     <div className="min-h-screen bg-background flex items-center justify-center p-4">
-      <div className="w-full max-w-[960px] bg-card rounded-3xl shadow-elevated border border-border overflow-hidden flex min-h-[600px]">
+      <div className="w-full max-w-[860px] bg-card rounded-3xl shadow-elevated border border-border overflow-hidden flex min-h-[540px]">
         {/* Left - Form */}
         <div className="flex-1 p-10 flex flex-col justify-center max-w-md mx-auto w-full">
           <div className="flex items-center gap-2 mb-10">
@@ -70,14 +69,14 @@ const SignUp = () => {
         {/* Right - Carousel */}
         <div className="hidden md:flex flex-1 relative overflow-hidden items-center justify-center" style={{
           background: isDark
-            ? 'radial-gradient(ellipse at center, hsl(225, 30%, 10%) 0%, hsl(240, 10%, 4%) 100%)'
-            : 'radial-gradient(ellipse at center, hsl(225, 60%, 92%) 0%, hsl(225, 50%, 85%) 100%)',
+            ? 'radial-gradient(ellipse at center, hsl(280, 30%, 8%) 0%, hsl(280, 20%, 3%) 100%)'
+            : 'radial-gradient(ellipse at center, hsl(280, 40%, 92%) 0%, hsl(280, 30%, 85%) 100%)',
         }}>
           <div className="absolute top-6 right-6 z-20">
             <Link to="/signin" className="px-4 py-2 rounded-full text-xs font-medium bg-card border border-border text-foreground hover:bg-secondary transition-colors">Log in</Link>
           </div>
 
-          <div className="relative flex items-center justify-center w-full h-[320px]">
+          <div className="relative flex items-center justify-center w-full h-[280px]">
             {carouselCards.map((card, i) => {
               const offset = ((i - activeIndex + carouselCards.length) % carouselCards.length);
               const centered = offset === 0 ? 0 : offset === 1 ? 1 : offset === carouselCards.length - 1 ? -1 : offset > carouselCards.length / 2 ? offset - carouselCards.length : offset;
@@ -85,20 +84,20 @@ const SignUp = () => {
               const absPos = Math.abs(centered);
               return (
                 <div key={i} className="absolute transition-all duration-700 ease-in-out cursor-pointer" style={{
-                  transform: `translateX(${centered * 155}px) scale(${isActive ? 1 : 0.85})`,
+                  transform: `translateX(${centered * 140}px) scale(${isActive ? 1 : 0.85})`,
                   opacity: absPos > 1 ? 0 : isActive ? 1 : 0.5,
                   zIndex: isActive ? 10 : 5 - absPos,
                 }} onClick={() => setActiveIndex(i)}>
-                  <div className="w-[230px] rounded-2xl p-5 border" style={{
+                  <div className="w-[210px] h-[250px] rounded-2xl p-5 border" style={{
                     borderColor: isActive ? card.color : 'hsl(var(--border))',
-                    background: isDark ? 'hsl(240, 10%, 8%)' : 'hsl(0, 0%, 100%)',
+                    background: isDark ? 'hsl(280, 15%, 6%)' : 'hsl(0, 0%, 100%)',
                     boxShadow: isActive ? `0 0 25px ${card.color}25` : 'none',
                   }}>
                     <span className="inline-block px-2.5 py-1 rounded-full text-[10px] font-semibold mb-3" style={{ background: `${card.color}20`, color: card.color }}>{card.badge}</span>
                     <h3 className="font-bold text-foreground text-sm mb-2">{card.title}</h3>
                     <p className="text-xs text-muted-foreground leading-relaxed">{card.desc}</p>
-                    <div className="mt-4 w-full h-20 rounded-lg bg-secondary/50 dark:bg-accent/50 flex items-center justify-center">
-                      <span className="text-2xl">{["🤖", "🏪", "👥", "📋"][i]}</span>
+                    <div className="mt-4 w-full h-16 rounded-lg bg-secondary/50 dark:bg-accent/50 flex items-center justify-center">
+                      <span className="text-xl">{["🤖", "🏪", "👥", "📋"][i]}</span>
                     </div>
                   </div>
                 </div>

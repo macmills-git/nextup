@@ -126,11 +126,15 @@
   }
 }
 
-/* Theme sweep animation */
-@keyframes themeSweepLR {
-  0% { clip-path: inset(0 100% 0 0); }
-  50% { clip-path: inset(0 0 0 0); }
-  100% { clip-path: inset(0 0 0 100%); }
+/* Smooth theme transition */
+.theme-transition-wrapper * {
+  transition-property: background-color, border-color, color, fill, stroke;
+  transition-duration: 0s;
+  transition-timing-function: ease;
+}
+
+html.theme-transitioning .theme-transition-wrapper * {
+  transition-duration: 0.4s;
 }
 
 /* Gradient flow animation for cards */

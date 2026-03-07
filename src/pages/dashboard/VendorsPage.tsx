@@ -35,6 +35,16 @@ const initialVendors: Vendor[] = [
   { id: 8, name: "Stage Masters", category: "Audio/Visual", rating: 4.7, reviews: 68, location: "South Bay", phone: "+1 555-0108", email: "book@stagemasters.com", status: "verified", price: "$$$$", image: vendorImages[7], favorited: false, author: "Sam", uses: "5.9k", priceTag: "$39" },
   { id: 9, name: "Gourmet Bites", category: "Catering", rating: 4.9, reviews: 112, location: "Harbor", phone: "+1 555-0109", email: "chef@gourmetbites.com", status: "verified", price: "$$$$", image: vendorImages[8], favorited: false, author: "Meng To", uses: "10.2k", isPro: true },
   { id: 10, name: "Party Lights Co", category: "Equipment", rating: 4.3, reviews: 37, location: "West Side", phone: "+1 555-0110", email: "info@partylights.com", status: "verified", price: "$$", image: vendorImages[9], favorited: false, author: "EventPro", uses: "13.0k", priceTag: "$29" },
+  { id: 11, name: "Melody Makers", category: "Entertainment", rating: 4.6, reviews: 88, location: "Easttown", phone: "+1 555-0111", email: "book@melodymakers.com", status: "verified", price: "$$$", image: "https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=400&h=300&fit=crop", favorited: false, author: "Sam", uses: "4.5k", isPro: true },
+  { id: 12, name: "Snap Perfect", category: "Photography", rating: 4.8, reviews: 145, location: "Arts District", phone: "+1 555-0112", email: "info@snapperfect.com", status: "verified", price: "$$$$", image: "https://images.unsplash.com/photo-1452587925148-ce544e77e70d?w=400&h=300&fit=crop", favorited: false, author: "Meng To", uses: "18.3k", priceTag: "$59" },
+  { id: 13, name: "Sweet Delights", category: "Catering", rating: 4.5, reviews: 62, location: "Suburb", phone: "+1 555-0113", email: "order@sweetdelights.com", status: "verified", price: "$$", image: "https://images.unsplash.com/photo-1558618666-fcd25c85f82e?w=400&h=300&fit=crop", favorited: false, author: "EventPro", uses: "3.2k", isPro: true },
+  { id: 14, name: "Velvet Stage", category: "Equipment", rating: 4.7, reviews: 54, location: "Downtown", phone: "+1 555-0114", email: "rent@velvetstage.com", status: "verified", price: "$$$", image: "https://images.unsplash.com/photo-1492684223066-81342ee5ff30?w=400&h=300&fit=crop", favorited: false, author: "Sam", uses: "6.1k", priceTag: "$45" },
+  { id: 15, name: "Garden Grace", category: "Decoration", rating: 4.9, reviews: 130, location: "Valley", phone: "+1 555-0115", email: "hello@gardengrace.com", status: "verified", price: "$$$$", image: "https://images.unsplash.com/photo-1478146059778-26028b07395a?w=400&h=300&fit=crop", favorited: false, author: "Meng To", uses: "14.7k", isPro: true },
+  { id: 16, name: "Beat Drop DJs", category: "Entertainment", rating: 4.4, reviews: 47, location: "Midtown", phone: "+1 555-0116", email: "book@beatdrop.com", status: "pending", price: "$$", image: "https://images.unsplash.com/photo-1571266028243-d220c6a8b255?w=400&h=300&fit=crop", favorited: false, author: "EventPro", uses: "2.8k", priceTag: "$25" },
+  { id: 17, name: "Crystal Clear AV", category: "Audio/Visual", rating: 4.8, reviews: 91, location: "Tech Park", phone: "+1 555-0117", email: "info@crystalclearav.com", status: "verified", price: "$$$$", image: "https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?w=400&h=300&fit=crop", favorited: false, author: "Sam", uses: "9.8k", isPro: true },
+  { id: 18, name: "Petal Perfection", category: "Decoration", rating: 4.6, reviews: 78, location: "Garden District", phone: "+1 555-0118", email: "flowers@petalperfection.com", status: "verified", price: "$$$", image: "https://images.unsplash.com/photo-1490750967868-88aa4f44baee?w=400&h=300&fit=crop", favorited: false, author: "Meng To", uses: "5.4k", priceTag: "$35" },
+  { id: 19, name: "Feast & Co", category: "Catering", rating: 4.7, reviews: 103, location: "Food Quarter", phone: "+1 555-0119", email: "events@feastco.com", status: "verified", price: "$$$", image: "https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=400&h=300&fit=crop", favorited: false, author: "EventPro", uses: "11.2k", isPro: true },
+  { id: 20, name: "Capture Moments", category: "Photography", rating: 4.9, reviews: 167, location: "Uptown", phone: "+1 555-0120", email: "book@capturemoments.com", status: "verified", price: "$$$$", image: "https://images.unsplash.com/photo-1537633552985-df8429e8048b?w=400&h=300&fit=crop", favorited: false, author: "Sam", uses: "20.1k", priceTag: "$69" },
 ];
 
 const categories = ["All", "Photography", "Catering", "Audio/Visual", "Decoration", "Entertainment", "Equipment", "Featured Vendors"];
@@ -88,7 +98,6 @@ const VendorsPage = () => {
         </div>
       </div>
 
-      {/* Add Vendor Modal */}
       {showAdd && (
         <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4" onClick={() => setShowAdd(false)}>
           <div className="bg-card rounded-2xl border border-border p-6 w-full max-w-lg shadow-elevated" onClick={e => e.stopPropagation()}>
@@ -117,51 +126,29 @@ const VendorsPage = () => {
         </div>
       )}
 
-      {/* Search + Sort - exact same as templates */}
       <div className="bg-card border border-border rounded-2xl p-5">
         <div className="flex items-center gap-4 mb-5">
           <div className="flex-1 relative">
             <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-            <input
-              placeholder={`Search ${vendors.length} vendors...`}
+            <input placeholder={`Search ${vendors.length} vendors...`}
               className="w-full h-11 rounded-full bg-secondary dark:bg-accent pl-11 pr-4 text-sm text-foreground placeholder:text-muted-foreground outline-none border-none focus:ring-2 focus:ring-primary/20 transition-shadow"
-              value={search}
-              onChange={e => setSearch(e.target.value)}
-            />
+              value={search} onChange={e => setSearch(e.target.value)} />
           </div>
           <div className="flex gap-1 bg-secondary dark:bg-accent rounded-lg p-0.5">
             {[{ label: "Popular", icon: ListFilter }, { label: "Recent", icon: CalendarDays }].map(sort => (
-              <button
-                key={sort.label}
-                onClick={() => setActiveSort(sort.label)}
-                className={`flex items-center gap-1.5 px-3.5 py-2 rounded-lg text-sm font-medium transition-all ${
-                  activeSort === sort.label
-                    ? 'bg-card border border-border shadow-sm text-foreground'
-                    : 'text-muted-foreground hover:text-foreground'
-                }`}
-              >
-                <sort.icon className="w-3.5 h-3.5" />
-                {sort.label}
+              <button key={sort.label} onClick={() => setActiveSort(sort.label)}
+                className={`flex items-center gap-1.5 px-3.5 py-2 rounded-lg text-sm font-medium transition-all ${activeSort === sort.label ? 'bg-card border border-border shadow-sm text-foreground' : 'text-muted-foreground hover:text-foreground'}`}>
+                <sort.icon className="w-3.5 h-3.5" />{sort.label}
               </button>
             ))}
           </div>
         </div>
 
-        {/* Category pills + right filters - exact same as templates */}
         <div className="flex items-center justify-between mb-5">
           <div className="flex flex-wrap items-center gap-2">
             {categories.map(cat => (
-              <button
-                key={cat}
-                onClick={() => setActiveCategory(cat)}
-                className={`px-4 py-1.5 text-sm font-medium rounded-full border transition-all duration-200 ${
-                  activeCategory === cat
-                    ? cat === "Featured Vendors"
-                      ? 'border-primary/40 bg-primary/5 text-primary'
-                      : 'border-foreground/20 bg-foreground/5 text-foreground'
-                    : 'border-border text-muted-foreground hover:text-foreground hover:bg-secondary dark:hover:bg-accent'
-                }`}
-              >
+              <button key={cat} onClick={() => setActiveCategory(cat)}
+                className={`px-4 py-1.5 text-sm font-medium rounded-full border transition-all duration-200 ${activeCategory === cat ? cat === "Featured Vendors" ? 'border-primary/40 bg-primary/5 text-primary' : 'border-foreground/20 bg-foreground/5 text-foreground' : 'border-border text-muted-foreground hover:text-foreground hover:bg-secondary dark:hover:bg-accent'}`}>
                 {cat}
               </button>
             ))}
@@ -174,12 +161,11 @@ const VendorsPage = () => {
           </div>
         </div>
 
-        {/* Vendor grid - 5 columns, same card style as templates */}
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-5">
           {filtered.map(vendor => (
             <div key={vendor.id} className="rounded-xl border border-border overflow-hidden bg-card hover:shadow-elevated transition-all duration-200 group cursor-pointer" onClick={() => navigate(`/dashboard/vendors/${vendor.id}`)}>
               <div className="relative h-44 bg-secondary overflow-hidden">
-                <img src={vendor.image} alt={vendor.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
+                <img src={vendor.image} alt={vendor.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" loading="lazy" />
               </div>
               <div className="p-3">
                 <div className="flex justify-between items-start gap-2 mb-2">

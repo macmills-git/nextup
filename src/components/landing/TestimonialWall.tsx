@@ -40,7 +40,6 @@ const TestimonialWall = () => {
     );
   }, []);
 
-  // Split into 4 columns for masonry
   const cols = [[], [], [], []] as typeof testimonials[];
   testimonials.forEach((t, i) => cols[i % 4].push(t));
 
@@ -60,24 +59,27 @@ const TestimonialWall = () => {
           {cols.map((col, ci) => (
             <div key={ci} className="space-y-4">
               {col.map((t, i) => (
-                <div key={i} className="tw-card rounded-xl p-4 bg-card border border-border hover:shadow-elevated transition-shadow duration-300">
-                  <div className="flex items-center gap-2.5 mb-2.5">
-                    <div className="w-8 h-8 rounded-full bg-primary/15 flex items-center justify-center flex-shrink-0">
-                      <span className="text-xs font-bold text-primary">{t.name[0]}</span>
-                    </div>
-                    <div className="min-w-0">
-                      <div className="flex items-center gap-1">
-                        <span className="text-sm font-semibold text-foreground truncate">{t.name}</span>
-                        {t.verified && (
-                          <svg className="w-3.5 h-3.5 text-primary flex-shrink-0" viewBox="0 0 24 24" fill="currentColor">
-                            <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z" />
-                          </svg>
-                        )}
+                <div key={i} className="tw-card rounded-xl p-4 bg-card border border-border hover:shadow-elevated hover:border-primary/20 transition-all duration-300 group"
+                  style={{ perspective: '600px' }}>
+                  <div className="transition-transform duration-300 group-hover:scale-[1.02]">
+                    <div className="flex items-center gap-2.5 mb-2.5">
+                      <div className="w-8 h-8 rounded-full bg-primary/15 flex items-center justify-center flex-shrink-0">
+                        <span className="text-xs font-bold text-primary">{t.name[0]}</span>
                       </div>
-                      <span className="text-[11px] text-muted-foreground">{t.handle}</span>
+                      <div className="min-w-0">
+                        <div className="flex items-center gap-1">
+                          <span className="text-sm font-semibold text-foreground truncate">{t.name}</span>
+                          {t.verified && (
+                            <svg className="w-3.5 h-3.5 text-primary flex-shrink-0" viewBox="0 0 24 24" fill="currentColor">
+                              <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z" />
+                            </svg>
+                          )}
+                        </div>
+                        <span className="text-[11px] text-muted-foreground">{t.handle}</span>
+                      </div>
                     </div>
+                    <p className="text-sm text-foreground/80 leading-relaxed">{t.text}</p>
                   </div>
-                  <p className="text-sm text-foreground/80 leading-relaxed">{t.text}</p>
                 </div>
               ))}
             </div>
