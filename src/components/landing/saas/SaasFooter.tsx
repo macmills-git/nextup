@@ -9,7 +9,7 @@ const SaasFooter = () => {
           <div className="col-span-2 md:col-span-1">
             <Link to="/" className="flex items-center gap-2 mb-4">
               <AnimatedLogo size={22} />
-              <span className="font-bold text-sm text-foreground">Event Nest</span>
+              <span className="font-bold text-sm text-foreground">Nested</span>
             </Link>
             <p className="text-sm text-muted-foreground leading-relaxed">
               Your intelligent event planning platform.
