@@ -41,10 +41,12 @@
     --warning-foreground: 0 0% 100%;
     --info: 225 90% 60%;
     --info-foreground: 0 0% 100%;
-    --shadow-brutal: 4px 4px 0px hsl(0 0% 6%);
-    --shadow-brutal-lg: 6px 6px 0px hsl(0 0% 6%);
-    --shadow-brutal-xl: 8px 8px 0px hsl(0 0% 6%);
-    --shadow-brutal-hover: 6px 6px 0px hsl(0 0% 6%);
+    --shadow-card: 0 1px 3px hsl(0 0% 0% / 0.04);
+    --shadow-elevated: 0 4px 16px hsl(0 0% 0% / 0.08);
+    --shadow-brutal: 0 1px 3px hsl(0 0% 0% / 0.04);
+    --shadow-brutal-lg: 0 4px 16px hsl(0 0% 0% / 0.08);
+    --shadow-brutal-xl: 0 8px 24px hsl(0 0% 0% / 0.1);
+    --shadow-brutal-hover: 0 4px 16px hsl(0 0% 0% / 0.08);
     --gradient-primary: linear-gradient(135deg, hsl(262, 83%, 58%), hsl(280, 70%, 55%));
     --hero-bg: 60 9% 98%;
     --section-bg: 60 9% 96%;
