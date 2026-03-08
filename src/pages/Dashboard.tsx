@@ -309,7 +309,7 @@ const Dashboard = () => {
   const [showProfile, setShowProfile] = useState(false);
 
   return (
-    <div className="flex min-h-screen bg-background">
+    <div className="flex min-h-screen bg-background relative z-[1]">
       <DashboardSidebar />
       <div className="flex-1 overflow-auto">
         <header className="h-16 bg-card border-b-2 border-border flex items-center justify-between px-6 sticky top-0 z-10">

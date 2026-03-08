@@ -20,7 +20,7 @@ const HelpPage = () => {
   const filtered = faqs.filter(f => f.q.toLowerCase().includes(search.toLowerCase()) || f.a.toLowerCase().includes(search.toLowerCase()));
 
   return (
-    <div className="min-h-screen bg-background grid-bg">
+    <div className="min-h-screen bg-background relative z-[1]">
       <Navbar />
       <div className="pt-32 pb-20 container mx-auto px-4 lg:px-8">
         <div className="text-center max-w-3xl mx-auto mb-16">

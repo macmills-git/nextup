@@ -26,8 +26,8 @@ const SignUp = () => {
   }, []);
 
   return (
-    <div className="min-h-screen bg-background flex items-center justify-center p-4">
-      <div className="w-full max-w-[860px] bg-card rounded-3xl shadow-elevated border border-border overflow-hidden flex min-h-[540px]">
+    <div className="min-h-screen bg-background flex items-center justify-center p-4 relative z-[1]">
+      <div className="w-full max-w-[774px] bg-card rounded-3xl shadow-elevated border border-border overflow-hidden flex h-[486px]">
         {/* Left - Form */}
         <div className="flex-1 p-10 flex flex-col justify-center max-w-md mx-auto w-full">
           <div className="flex items-center gap-2 mb-10">
