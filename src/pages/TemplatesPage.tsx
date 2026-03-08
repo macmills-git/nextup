@@ -119,7 +119,7 @@ const TemplatesPage = () => {
           )}
         </div>
       </div>
-      <VariantFooter />
+      <SaasFooter />
     </div>
   );
 };

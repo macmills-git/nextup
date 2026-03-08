@@ -209,7 +209,7 @@ const PricingPage = () => {
           </div>
         </div>
       </div>
-      <VariantFooter />
+      <SaasFooter />
     </div>
   );
 };

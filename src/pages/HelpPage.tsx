@@ -83,7 +83,7 @@ const HelpPage = () => {
           </div>
         </div>
       </div>
-      <VariantFooter />
+      <SaasFooter />
     </div>
   );
 };
