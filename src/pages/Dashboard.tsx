@@ -98,10 +98,10 @@ const ProfileDropdown = ({ onClose, onNavigate }: { onClose: () => void; onNavig
           { icon: User, label: "Profile", path: "/dashboard/settings" },
           { icon: Settings, label: "Settings", path: "/dashboard/settings" },
           { icon: Users, label: "Team", path: "/dashboard/team" },
-          { icon: LogOut, label: "Log out", path: "/" },
+          { icon: LogOut, label: "Log out", path: "/signin", isLogout: true },
         ].map(item => (
           <button key={item.label} className="w-full flex items-center gap-3 px-3 py-2 rounded-lg text-sm text-muted-foreground hover:text-foreground hover:bg-muted transition-colors"
-            onClick={() => { onNavigate(item.path); onClose(); }}>
+            onClick={() => { if ((item as any).isLogout) { sessionStorage.removeItem("nested_auth_user"); } onNavigate(item.path); onClose(); }}>
             <item.icon className="w-4 h-4" />
             {item.label}
           </button>
