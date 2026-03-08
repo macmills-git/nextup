@@ -13,11 +13,13 @@ import HelpPage from "./pages/HelpPage";
 import DocsPage from "./pages/DocsPage";
 import TemplatesPage from "./pages/TemplatesPage";
 import NotFound from "./pages/NotFound";
+import { DesignVariantProvider } from "./contexts/DesignVariantContext";
 
 const queryClient = new QueryClient();
 
 const App = () => (
   <QueryClientProvider client={queryClient}>
+    <DesignVariantProvider>
     <TooltipProvider>
       <Toaster />
       <Sonner />
