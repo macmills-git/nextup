@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Search, Plus, Mail, Phone, MoreHorizontal, Shield, UserCheck, MessageSquare, Eye, Edit, Trash2 } from "lucide-react";
+import { Search, Plus, Mail, Phone, MoreHorizontal, Shield, UserCheck, MessageSquare, Eye, Edit, Trash2, UserPlus, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
@@ -10,6 +10,10 @@ type TeamMember = {
   status: string; avatar: string; events: string[]; permission: string;
 };
 
+type InvitedMember = {
+  id: number; name: string; email: string; initials: string;
+};
+
 const teamMembers: TeamMember[] = [
   { id: 1, name: "Jane Doe", role: "Project Manager", email: "jane@eventnest.com", phone: "+1 555-0201", status: "online", avatar: "JD", events: ["Annual Corporate Gala", "Product Launch Party"], permission: "Admin" },
   { id: 2, name: "Michael Chen", role: "Event Coordinator", email: "michael@eventnest.com", phone: "+1 555-0202", status: "online", avatar: "MC", events: ["Annual Corporate Gala", "Team Building Retreat"], permission: "Editor" },
@@ -17,6 +21,12 @@ const teamMembers: TeamMember[] = [
   { id: 4, name: "David Kim", role: "Budget Analyst", email: "david@eventnest.com", phone: "+1 555-0204", status: "offline", avatar: "DK", events: ["Annual Corporate Gala"], permission: "Viewer" },
   { id: 5, name: "Emily Brown", role: "Marketing Lead", email: "emily@eventnest.com", phone: "+1 555-0205", status: "online", avatar: "EB", events: ["Product Launch Party", "Summer Music Festival"], permission: "Editor" },
   { id: 6, name: "Alex Johnson", role: "Logistics", email: "alex@eventnest.com", phone: "+1 555-0206", status: "away", avatar: "AJ", events: ["Team Building Retreat", "Charity Fundraiser"], permission: "Viewer" },
+];
+
+const initialInvited: InvitedMember[] = [
+  { id: 1, name: "Tom Crown", email: "tom@company.com", initials: "TC" },
+  { id: 2, name: "John Doe", email: "john@company.com", initials: "JD" },
+  { id: 3, name: "Michael Crombie", email: "michael@company.com", initials: "MC" },
 ];
 
 const statusDot: Record<string, string> = { online: "bg-success", away: "bg-warning", offline: "bg-muted-foreground" };
@@ -30,6 +40,10 @@ const TeamPage = () => {
   const [menuOpen, setMenuOpen] = useState<number | null>(null);
   const [permissionModal, setPermissionModal] = useState<number | null>(null);
   const [members, setMembers] = useState(teamMembers);
+  const [showInvite, setShowInvite] = useState(false);
+  const [inviteEmail, setInviteEmail] = useState("");
+  const [inviteRole, setInviteRole] = useState("Guest");
+  const [invitedMembers, setInvitedMembers] = useState(initialInvited);
   const navigate = useNavigate();
 
   const filtered = members.filter(m => {
@@ -48,6 +62,17 @@ const TeamPage = () => {
     setMenuOpen(null);
   };
 
+  const handleInvite = () => {
+    if (!inviteEmail.trim()) return;
+    const initials = inviteEmail.split('@')[0].slice(0, 2).toUpperCase();
+    setInvitedMembers(prev => [...prev, { id: Date.now(), name: inviteEmail.split('@')[0], email: inviteEmail, initials }]);
+    setInviteEmail("");
+  };
+
+  const removeInvited = (id: number) => {
+    setInvitedMembers(prev => prev.filter(m => m.id !== id));
+  };
+
   return (
     <div className="space-y-6">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
@@ -55,8 +80,82 @@ const TeamPage = () => {
           <h1 className="text-2xl font-bold text-foreground">Team</h1>
           <p className="text-sm text-muted-foreground">Manage your team members and roles</p>
         </div>
-        <Button className="gradient-primary text-primary-foreground gap-2"><Plus className="h-4 w-4" /> Invite Member</Button>
+        <Button className="gradient-primary text-primary-foreground gap-2" onClick={() => setShowInvite(true)}>
+          <Plus className="h-4 w-4" /> Invite Member
+        </Button>
       </div>
+
+      {/* Invite Members Panel */}
+      {showInvite && (
+        <div className="bg-card rounded-xl border-2 border-border p-6 space-y-5">
+          <div className="flex items-center justify-between">
+            <div>
+              <h2 className="text-lg font-semibold text-foreground">Invite members</h2>
+              <p className="text-sm text-muted-foreground mt-1">Add new team members to your workspace. Please consider your organization's policies when adding external people.</p>
+            </div>
+            <button onClick={() => setShowInvite(false)} className="text-muted-foreground hover:text-foreground">
+              <X className="h-5 w-5" />
+            </button>
+          </div>
+
+          <div className="flex gap-2 flex-wrap">
+            <select value={inviteRole} onChange={e => setInviteRole(e.target.value)}
+              className="h-9 rounded-lg border border-border bg-secondary dark:bg-accent text-sm text-foreground px-3 outline-none">
+              <option value="Guest">Guest</option>
+              <option value="Member">Member</option>
+              <option value="Admin">Admin</option>
+            </select>
+            <Input value={inviteEmail} onChange={e => setInviteEmail(e.target.value)} placeholder="name@company.com" className="flex-1 min-w-[200px]"
+              onKeyDown={e => { if (e.key === 'Enter') handleInvite(); }} />
+            <Button onClick={handleInvite} className="gap-1.5 gradient-primary text-white">
+              <UserPlus className="h-4 w-4" /> Invite
+            </Button>
+          </div>
+
+          {/* Existing members */}
+          <div>
+            <h3 className="text-sm font-medium text-muted-foreground mb-3">People with existing access</h3>
+            <div className="space-y-2">
+              {members.slice(0, 3).map(member => (
+                <div key={member.id} className="flex items-center justify-between py-2 px-3 rounded-lg hover:bg-secondary/50 dark:hover:bg-accent/50 transition-colors">
+                  <div className="flex items-center gap-3">
+                    <div className="w-8 h-8 rounded-full gradient-primary flex items-center justify-center">
+                      <span className="text-primary-foreground font-bold text-xs">{member.avatar}</span>
+                    </div>
+                    <span className="text-sm font-medium text-foreground">{member.name}</span>
+                  </div>
+                  <span className="text-xs px-2.5 py-1 rounded-full bg-secondary dark:bg-accent text-muted-foreground">member</span>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Pending invitations */}
+          {invitedMembers.length > 0 && (
+            <div>
+              <h3 className="text-sm font-medium text-muted-foreground mb-3">Pending invitations</h3>
+              <div className="space-y-2">
+                {invitedMembers.map(member => (
+                  <div key={member.id} className="flex items-center justify-between py-2 px-3 rounded-lg hover:bg-secondary/50 dark:hover:bg-accent/50 transition-colors">
+                    <div className="flex items-center gap-3">
+                      <div className="w-8 h-8 rounded-full bg-muted flex items-center justify-center">
+                        <span className="text-muted-foreground font-bold text-xs">{member.initials}</span>
+                      </div>
+                      <span className="text-sm text-muted-foreground">{member.email}</span>
+                    </div>
+                    <div className="flex items-center gap-3">
+                      <span className="text-xs text-warning">Pending invitation</span>
+                      <button onClick={() => removeInvited(member.id)} className="text-destructive/60 hover:text-destructive transition-colors">
+                        <Trash2 className="h-3.5 w-3.5" />
+                      </button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+        </div>
+      )}
 
       <div className="flex flex-col sm:flex-row gap-3">
         <div className="relative flex-1 max-w-md">
@@ -75,7 +174,7 @@ const TeamPage = () => {
 
       <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
         {filtered.map(member => (
-          <div key={member.id} className="bg-card rounded-xl border border-border p-5 shadow-card relative">
+          <div key={member.id} className="bg-card rounded-xl border-2 border-border p-5 hover:border-primary/30 transition-all relative">
             <div className="flex items-start justify-between mb-4">
               <div className="flex items-center gap-3">
                 <div className="relative">

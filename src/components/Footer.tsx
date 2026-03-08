@@ -1,8 +1,34 @@
 import { Link } from "react-router-dom";
 import { Twitter, Instagram, Linkedin, Facebook, Mail, Phone } from "lucide-react";
 import AnimatedLogo from "@/components/AnimatedLogo";
+import { useEffect, useRef } from "react";
 
 const Footer = () => {
+  const textRef = useRef<HTMLHeadingElement>(null);
+
+  useEffect(() => {
+    const el = textRef.current;
+    if (!el) return;
+    
+    const handleMouseMove = (e: MouseEvent) => {
+      const rect = el.getBoundingClientRect();
+      const x = ((e.clientX - rect.left) / rect.width) * 100;
+      const y = ((e.clientY - rect.top) / rect.height) * 100;
+      el.style.backgroundImage = `radial-gradient(circle at ${x}% ${y}%, hsl(var(--primary)) 0%, hsl(var(--primary) / 0.3) 25%, hsl(var(--foreground) / 0.06) 50%)`;
+    };
+    
+    const handleMouseLeave = () => {
+      el.style.backgroundImage = '';
+    };
+    
+    el.addEventListener('mousemove', handleMouseMove);
+    el.addEventListener('mouseleave', handleMouseLeave);
+    return () => {
+      el.removeEventListener('mousemove', handleMouseMove);
+      el.removeEventListener('mouseleave', handleMouseLeave);
+    };
+  }, []);
+
   return (
     <div className="bg-secondary dark:bg-card/50">
       <div className="py-10">
@@ -54,10 +80,19 @@ const Footer = () => {
               </div>
             </div>
           </div>
-          {/* Large text banner */}
+          {/* Large text with hover effect */}
           <div className="py-12 text-center select-none overflow-hidden">
-            <h2 className="text-[8vw] md:text-[6vw] font-black tracking-tighter leading-none text-foreground/[0.04] hover:text-foreground/[0.08] transition-colors duration-700"
-              style={{ fontFamily: "'DM Sans', system-ui, sans-serif" }}>
+            <h2
+              ref={textRef}
+              className="text-[8vw] md:text-[6vw] font-black tracking-tighter leading-none cursor-default transition-colors duration-300"
+              style={{
+                fontFamily: "'DM Sans', system-ui, sans-serif",
+                color: 'transparent',
+                WebkitBackgroundClip: 'text',
+                backgroundClip: 'text',
+                backgroundImage: 'linear-gradient(to bottom, hsl(var(--foreground) / 0.06), hsl(var(--foreground) / 0.03))',
+              }}
+            >
               EVENT NEST
             </h2>
           </div>
