@@ -141,7 +141,7 @@ const MessagesPage = () => {
           {currentMessages.map(msg => (
             <div key={msg.id} className={cn("flex", msg.own ? "justify-end" : "justify-start")}>
               <div className={cn("max-w-[70%] rounded-2xl px-4 py-2.5",
-                msg.own ? "bg-foreground text-background rounded-br-md" : "bg-muted text-foreground rounded-bl-md")}>
+                msg.own ? "bg-primary text-white rounded-br-md" : "bg-secondary dark:bg-accent text-foreground rounded-bl-md")}>
                 {!msg.own && activeConvo?.type === "team" && <p className="text-xs font-medium text-primary mb-1">{msg.sender}</p>}
                 <p className="text-sm">{msg.text}</p>
                 <div className={cn("flex items-center gap-1 mt-1", msg.own ? "justify-end" : "")}>
