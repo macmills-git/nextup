@@ -282,7 +282,7 @@ const SaasBentoFeatures = () => {
               <h3 className="text-base font-semibold text-foreground">Vendor Model Selector</h3>
             </div>
             <p className="text-sm text-muted-foreground mb-6">
-              Track real-time activity of vendors with detailed records of triggers, tools used, outcomes, and timestamps.
+              Browse and compare verified vendors by category, ratings, availability, and pricing — all within your event workspace.
             </p>
             {/* Mock vendor list */}
             <div className="space-y-3">
