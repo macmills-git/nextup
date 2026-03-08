@@ -145,7 +145,7 @@ const MessagesPage = () => {
                 {!msg.own && activeConvo?.type === "team" && <p className="text-xs font-medium text-primary mb-1">{msg.sender}</p>}
                 <p className="text-sm">{msg.text}</p>
                 <div className={cn("flex items-center gap-1 mt-1", msg.own ? "justify-end" : "")}>
-                  <p className={cn("text-[10px]", msg.own ? "text-background/60" : "text-muted-foreground")}>{msg.time}</p>
+                  <p className={cn("text-[10px]", msg.own ? "text-white/60" : "text-muted-foreground")}>{msg.time}</p>
                   {msg.own && <StatusIcon status={msg.status} />}
                 </div>
               </div>
