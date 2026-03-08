@@ -18,6 +18,8 @@ import MessagesPage from "./dashboard/MessagesPage";
 import AIAssistantPage from "./dashboard/AIAssistantPage";
 import SettingsPage from "./dashboard/SettingsPage";
 import NotificationsPage from "./dashboard/NotificationsPage";
+import ReportsPage from "./dashboard/ReportsPage";
+import TicketingPage from "./dashboard/TicketingPage";
 
 const chartData = [
   { name: "Jan", events: 4 }, { name: "Feb", events: 3 }, { name: "Mar", events: 5 }, { name: "Apr", events: 7 },
@@ -54,7 +56,6 @@ const budgetCategories = [
   { name: "Entertainment", amount: 3010, share: "14.3%", color: "hsl(0, 0%, 85%)" },
 ];
 
-/* Profile Dropdown */
 const ProfileDropdown = ({ onClose, onNavigate }: { onClose: () => void; onNavigate: (path: string) => void }) => (
   <div className="fixed inset-0 z-50 flex items-start justify-end pt-16 pr-6" onClick={onClose}>
     <div className="w-[380px] bg-card rounded-2xl border border-border shadow-elevated p-6 animate-scale-in" onClick={e => e.stopPropagation()}>
@@ -68,7 +69,7 @@ const ProfileDropdown = ({ onClose, onNavigate }: { onClose: () => void; onNavig
         <div className="w-11 h-11 rounded-full bg-foreground flex items-center justify-center text-background font-semibold text-sm">K</div>
         <div>
           <p className="font-semibold text-foreground text-sm">Kusi Boateng Mills</p>
-          <p className="text-xs text-muted-foreground">kusi@eventnest.com</p>
+          <p className="text-xs text-muted-foreground">kusi@nested.com</p>
         </div>
       </div>
       <div className="space-y-4 mb-5">
@@ -127,7 +128,6 @@ const DashboardHome = () => {
 
   return (
     <div className="space-y-6">
-      {/* Stat cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         {statCards.map(stat => (
           <div key={stat.label} className="bg-card rounded-xl border border-border p-5 hover:shadow-elevated transition-shadow">
@@ -146,7 +146,6 @@ const DashboardHome = () => {
         ))}
       </div>
 
-      {/* Workflow Monitor Table */}
       <div className="bg-card rounded-xl border border-border p-5">
         <h2 className="font-semibold text-foreground mb-4">Workflow monitor</h2>
         <div className="overflow-x-auto">
@@ -165,9 +164,7 @@ const DashboardHome = () => {
                 <tr key={v.name} className="border-b border-border last:border-0 hover:bg-muted/50 transition-colors">
                   <td className="py-3 px-3 font-medium text-foreground">{v.name}</td>
                   <td className="py-3 px-3">
-                    <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-muted text-xs font-medium text-foreground">
-                      {v.category}
-                    </span>
+                    <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-muted text-xs font-medium text-foreground">{v.category}</span>
                   </td>
                   <td className="py-3 px-3">
                     <span className="flex items-center gap-1.5 text-sm">
@@ -185,7 +182,6 @@ const DashboardHome = () => {
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {/* Budget Donut */}
         <div className="bg-card rounded-xl border border-border p-5">
           <div className="flex items-center justify-between mb-4">
             <h2 className="font-semibold text-foreground">Agents by status</h2>
@@ -198,7 +194,6 @@ const DashboardHome = () => {
               ))}
             </div>
           </div>
-
           <div className="flex items-center gap-8">
             <div className="relative w-36 h-36">
               <svg viewBox="0 0 36 36" className="w-full h-full -rotate-90">
@@ -206,12 +201,9 @@ const DashboardHome = () => {
                   const percentage = (item.amount / totalBudget) * 100;
                   const offset = activeBudgetData.slice(0, i).reduce((sum, d) => sum + (d.amount / totalBudget) * 100, 0);
                   return (
-                    <circle key={i} cx="18" cy="18" r="14" fill="none"
-                      stroke={item.color}
-                      strokeWidth="3.5"
+                    <circle key={i} cx="18" cy="18" r="14" fill="none" stroke={item.color} strokeWidth="3.5"
                       strokeDasharray={`${percentage * 0.88} ${88 - percentage * 0.88}`}
-                      strokeDashoffset={`${-offset * 0.88}`}
-                    />
+                      strokeDashoffset={`${-offset * 0.88}`} />
                   );
                 })}
               </svg>
@@ -234,7 +226,6 @@ const DashboardHome = () => {
           </div>
         </div>
 
-        {/* Tasks breakdown chart */}
         <div className="bg-card rounded-xl border border-border p-5">
           <h2 className="font-semibold text-foreground mb-4">Tasks breakdown</h2>
           <ResponsiveContainer width="100%" height={200}>
@@ -249,7 +240,6 @@ const DashboardHome = () => {
         </div>
       </div>
 
-      {/* Upcoming Tasks + AI Card */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         <div className="lg:col-span-2 bg-card rounded-xl border border-border p-5">
           <h2 className="font-semibold text-foreground mb-4">Upcoming Tasks</h2>
@@ -326,6 +316,8 @@ const Dashboard = () => {
             <Route path="team" element={<TeamPage />} />
             <Route path="messages" element={<MessagesPage />} />
             <Route path="ai" element={<AIAssistantPage />} />
+            <Route path="reports" element={<ReportsPage />} />
+            <Route path="ticketing" element={<TicketingPage />} />
             <Route path="settings" element={<SettingsPage />} />
             <Route path="notifications" element={<NotificationsPage />} />
           </Routes>
