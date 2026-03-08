@@ -1,7 +1,8 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
-import { Eye, EyeOff } from "lucide-react";
+import { Link, useNavigate } from "react-router-dom";
+import { Eye, EyeOff, Loader2 } from "lucide-react";
 import AnimatedLogo from "@/components/AnimatedLogo";
+import { useAuth } from "@/contexts/AuthContext";
 
 const SignUp = () => {
   const [name, setName] = useState("");
@@ -11,6 +12,9 @@ const SignUp = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
+  const { signUp: authSignUp } = useAuth();
 
   const handleSignUp = () => {
     if (password !== confirmPassword) {
@@ -21,8 +25,16 @@ const SignUp = () => {
       setError("Password must be at least 8 characters");
       return;
     }
+    if (!email || !name) {
+      setError("Please fill in all fields");
+      return;
+    }
     setError("");
-    window.location.href = "/dashboard";
+    setLoading(true);
+    authSignUp(email, name);
+    setTimeout(() => {
+      navigate('/dashboard');
+    }, 800);
   };
 
   return (

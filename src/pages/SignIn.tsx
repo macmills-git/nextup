@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Eye, EyeOff, Loader2 } from "lucide-react";
 import AnimatedLogo from "@/components/AnimatedLogo";
+import { useAuth } from "@/contexts/AuthContext";
 
 const SignIn = () => {
   const [email, setEmail] = useState("");
@@ -9,9 +10,12 @@ const SignIn = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+  const { signIn } = useAuth();
 
   const handleSignIn = () => {
+    if (!email) return;
     setLoading(true);
+    signIn(email);
     setTimeout(() => {
       navigate('/dashboard');
     }, 800);
