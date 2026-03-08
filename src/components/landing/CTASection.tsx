@@ -19,7 +19,7 @@ const CTASection = () => {
   }, []);
 
   return (
-    <section className="relative py-28 overflow-hidden bg-background">
+    <section className="relative py-28 overflow-hidden bg-transparent">
       <div className="absolute inset-0 pointer-events-none opacity-[0.03]" style={{
         backgroundImage: `linear-gradient(hsl(var(--foreground) / 0.15) 1px, transparent 1px), linear-gradient(90deg, hsl(var(--foreground) / 0.15) 1px, transparent 1px)`,
         backgroundSize: '60px 60px',

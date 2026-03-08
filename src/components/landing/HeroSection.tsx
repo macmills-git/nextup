@@ -22,7 +22,7 @@ const HeroSection = () => {
   }, []);
 
   return (
-    <section className="relative min-h-screen overflow-hidden bg-background">
+    <section className="relative min-h-screen overflow-hidden bg-transparent">
       {/* Lamp glow effect */}
       <div className="absolute inset-0 z-0 overflow-hidden">
         <div className="absolute top-[40%] left-1/2 -translate-x-1/2 w-[600px] md:w-[900px] h-[400px]" style={{
