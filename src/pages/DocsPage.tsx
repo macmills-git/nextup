@@ -7,8 +7,8 @@ const sections = [
   {
     group: "GETTING STARTED", icon: BookOpen, title: "Introduction",
     content: [
-      { type: "text", value: "Welcome to EventNest! Follow these steps to get up and running in minutes. This documentation covers everything you need to know." },
-      { type: "video", label: "Gemini 3 changes everything for EventNest", duration: "12:34" },
+      { type: "text", value: "Welcome to Nested! Follow these steps to get up and running in minutes. This documentation covers everything you need to plan, manage, and execute unforgettable events." },
+      { type: "video", label: "Getting started with Nested", duration: "12:34" },
       { type: "features", items: [
         { icon: Sparkles, title: "Advanced AI Models", desc: "Leverage cutting-edge AI to automate event planning tasks." },
         { icon: Code, title: "Multi-Page Sites", desc: "Create comprehensive event microsites with multiple pages." },
