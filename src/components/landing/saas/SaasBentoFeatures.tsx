@@ -259,9 +259,9 @@ const SaasBentoFeatures = () => {
             {/* Bottom feature strip */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-px bg-border/10 border-t border-border/10">
               {[
-                { icon: Shield, title: "One Click Auth", desc: "A drag-and-drop interface to create, connect, and configure event workflows" },
-                { icon: RefreshCw, title: "Realtime Sync", desc: "Agents operate independently and coordinate tasks to complete complex goals" },
-                { icon: Code2, title: "Custom Connector SDK", desc: "Run event workflows in a sandbox to preview behavior, debug logic, and test interactions" },
+                { icon: Shield, title: "One Click Auth", desc: "Secure team access with role-based permissions and single sign-on for your organization" },
+                { icon: RefreshCw, title: "Realtime Sync", desc: "Changes to events, budgets, and vendor assignments sync instantly across all team members" },
+                { icon: Code2, title: "Custom Integrations", desc: "Use our API and webhooks to connect Nested with your existing event management tools" },
               ].map((item, i) => (
                 <div key={i} className="feat-anim bg-card p-6 md:p-8">
                   <item.icon className="w-5 h-5 text-primary mb-3" />
