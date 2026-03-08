@@ -28,14 +28,14 @@ const WorldMapSection = () => {
   useEffect(() => {
     if (!ref.current) return;
     gsap.fromTo(ref.current.querySelectorAll('.wm-el'),
-      { y: 20, opacity: 0, filter: 'blur(6px)' },
-      { y: 0, opacity: 1, filter: 'blur(0px)', duration: 0.7, stagger: 0.1, ease: 'power3.out',
+      { y: 20, opacity: 0 },
+      { y: 0, opacity: 1, duration: 0.5, stagger: 0.08, ease: 'power3.out',
         scrollTrigger: { trigger: ref.current, start: 'top 80%' }
       }
     );
     gsap.fromTo(ref.current.querySelectorAll('.avatar-pin'),
       { scale: 0, opacity: 0 },
-      { scale: 1, opacity: 1, duration: 0.5, stagger: 0.1, ease: 'back.out(1.7)',
+      { scale: 1, opacity: 1, duration: 0.4, stagger: 0.1, ease: 'back.out(1.7)',
         scrollTrigger: { trigger: ref.current, start: 'top 75%' }
       }
     );
@@ -48,22 +48,21 @@ const WorldMapSection = () => {
   }, []);
 
   return (
-    <section ref={ref} className="py-28 bg-transparent relative overflow-hidden">
+    <section ref={ref} className="py-28 bg-background relative overflow-hidden">
       <div className="container mx-auto px-4 lg:px-8 text-center">
-        <span className="wm-el inline-flex items-center text-[11px] font-medium text-primary bg-primary/10 border border-primary/20 px-3.5 py-1 rounded-full mb-4">
+        <span className="wm-el inline-flex items-center text-xs font-bold text-foreground bg-accent/30 border-2 border-border px-4 py-1 rounded-lg shadow-brutal mb-4">
           Availability
         </span>
-        <h2 className="wm-el text-3xl md:text-5xl font-bold mb-3 text-foreground">
+        <h2 className="wm-el text-3xl md:text-5xl font-black mb-3 text-foreground">
           Connect to team members everywhere
         </h2>
-        <p className="wm-el text-sm text-muted-foreground max-w-lg mx-auto mb-14">
+        <p className="wm-el text-sm text-muted-foreground max-w-lg mx-auto mb-14 font-medium">
           Our platform is available in all countries, with support from over 20,000+ event professionals.
         </p>
 
-        {/* Map container */}
-        <div className="relative max-w-5xl mx-auto overflow-hidden rounded-3xl border border-border/40 bg-card/40 backdrop-blur-sm" style={{ aspectRatio: '2/1' }}>
+        <div className="relative max-w-5xl mx-auto overflow-hidden rounded-2xl border-2 border-border bg-card shadow-brutal-xl" style={{ aspectRatio: '2/1' }}>
           <div className="absolute inset-0 scale-[1.15] origin-center">
-            <svg viewBox="0 0 1000 500" className="w-full h-full opacity-20" fill="hsl(var(--muted-foreground))">
+            <svg viewBox="0 0 1000 500" className="w-full h-full opacity-20" fill="hsl(var(--foreground))">
               {Array.from({ length: 80 }).map((_, row) =>
                 Array.from({ length: 160 }).map((_, col) => {
                   const x = col * 6.25 + 3;
@@ -93,7 +92,7 @@ const WorldMapSection = () => {
                 return (
                   <path key={i} className="connection-line"
                     d={`M ${fromX} ${fromY} Q ${(fromX + toX) / 2} ${midY} ${toX} ${toY}`}
-                    fill="none" stroke="hsl(var(--primary) / 0.4)" strokeWidth="0.3"
+                    fill="none" stroke="hsl(var(--primary))" strokeWidth="0.4"
                     strokeDasharray="500" strokeDashoffset="500" />
                 );
               })}
@@ -102,11 +101,11 @@ const WorldMapSection = () => {
             {avatars.map((av, i) => (
               <div key={i} className="avatar-pin absolute w-10 h-10 -translate-x-1/2 -translate-y-1/2 group cursor-pointer"
                 style={{ top: av.top, left: av.left }}>
-                <div className="w-10 h-10 rounded-full border-2 border-background shadow-elevated overflow-hidden bg-primary/20 flex items-center justify-center transition-transform duration-300 group-hover:scale-125">
-                  <span className="text-xs font-bold text-primary">{av.name[0]}</span>
+                <div className="w-10 h-10 rounded-lg border-2 border-border shadow-brutal overflow-hidden bg-secondary flex items-center justify-center transition-all duration-150 group-hover:translate-x-[-2px] group-hover:translate-y-[-2px] group-hover:shadow-brutal-lg">
+                  <span className="text-xs font-black text-foreground">{av.name[0]}</span>
                 </div>
-                <div className="absolute -bottom-6 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-all duration-200 group-hover:-translate-y-1 bg-card border border-border rounded-md px-2 py-0.5 whitespace-nowrap shadow-sm pointer-events-none">
-                  <span className="text-[10px] text-foreground font-medium">{av.name}</span>
+                <div className="absolute -bottom-7 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-all duration-150 bg-card border-2 border-border rounded-lg px-2 py-0.5 whitespace-nowrap shadow-brutal pointer-events-none">
+                  <span className="text-[10px] text-foreground font-bold">{av.name}</span>
                 </div>
               </div>
             ))}
