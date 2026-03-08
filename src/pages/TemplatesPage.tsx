@@ -16,6 +16,20 @@ const templates = [
   { name: "Destination Wedding", category: "Weddings", image: "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=400&h=300&fit=crop", uses: "5.9k", author: "Sam", price: "$39" },
   { name: "Product Launch Playbook", category: "Corporate", image: "https://images.unsplash.com/photo-1475721027785-f74eccf877e2?w=400&h=300&fit=crop", uses: "10.2k", author: "Meng To", isPro: true },
   { name: "Networking Mixer", category: "Social", image: "https://images.unsplash.com/photo-1511578314322-379afb476865?w=400&h=300&fit=crop", uses: "13.0k", author: "EventPro", price: "$29" },
+  { name: "Charity Gala Evening", category: "Social", image: "https://images.unsplash.com/photo-1492684223066-81342ee5ff30?w=400&h=300&fit=crop", uses: "4.7k", author: "Sam", isPro: true },
+  { name: "Startup Demo Day", category: "Conferences", image: "https://images.unsplash.com/photo-1556761175-5973dc0f32e7?w=400&h=300&fit=crop", uses: "6.1k", author: "Meng To", price: "$35" },
+  { name: "Rustic Barn Wedding", category: "Weddings", image: "https://images.unsplash.com/photo-1465495976277-4387d4b0b4c6?w=400&h=300&fit=crop", uses: "8.9k", author: "EventPro", isPro: true },
+  { name: "Annual Company Retreat", category: "Corporate", image: "https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=400&h=300&fit=crop", uses: "7.3k", author: "Sam", price: "$45" },
+  { name: "Kids Birthday Party", category: "Birthday", image: "https://images.unsplash.com/photo-1513151233558-d860c5398176?w=400&h=300&fit=crop", uses: "14.2k", author: "EventPro", isPro: true },
+  { name: "Hackathon Organizer", category: "Conferences", image: "https://images.unsplash.com/photo-1504384308090-c894fdcc538d?w=400&h=300&fit=crop", uses: "5.4k", author: "Meng To", price: "$29" },
+  { name: "Cocktail Reception", category: "Social", image: "https://images.unsplash.com/photo-1470337458703-46ad1756a187?w=400&h=300&fit=crop", uses: "9.8k", author: "Sam", isPro: true },
+  { name: "Photography Workshop", category: "Workshops", image: "https://images.unsplash.com/photo-1452587925148-ce544e77e70d?w=400&h=300&fit=crop", uses: "3.6k", author: "EventPro", price: "$19" },
+  { name: "Beach Wedding Suite", category: "Weddings", image: "https://images.unsplash.com/photo-1544078751-58fee2d8a03b?w=400&h=300&fit=crop", uses: "10.5k", author: "Meng To", isPro: true },
+  { name: "Leadership Workshop", category: "Workshops", image: "https://images.unsplash.com/photo-1552664730-d307ca884978?w=400&h=300&fit=crop", uses: "4.2k", author: "Sam", price: "$39" },
+  { name: "Award Ceremony Planner", category: "Corporate", image: "https://images.unsplash.com/photo-1531058020387-3be344556be6?w=400&h=300&fit=crop", uses: "6.8k", author: "EventPro", isPro: true },
+  { name: "Music Festival Guide", category: "Social", image: "https://images.unsplash.com/photo-1459749411175-04bf5292ceea?w=400&h=300&fit=crop", uses: "11.3k", author: "Meng To", price: "$55" },
+  { name: "Sweet 16 Celebration", category: "Birthday", image: "https://images.unsplash.com/photo-1464349095431-e9a21285b5f3?w=400&h=300&fit=crop", uses: "7.6k", author: "Sam", isPro: true },
+  { name: "Yoga & Wellness Retreat", category: "Workshops", image: "https://images.unsplash.com/photo-1545205597-3d9d02c29597?w=400&h=300&fit=crop", uses: "5.1k", author: "EventPro", price: "$25" },
 ];
 
 const TemplatesPage = () => {
@@ -71,27 +85,27 @@ const TemplatesPage = () => {
           ))}
         </div>
 
-        {/* Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5">
+        {/* Grid - 5 columns with smaller cards */}
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
           {filtered.map((t, i) => (
-            <div key={i} className="rounded-2xl border border-border overflow-hidden bg-card hover:shadow-elevated transition-all duration-200 group cursor-pointer">
-              <div className="relative h-48 bg-secondary overflow-hidden">
+            <div key={i} className="rounded-xl border border-border overflow-hidden bg-card hover:shadow-elevated transition-all duration-200 group cursor-pointer">
+              <div className="relative h-32 bg-secondary overflow-hidden">
                 <img src={t.image} alt={t.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" loading="lazy" />
               </div>
-              <div className="p-4">
-                <div className="flex justify-between items-start gap-2 mb-2">
-                  <h3 className="text-sm font-semibold text-foreground truncate flex-1">{t.name}</h3>
+              <div className="p-3">
+                <div className="flex justify-between items-start gap-1.5 mb-1.5">
+                  <h3 className="text-xs font-semibold text-foreground truncate flex-1">{t.name}</h3>
                   {t.isPro ? (
-                    <span className="text-[10px] bg-secondary px-2 py-0.5 rounded-md text-muted-foreground flex-shrink-0 font-medium">PRO</span>
+                    <span className="text-[9px] bg-secondary px-1.5 py-0.5 rounded text-muted-foreground flex-shrink-0 font-medium">PRO</span>
                   ) : (
-                    <span className="text-sm font-semibold text-foreground flex-shrink-0">{t.price}</span>
+                    <span className="text-xs font-semibold text-foreground flex-shrink-0">{t.price}</span>
                   )}
                 </div>
-                <div className="flex justify-between items-center text-xs text-muted-foreground">
+                <div className="flex justify-between items-center text-[11px] text-muted-foreground">
                   <span>{t.author}</span>
-                  <div className="flex items-center gap-3">
-                    <span className="flex items-center gap-1 hover:text-foreground cursor-pointer"><Shuffle className="w-3 h-3" /> Remix</span>
-                    <span className="flex items-center gap-1"><Eye className="w-3 h-3" /> {t.uses}</span>
+                  <div className="flex items-center gap-2">
+                    <span className="flex items-center gap-0.5 hover:text-foreground cursor-pointer"><Shuffle className="w-2.5 h-2.5" /> Remix</span>
+                    <span className="flex items-center gap-0.5"><Eye className="w-2.5 h-2.5" /> {t.uses}</span>
                   </div>
                 </div>
               </div>
