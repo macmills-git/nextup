@@ -36,7 +36,7 @@ const SaasMacBookShowcase = () => {
                 <div className="w-3 h-3 rounded-full bg-warning/50" />
                 <div className="w-3 h-3 rounded-full bg-success/50" />
               </div>
-              <span className="text-xs font-semibold text-foreground ml-2">Event Nest</span>
+              <span className="text-xs font-semibold text-foreground ml-2">Nested</span>
             </div>
             <div className="flex-1 max-w-sm mx-8">
               <div className="flex items-center gap-2 bg-muted/40 rounded-lg px-3 py-1.5">

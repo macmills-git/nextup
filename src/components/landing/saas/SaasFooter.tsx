@@ -32,7 +32,7 @@ const SaasFooter = () => {
           ))}
         </div>
         <div className="py-6 border-t border-border/10 flex flex-col md:flex-row items-center justify-between gap-4">
-          <p className="text-xs text-muted-foreground">© 2026 Event Nest. All rights reserved.</p>
+          <p className="text-xs text-muted-foreground">© 2026 Nested. All rights reserved.</p>
           <div className="flex items-center gap-4">
             {["Twitter", "GitHub", "LinkedIn"].map(link => (
               <a key={link} href="#" className="text-xs text-muted-foreground hover:text-foreground transition-colors">{link}</a>

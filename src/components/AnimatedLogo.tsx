@@ -1,32 +1,28 @@
-import { useEffect, useRef } from 'react';
-
 const AnimatedLogo = ({ size = 28, className = '' }: { size?: number; className?: string }) => {
+  const id = `logoGrad_${size}`;
   return (
     <svg width={size} height={size} viewBox="0 0 40 40" className={className} fill="none">
-      {/* Outer ring */}
-      <circle cx="20" cy="20" r="17" stroke="url(#logoGrad2)" strokeWidth="2" fill="none" opacity="0.3" />
-      {/* Inner hexagon */}
+      {/* Diamond shape */}
       <path
-        d="M20 6L32 13V27L20 34L8 27V13L20 6Z"
-        stroke="url(#logoGrad2)"
-        strokeWidth="2"
-        fill="url(#logoGrad2)"
-        fillOpacity="0.1"
+        d="M20 4L36 20L20 36L4 20L20 4Z"
+        fill={`url(#${id})`}
+        fillOpacity="0.15"
+        stroke={`url(#${id})`}
+        strokeWidth="1.5"
       />
-      {/* E letter */}
+      {/* Inner N letterform */}
       <path
-        d="M14 14H26M14 20H24M14 26H26M14 14V26"
-        stroke="url(#logoGrad2)"
+        d="M14 27V13L26 27V13"
+        stroke={`url(#${id})`}
         strokeWidth="2.5"
         strokeLinecap="round"
         strokeLinejoin="round"
       />
-      {/* Dot accent */}
-      <circle cx="27" cy="14" r="2" fill="hsl(225, 90%, 60%)" />
       <defs>
-        <linearGradient id="logoGrad2" x1="0" y1="0" x2="40" y2="40">
-          <stop offset="0%" stopColor="hsl(225, 90%, 60%)" />
-          <stop offset="100%" stopColor="hsl(260, 80%, 65%)" />
+        <linearGradient id={id} x1="0" y1="0" x2="40" y2="40">
+          <stop offset="0%" stopColor="hsl(40, 55%, 55%)" />
+          <stop offset="50%" stopColor="hsl(35, 45%, 50%)" />
+          <stop offset="100%" stopColor="hsl(220, 60%, 25%)" />
         </linearGradient>
       </defs>
     </svg>

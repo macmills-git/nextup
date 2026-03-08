@@ -13,7 +13,7 @@ const SignIn = () => {
       <div className="w-full max-w-[420px]">
         <div className="flex items-center gap-2 mb-10">
           <AnimatedLogo size={24} />
-          <span className="text-sm font-semibold text-foreground tracking-tight">Event Nest</span>
+          <span className="text-sm font-semibold text-foreground tracking-tight">Nested</span>
         </div>
         <h1 className="text-2xl font-bold text-foreground mb-1">Welcome back</h1>
         <p className="text-sm text-muted-foreground mb-8">Sign in to continue planning.</p>
