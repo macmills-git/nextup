@@ -47,7 +47,7 @@ const HelpPage = () => {
             {[
               { icon: BookOpen, title: "Documentation", desc: "Browse our comprehensive docs and guides", link: "/docs" },
               { icon: MessageCircle, title: "Live Chat", desc: "Chat with our support team in real-time", link: "#" },
-              { icon: Mail, title: "Email Support", desc: "support@eventnest.com — we reply within 24h", link: "mailto:support@eventnest.com" },
+              { icon: Mail, title: "Email Support", desc: "support@nested.com — we reply within 24h", link: "mailto:support@nested.com" },
             ].map((item, i) => (
               <Link key={i} to={item.link} className="rounded-2xl p-5 flex items-center gap-4 bg-card border border-border hover:shadow-elevated transition-all group">
                 <div className="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0 bg-primary/10">

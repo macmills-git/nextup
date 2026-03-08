@@ -17,7 +17,7 @@ const sections = [
       ]},
       { type: "reference", title: "What You Can Reference", items: ["Events – Link to any event in your workspace", "Vendors – Reference vendor profiles and portfolios", "Team Members – Mention teammates for assignments", "Budgets – Pull in budget data for analysis", "Tasks – Reference task lists and milestones"] },
       { type: "steps", items: [
-        { title: "Create an account", desc: "Sign up for free at eventnest.com/signup with your email or Google account." },
+        { title: "Create an account", desc: "Sign up for free at nested.com/signup with your email or Google account." },
         { title: "Set up your profile", desc: "Add your name, photo, and organization details in Settings." },
         { title: "Create your first event", desc: "Head to Dashboard → Events → Create Event to get started." },
         { title: "Invite your team", desc: "Add collaborators from the Team page and assign roles." },

@@ -5,12 +5,12 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 gsap.registerPlugin(ScrollTrigger);
 
 const logos = [
-  { name: "Hippocratic AI", text: "Hippocratic AI" },
-  { name: "ARCH", text: "A R C H" },
-  { name: "Bill", text: "bill" },
-  { name: "Attention", text: "Attention" },
-  { name: "Vercel", text: "Vercel" },
-  { name: "Linear", text: "Linear" },
+  { name: "Eventbrite", text: "Eventbrite" },
+  { name: "Marriott", text: "Marriott" },
+  { name: "LiveNation", text: "Live Nation" },
+  { name: "Hilton", text: "Hilton" },
+  { name: "WME", text: "W M E" },
+  { name: "Cvent", text: "Cvent" },
 ];
 
 const SaasLeadersCarousel = () => {

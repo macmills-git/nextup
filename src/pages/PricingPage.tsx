@@ -158,7 +158,7 @@ const PricingPage = () => {
             <div className="bg-card rounded-2xl border border-border p-6">
               <Quote className="w-6 h-6 text-muted-foreground/20 mb-4" />
               <p className="text-sm text-foreground leading-relaxed mb-4">
-                "EventNest has completely transformed how we plan events. The AI assistant alone saved us 40 hours per event. The vendor marketplace is incredibly well-curated."
+                "Nested has completely transformed how we plan events. The AI assistant alone saved us 40 hours per event. The vendor marketplace is incredibly well-curated."
               </p>
               <div className="flex items-center gap-3">
                 <div className="w-10 h-10 rounded-full bg-secondary flex items-center justify-center">
