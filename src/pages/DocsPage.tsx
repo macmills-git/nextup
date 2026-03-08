@@ -1,5 +1,5 @@
 import Navbar from "@/components/Navbar";
-import VariantFooter from "@/components/VariantFooter";
+import SaasFooter from "@/components/landing/saas/SaasFooter";
 import { BookOpen, Calendar, Store, Users, MessageSquare, Sparkles, DollarSign, Settings, Play, ChevronRight, AtSign, Code, Image as ImageIcon } from "lucide-react";
 import { useState, useEffect, useRef } from "react";
 
