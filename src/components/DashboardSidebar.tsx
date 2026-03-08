@@ -1,6 +1,6 @@
 import { Link, useLocation } from "react-router-dom";
 import {
-  LayoutDashboard, Calendar, Users, Store, MessageSquare, Settings, Sparkles, ChevronLeft, Bell,
+  LayoutDashboard, Calendar, Users, Store, MessageSquare, Settings, Sparkles, ChevronLeft, Bell, BarChart3, Ticket,
 } from "lucide-react";
 import { useState } from "react";
 import { cn } from "@/lib/utils";
@@ -14,6 +14,8 @@ const navItems = [
   { icon: MessageSquare, label: "Messages", path: "/dashboard/messages" },
   { icon: Sparkles, label: "AI Assistant", path: "/dashboard/ai" },
   { icon: Bell, label: "Notifications", path: "/dashboard/notifications" },
+  { icon: BarChart3, label: "Reports", path: "/dashboard/reports" },
+  { icon: Ticket, label: "Ticketing", path: "/dashboard/ticketing" },
   { icon: Settings, label: "Settings", path: "/dashboard/settings" },
 ];
 
@@ -29,7 +31,7 @@ const DashboardSidebar = () => {
       <div className="h-14 flex items-center px-4 border-b border-border">
         <Link to="/" className="flex items-center gap-2.5 overflow-hidden">
           <AnimatedLogo size={22} />
-          {!collapsed && <span className="font-semibold text-sm text-foreground whitespace-nowrap tracking-tight">EventNest</span>}
+          {!collapsed && <span className="font-semibold text-sm text-foreground whitespace-nowrap tracking-tight">Nested</span>}
         </Link>
       </div>
 

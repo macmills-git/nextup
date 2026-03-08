@@ -9,6 +9,7 @@ type Vendor = {
   id: number; name: string; category: string; rating: number; reviews: number;
   location: string; phone: string; email: string; status: string; price: string;
   image: string; favorited: boolean; author: string; uses: string; isPro?: boolean; priceTag?: string;
+  dateAdded: string;
 };
 
 const vendorImages = [
@@ -22,20 +23,29 @@ const vendorImages = [
   "https://images.unsplash.com/photo-1475721027785-f74eccf877e2?w=400&h=300&fit=crop",
   "https://images.unsplash.com/photo-1517048676732-d65bc937f952?w=400&h=300&fit=crop",
   "https://images.unsplash.com/photo-1528605248644-14dd04022da1?w=400&h=300&fit=crop",
+  "https://images.unsplash.com/photo-1492684223066-81342ee5ff30?w=400&h=300&fit=crop",
+  "https://images.unsplash.com/photo-1459749411175-04bf5292ceea?w=400&h=300&fit=crop",
 ];
 
 const initialVendors: Vendor[] = [
-  { id: 1, name: "Akolo Studio", category: "Photography", rating: 4.9, reviews: 124, location: "Downtown", phone: "+1 555-0101", email: "hello@akolo.com", status: "verified", price: "$$$$", image: vendorImages[0], favorited: false, author: "EventPro", uses: "12.4k", isPro: true },
-  { id: 2, name: "Bake It Right", category: "Catering", rating: 4.7, reviews: 89, location: "Midtown", phone: "+1 555-0102", email: "info@bakeitright.com", status: "verified", price: "$$$", image: vendorImages[1], favorited: true, author: "Sam", uses: "8.2k", priceTag: "$39" },
-  { id: 3, name: "Prime Audio", category: "Audio/Visual", rating: 4.8, reviews: 56, location: "West End", phone: "+1 555-0103", email: "book@primeaudio.com", status: "verified", price: "$$$", image: vendorImages[2], favorited: false, author: "Meng To", uses: "15.1k", isPro: true },
-  { id: 4, name: "Event Bloom", category: "Decoration", rating: 4.6, reviews: 102, location: "East Side", phone: "+1 555-0104", email: "design@eventbloom.com", status: "verified", price: "$$", image: vendorImages[3], favorited: false, author: "EventPro", uses: "9.3k", priceTag: "$29" },
-  { id: 5, name: "DJ Maxwell", category: "Entertainment", rating: 4.5, reviews: 73, location: "Central", phone: "+1 555-0105", email: "max@djmaxwell.com", status: "pending", price: "$$", image: vendorImages[4], favorited: false, author: "Sam", uses: "11.7k", isPro: true },
-  { id: 6, name: "Luxe Rentals", category: "Equipment", rating: 4.4, reviews: 41, location: "Northside", phone: "+1 555-0106", email: "rent@luxerentals.com", status: "verified", price: "$$$", image: vendorImages[5], favorited: false, author: "Meng To", uses: "6.5k", priceTag: "$49" },
-  { id: 7, name: "Floral Dreams", category: "Decoration", rating: 4.8, reviews: 95, location: "Uptown", phone: "+1 555-0107", email: "info@floraldreams.com", status: "verified", price: "$$$", image: vendorImages[6], favorited: false, author: "EventPro", uses: "7.8k", isPro: true },
-  { id: 8, name: "Stage Masters", category: "Audio/Visual", rating: 4.7, reviews: 68, location: "South Bay", phone: "+1 555-0108", email: "book@stagemasters.com", status: "verified", price: "$$$$", image: vendorImages[7], favorited: false, author: "Sam", uses: "5.9k", priceTag: "$39" },
-  { id: 9, name: "Gourmet Bites", category: "Catering", rating: 4.9, reviews: 112, location: "Harbor", phone: "+1 555-0109", email: "chef@gourmetbites.com", status: "verified", price: "$$$$", image: vendorImages[8], favorited: false, author: "Meng To", uses: "10.2k", isPro: true },
-  { id: 10, name: "Party Lights Co", category: "Equipment", rating: 4.3, reviews: 37, location: "West Side", phone: "+1 555-0110", email: "info@partylights.com", status: "verified", price: "$$", image: vendorImages[9], favorited: false, author: "EventPro", uses: "13.0k", priceTag: "$29" },
+  { id: 1, name: "Akolo Studio", category: "Photography", rating: 4.9, reviews: 124, location: "Downtown", phone: "+1 555-0101", email: "hello@akolo.com", status: "verified", price: "$$$$", image: vendorImages[0], favorited: false, author: "EventPro", uses: "12.4k", isPro: true, dateAdded: "2026-03-01" },
+  { id: 2, name: "Bake It Right", category: "Catering", rating: 4.7, reviews: 89, location: "Midtown", phone: "+1 555-0102", email: "info@bakeitright.com", status: "verified", price: "$$$", image: vendorImages[1], favorited: true, author: "Sam", uses: "8.2k", priceTag: "$39", dateAdded: "2026-02-28" },
+  { id: 3, name: "Prime Audio", category: "Audio/Visual", rating: 4.8, reviews: 56, location: "West End", phone: "+1 555-0103", email: "book@primeaudio.com", status: "verified", price: "$$$", image: vendorImages[2], favorited: false, author: "Meng To", uses: "15.1k", isPro: true, dateAdded: "2026-02-25" },
+  { id: 4, name: "Event Bloom", category: "Decoration", rating: 4.6, reviews: 102, location: "East Side", phone: "+1 555-0104", email: "design@eventbloom.com", status: "verified", price: "$$", image: vendorImages[3], favorited: false, author: "EventPro", uses: "9.3k", priceTag: "$29", dateAdded: "2026-02-20" },
+  { id: 5, name: "DJ Maxwell", category: "Entertainment", rating: 4.5, reviews: 73, location: "Central", phone: "+1 555-0105", email: "max@djmaxwell.com", status: "pending", price: "$$", image: vendorImages[4], favorited: false, author: "Sam", uses: "11.7k", isPro: true, dateAdded: "2026-02-15" },
+  { id: 6, name: "Luxe Rentals", category: "Equipment", rating: 4.4, reviews: 41, location: "Northside", phone: "+1 555-0106", email: "rent@luxerentals.com", status: "verified", price: "$$$", image: vendorImages[5], favorited: false, author: "Meng To", uses: "6.5k", priceTag: "$49", dateAdded: "2026-02-10" },
+  { id: 7, name: "Floral Dreams", category: "Decoration", rating: 4.8, reviews: 95, location: "Uptown", phone: "+1 555-0107", email: "info@floraldreams.com", status: "verified", price: "$$$", image: vendorImages[6], favorited: false, author: "EventPro", uses: "7.8k", isPro: true, dateAdded: "2026-03-05" },
+  { id: 8, name: "Stage Masters", category: "Audio/Visual", rating: 4.7, reviews: 68, location: "South Bay", phone: "+1 555-0108", email: "book@stagemasters.com", status: "verified", price: "$$$$", image: vendorImages[7], favorited: false, author: "Sam", uses: "5.9k", priceTag: "$39", dateAdded: "2026-03-02" },
+  { id: 9, name: "Gourmet Bites", category: "Catering", rating: 4.9, reviews: 112, location: "Harbor", phone: "+1 555-0109", email: "chef@gourmetbites.com", status: "verified", price: "$$$$", image: vendorImages[8], favorited: false, author: "Meng To", uses: "10.2k", isPro: true, dateAdded: "2026-02-18" },
+  { id: 10, name: "Party Lights Co", category: "Equipment", rating: 4.3, reviews: 37, location: "West Side", phone: "+1 555-0110", email: "info@partylights.com", status: "verified", price: "$$", image: vendorImages[9], favorited: false, author: "EventPro", uses: "13.0k", priceTag: "$29", dateAdded: "2026-01-30" },
+  { id: 11, name: "Silver Screen Films", category: "Photography", rating: 4.6, reviews: 78, location: "Arts District", phone: "+1 555-0111", email: "hello@silverscreen.com", status: "verified", price: "$$$", image: vendorImages[10], favorited: false, author: "Sam", uses: "8.8k", isPro: true, dateAdded: "2026-03-07" },
+  { id: 12, name: "Beat Factory", category: "Entertainment", rating: 4.7, reviews: 62, location: "Downtown", phone: "+1 555-0112", email: "book@beatfactory.com", status: "verified", price: "$$$", image: vendorImages[11], favorited: false, author: "Meng To", uses: "9.1k", priceTag: "$55", dateAdded: "2026-03-06" },
+  { id: 13, name: "The Table Co.", category: "Catering", rating: 4.5, reviews: 44, location: "Uptown", phone: "+1 555-0113", email: "events@tableco.com", status: "verified", price: "$$", image: vendorImages[0], favorited: false, author: "EventPro", uses: "4.5k", isPro: true, dateAdded: "2026-02-22" },
+  { id: 14, name: "Velvet Events", category: "Decoration", rating: 4.8, reviews: 91, location: "Midtown", phone: "+1 555-0114", email: "info@velvetevents.com", status: "verified", price: "$$$$", image: vendorImages[3], favorited: false, author: "Sam", uses: "11.2k", priceTag: "$65", dateAdded: "2026-03-04" },
+  { id: 15, name: "Harmony Strings", category: "Entertainment", rating: 4.9, reviews: 53, location: "Central", phone: "+1 555-0115", email: "book@harmonystrings.com", status: "verified", price: "$$$", image: vendorImages[4], favorited: false, author: "Meng To", uses: "6.3k", isPro: true, dateAdded: "2026-03-03" },
 ];
+
+const parseUses = (uses: string) => parseFloat(uses.replace('k', '')) * 1000;
 
 const categories = ["All", "Photography", "Catering", "Audio/Visual", "Decoration", "Entertainment", "Equipment", "Featured Vendors"];
 
@@ -57,7 +67,7 @@ const VendorsPage = () => {
     setVendors(prev => [...prev, {
       id: Date.now(), ...newVendor, rating: 0, reviews: 0, status: "pending", price: "$$",
       image: vendorImages[Math.floor(Math.random() * vendorImages.length)], favorited: false,
-      author: "You", uses: "0", isPro: false,
+      author: "You", uses: "0", isPro: false, dateAdded: new Date().toISOString().split('T')[0],
     }]);
     setNewVendor({ name: "", category: "Photography", location: "", phone: "", email: "" });
     setShowAdd(false);
@@ -68,6 +78,12 @@ const VendorsPage = () => {
     const matchCat = activeCategory === "All" || activeCategory === "Featured Vendors" ? (activeCategory === "Featured Vendors" ? v.status === "verified" : true) : v.category === activeCategory;
     const matchFav = !showFavorites || v.favorited;
     return matchSearch && matchCat && matchFav;
+  });
+
+  const sorted = [...filtered].sort((a, b) => {
+    if (activeSort === "Popular") return parseUses(b.uses) - parseUses(a.uses);
+    if (activeSort === "Recent") return new Date(b.dateAdded).getTime() - new Date(a.dateAdded).getTime();
+    return 0;
   });
 
   return (
@@ -143,7 +159,7 @@ const VendorsPage = () => {
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
-          {filtered.map(vendor => (
+          {sorted.map(vendor => (
             <div key={vendor.id} className="rounded-xl border border-border overflow-hidden bg-card hover:shadow-elevated transition-all duration-200 group cursor-pointer" onClick={() => navigate(`/dashboard/vendors/${vendor.id}`)}>
               <div className="relative h-40 bg-muted overflow-hidden">
                 <img src={vendor.image} alt={vendor.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" loading="lazy" />
@@ -166,7 +182,7 @@ const VendorsPage = () => {
           ))}
         </div>
 
-        {filtered.length === 0 && (
+        {sorted.length === 0 && (
           <div className="text-center py-20">
             <p className="text-muted-foreground text-sm">No vendors found. Try adjusting your filters.</p>
           </div>

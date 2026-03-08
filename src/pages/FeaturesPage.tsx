@@ -1,6 +1,6 @@
 import Navbar from "@/components/Navbar";
 import SaasFooter from "@/components/landing/saas/SaasFooter";
-import { Calendar, DollarSign, Users, Sparkles, MessageSquare, Clock, Store, CheckCircle, Zap, Shield, ArrowRight, Bot, Heart, Layers } from "lucide-react";
+import { Calendar, DollarSign, Users, Sparkles, MessageSquare, Clock, Store, CheckCircle, Zap, Shield, ArrowRight, Bot, Heart, Layers, BarChart3, Ticket } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 import { useEffect, useRef } from "react";
@@ -26,7 +26,6 @@ const FeaturesPage = () => {
     <div className="min-h-screen bg-background" ref={pageRef}>
       <Navbar />
 
-      {/* Hero — Nodus style: left text, right values grid */}
       <section className="pt-36 pb-20 container mx-auto px-4 lg:px-8">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-start mb-24">
           <div>
@@ -73,7 +72,6 @@ const FeaturesPage = () => {
             <h2 className="text-3xl md:text-4xl font-bold text-foreground mt-2">Everything you need, nothing you don't</h2>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-5 max-w-5xl mx-auto">
-            {/* AI Card */}
             <div className="reveal rounded-2xl border border-border p-6 bg-card">
               <h3 className="text-lg font-semibold text-foreground mb-1">AI-Powered Planning</h3>
               <p className="text-sm text-muted-foreground mb-4">Generate event plans from a text prompt at the speed of light.</p>
@@ -97,7 +95,6 @@ const FeaturesPage = () => {
               </div>
             </div>
 
-            {/* Vendor Card */}
             <div className="reveal rounded-2xl border border-border p-6 bg-card">
               <h3 className="text-lg font-semibold text-foreground mb-1">Multi-Vendor Support</h3>
               <p className="text-sm text-muted-foreground mb-4">Whether it's caterers, photographers or DJs — manage them all.</p>
@@ -119,7 +116,6 @@ const FeaturesPage = () => {
               </div>
             </div>
 
-            {/* Communication */}
             <div className="reveal rounded-2xl border border-border p-6 bg-card">
               <h3 className="text-lg font-semibold text-foreground mb-1">Smart Communication</h3>
               <p className="text-sm text-muted-foreground mb-4">Centralized messaging with vendors, team, and guests.</p>
@@ -132,12 +128,11 @@ const FeaturesPage = () => {
               </div>
             </div>
 
-            {/* Deploy */}
             <div className="reveal rounded-2xl border border-border p-6 bg-card">
               <h3 className="text-lg font-semibold text-foreground mb-1">Deploy in seconds</h3>
               <p className="text-sm text-muted-foreground mb-4">Create and publish event pages instantly.</p>
               <div className="flex flex-wrap gap-1.5">
-                {["📅 Events", "👥 Teams", "📊 Analytics", "💬 Messages", "🎯 Goals", "🏪 Vendors", "📋 Tasks", "💰 Budget", "🎨 Templates", "🔔 Alerts"].map((tag) => (
+                {["📅 Events", "👥 Teams", "📊 Reports", "💬 Messages", "🎯 Goals", "🏪 Vendors", "📋 Tasks", "💰 Budget", "🎨 Templates", "🎟️ Ticketing"].map((tag) => (
                   <span key={tag} className="text-[10px] px-2.5 py-1 rounded-full border border-border bg-secondary text-foreground">{tag}</span>
                 ))}
               </div>
@@ -145,7 +140,7 @@ const FeaturesPage = () => {
           </div>
         </div>
 
-        {/* Feature grid — 8 small cards */}
+        {/* Feature grid */}
         <div className="max-w-6xl mx-auto mb-20">
           <div className="reveal text-center mb-12">
             <h2 className="text-3xl font-bold text-foreground mb-3">And so much more</h2>
@@ -157,8 +152,8 @@ const FeaturesPage = () => {
               { icon: Store, title: "Vendor Marketplace", desc: "Discover and compare verified vendors with reviews." },
               { icon: DollarSign, title: "Budget Tracking", desc: "Real-time expense tracking with smart alerts." },
               { icon: Clock, title: "Timeline Planning", desc: "Automated timelines with milestones and deadlines." },
-              { icon: Zap, title: "Real-time Updates", desc: "Instant notifications for all event changes." },
-              { icon: Shield, title: "Secure & Private", desc: "Enterprise-grade encrypted data storage." },
+              { icon: BarChart3, title: "Event Reports", desc: "Detailed analytics with revenue, satisfaction, and budget insights." },
+              { icon: Ticket, title: "Ticketing", desc: "Sell tickets, manage registrations, and track attendance. Coming soon!" },
               { icon: Users, title: "Team Collaboration", desc: "Share access with your whole team seamlessly." },
               { icon: Heart, title: "And everything else", desc: "Everything else you could possibly need." },
             ].map((f, i) => (
@@ -166,12 +161,16 @@ const FeaturesPage = () => {
                 <f.icon className="w-5 h-5 text-primary mb-3" />
                 <h4 className="text-sm font-semibold text-foreground mb-1">{f.title}</h4>
                 <p className="text-[11px] text-muted-foreground leading-relaxed">{f.desc}</p>
+                {f.title === "Ticketing" && (
+                  <span className="inline-flex items-center gap-1 mt-2 text-[9px] px-2 py-0.5 rounded-full bg-primary/10 text-primary font-medium">
+                    <Sparkles className="w-2.5 h-2.5" /> Coming Soon
+                  </span>
+                )}
               </div>
             ))}
           </div>
         </div>
 
-        {/* CTA */}
         <div className="reveal text-center">
           <Button size="lg" asChild className="rounded-full px-8 py-3 text-sm font-medium bg-foreground text-background hover:bg-foreground/90">
             <Link to="/signup">Get Started Now <ArrowRight className="ml-2 h-4 w-4" /></Link>
