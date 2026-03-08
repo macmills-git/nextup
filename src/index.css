@@ -51,8 +51,8 @@
     --hero-bg: 60 9% 98%;
     --section-bg: 60 9% 96%;
     --section-alt-bg: 60 9% 98%;
-    --nav-bg: 0 0% 6%;
-    --nav-text: 0 0% 100%;
+    --nav-bg: 0 0% 100%;
+    --nav-text: 0 0% 6%;
   }
 
   .dark {
