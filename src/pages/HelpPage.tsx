@@ -10,7 +10,7 @@ const faqs = [
   { q: "How does the AI Assistant work?", a: "Our AI Assistant analyzes your event data, budget constraints, and vendor history to provide intelligent recommendations." },
   { q: "How do I manage my budget?", a: "Each event has a dedicated budget section. Set budgets per category, track expenses in real-time, and receive alerts." },
   { q: "Can I message vendors directly?", a: "Yes! Visit the Vendor Marketplace, find a vendor, and click 'Contact'. Messages are centralized in your Messages tab." },
-  { q: "Is there a mobile app?", a: "EventNest is fully responsive and works great on mobile browsers. A dedicated mobile app is planned for future release." },
+  { q: "Is there a mobile app?", a: "Nested is fully responsive and works great on mobile browsers. A dedicated mobile app is planned for future release." },
 ];
 
 const HelpPage = () => {
