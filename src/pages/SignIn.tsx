@@ -10,9 +10,12 @@ const SignIn = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+  const { signIn } = useAuth();
 
   const handleSignIn = () => {
+    if (!email) return;
     setLoading(true);
+    signIn(email);
     setTimeout(() => {
       navigate('/dashboard');
     }, 800);

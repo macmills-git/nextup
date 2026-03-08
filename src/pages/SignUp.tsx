@@ -12,6 +12,9 @@ const SignUp = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
+  const { signUp: authSignUp } = useAuth();
 
   const handleSignUp = () => {
     if (password !== confirmPassword) {
@@ -22,8 +25,16 @@ const SignUp = () => {
       setError("Password must be at least 8 characters");
       return;
     }
+    if (!email || !name) {
+      setError("Please fill in all fields");
+      return;
+    }
     setError("");
-    window.location.href = "/dashboard";
+    setLoading(true);
+    authSignUp(email, name);
+    setTimeout(() => {
+      navigate('/dashboard');
+    }, 800);
   };
 
   return (
