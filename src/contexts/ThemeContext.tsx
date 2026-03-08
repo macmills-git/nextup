@@ -23,8 +23,17 @@ export const ThemeProvider = ({ children }: { children: ReactNode }) => {
   }, [theme]);
 
   const toggleTheme = useCallback(() => {
-    setTheme(prev => prev === 'dark' ? 'light' : 'dark');
-  }, []);
+    const next = theme === 'dark' ? 'light' : 'dark';
+
+    // Use View Transitions API for a smooth circular reveal
+    if (document.startViewTransition) {
+      document.startViewTransition(() => {
+        setTheme(next);
+      });
+    } else {
+      setTheme(next);
+    }
+  }, [theme]);
 
   return (
     <ThemeContext.Provider value={{ theme, toggleTheme }}>
