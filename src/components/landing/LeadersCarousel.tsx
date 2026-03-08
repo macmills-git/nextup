@@ -6,28 +6,22 @@ import { ArrowRight } from "lucide-react";
 gsap.registerPlugin(ScrollTrigger);
 
 const leaders = [
-  { name: "Sarah Chen", role: "CEO, Eventify", initials: "SC" },
-  { name: "Marcus Williams", role: "Director, GatherPro", initials: "MW" },
-  { name: "Aisha Patel", role: "VP Events, Summit Co", initials: "AP" },
-  { name: "James O'Brien", role: "Founder, PartyPlan", initials: "JO" },
-  { name: "Yuki Tanaka", role: "CMO, FestivalHub", initials: "YT" },
-  { name: "Elena Volkov", role: "CTO, MeetUp Plus", initials: "EV" },
-  { name: "David Kim", role: "Head of Ops, Nexus", initials: "DK" },
-  { name: "Fatima Al-Rashid", role: "CEO, Occasion", initials: "FA" },
-  { name: "Lucas Berg", role: "Co-Founder, VenueIQ", initials: "LB" },
-  { name: "Priya Sharma", role: "Director, CelebRate", initials: "PS" },
-  { name: "Tom Nguyen", role: "VP Product, Eventia", initials: "TN" },
-  { name: "Rachel Moore", role: "Head of Design, Fiesta", initials: "RM" },
+  { name: "Sarah Chen", role: "CEO, Eventify", initials: "SC", img: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=200&h=200&fit=crop&crop=face" },
+  { name: "Marcus Williams", role: "Director, GatherPro", initials: "MW", img: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=200&h=200&fit=crop&crop=face" },
+  { name: "Aisha Patel", role: "VP Events, Summit Co", initials: "AP", img: "https://images.unsplash.com/photo-1580489944761-15a19d654956?w=200&h=200&fit=crop&crop=face" },
+  { name: "James O'Brien", role: "Founder, PartyPlan", initials: "JO", img: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=200&h=200&fit=crop&crop=face" },
+  { name: "Yuki Tanaka", role: "CMO, FestivalHub", initials: "YT", img: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=200&h=200&fit=crop&crop=face" },
+  { name: "Elena Volkov", role: "CTO, MeetUp Plus", initials: "EV", img: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=200&h=200&fit=crop&crop=face" },
+  { name: "David Kim", role: "Head of Ops, Nexus", initials: "DK", img: "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=200&h=200&fit=crop&crop=face" },
+  { name: "Fatima Al-Rashid", role: "CEO, Occasion", initials: "FA", img: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=200&h=200&fit=crop&crop=face" },
+  { name: "Lucas Berg", role: "Co-Founder, VenueIQ", initials: "LB", img: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=200&h=200&fit=crop&crop=face" },
+  { name: "Priya Sharma", role: "Director, CelebRate", initials: "PS", img: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=200&h=200&fit=crop&crop=face" },
+  { name: "Tom Nguyen", role: "VP Product, Eventia", initials: "TN", img: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?w=200&h=200&fit=crop&crop=face" },
+  { name: "Rachel Moore", role: "Head of Design, Fiesta", initials: "RM", img: "https://images.unsplash.com/photo-1487412720507-e7ab37603c6f?w=200&h=200&fit=crop&crop=face" },
 ];
 
-const gradients = [
-  "from-[hsl(225,80%,55%)] to-[hsl(260,70%,60%)]",
-  "from-[hsl(160,60%,45%)] to-[hsl(190,70%,50%)]",
-  "from-[hsl(280,60%,55%)] to-[hsl(320,70%,60%)]",
-  "from-[hsl(30,80%,55%)] to-[hsl(15,70%,55%)]",
-  "from-[hsl(200,70%,50%)] to-[hsl(225,80%,55%)]",
-  "from-[hsl(340,65%,55%)] to-[hsl(0,70%,55%)]",
-];
+
+
 
 // Staggered mosaic positions — asymmetric floating layout
 const mosaicPositions = [
@@ -142,13 +136,12 @@ const LeadersCarousel = () => {
                         }`}
                       >
                         {!isPlaceholder ? (
-                          <div
-                            className={`w-full h-full bg-gradient-to-br ${gradients[i % gradients.length]} flex items-center justify-center`}
-                          >
-                            <span className="text-sm md:text-base font-bold text-white/90">
-                              {leader.initials}
-                            </span>
-                          </div>
+                          <img
+                            src={leader.img}
+                            alt={leader.name}
+                            className="w-full h-full object-cover"
+                            loading="lazy"
+                          />
                         ) : (
                           <div className="w-full h-full" />
                         )}

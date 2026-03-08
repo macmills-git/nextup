@@ -146,7 +146,32 @@ body::before {
   }
 }
 
-/* Smooth theme transition on all color properties */
+/* Smooth theme transition — skip during view transitions */
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation: none;
+  mix-blend-mode: normal;
+}
+
+::view-transition-old(root) {
+  z-index: 1;
+}
+
+::view-transition-new(root) {
+  z-index: 9999;
+  animation: viewTransitionReveal 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+@keyframes viewTransitionReveal {
+  from {
+    clip-path: circle(0% at 50% 0%);
+  }
+  to {
+    clip-path: circle(150% at 50% 0%);
+  }
+}
+
+/* Only transition colors when NOT using view transitions */
 *, *::before, *::after {
   transition: background-color 0.4s ease, border-color 0.4s ease, color 0.4s ease, fill 0.3s ease, stroke 0.3s ease, box-shadow 0.3s ease;
 }
