@@ -140,16 +140,7 @@ body::before {
   }
 }
 
-/* Smooth theme transition */
-.theme-transition-wrapper * {
-  transition-property: background-color, border-color, color, fill, stroke;
-  transition-duration: 0s;
-  transition-timing-function: ease;
-}
-
-html.theme-transitioning .theme-transition-wrapper * {
-  transition-duration: 0.4s;
-}
+/* Theme transition classes managed by ThemeContext */
 
 /* Gradient flow animation for cards */
 @keyframes gradientCardFlow {
