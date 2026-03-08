@@ -227,9 +227,9 @@ const SaasBentoFeatures = () => {
                 {/* Tool labels on left */}
                 <div className="absolute left-0 top-1/2 -translate-y-1/2 space-y-6">
                   {[
-                    { icon: "📅", label: "Meeting Summarizer", color: "bg-primary/20" },
-                    { icon: "💻", label: "Code Reviewer", color: "bg-primary/30" },
-                    { icon: "📞", label: "Customer Support", color: "bg-yellow-500/20" },
+                    { icon: "📅", label: "Google Calendar", color: "bg-primary/20" },
+                    { icon: "💻", label: "Stripe Payments", color: "bg-primary/30" },
+                    { icon: "📞", label: "Slack Notifications", color: "bg-yellow-500/20" },
                   ].map((tool, i) => (
                     <div key={i} className="flex items-center gap-2">
                       <Monitor className="w-3.5 h-3.5 text-muted-foreground" />
