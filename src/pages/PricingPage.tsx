@@ -1,5 +1,5 @@
 import Navbar from "@/components/Navbar";
-import Footer from "@/components/Footer";
+import VariantFooter from "@/components/VariantFooter";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 import { ArrowRight, Check, CreditCard, ChevronRight, Plus, Quote } from "lucide-react";
