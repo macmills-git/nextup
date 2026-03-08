@@ -20,14 +20,8 @@ const leaders = [
   { name: "Rachel Moore", role: "Head of Design, Fiesta", initials: "RM", img: "https://images.unsplash.com/photo-1487412720507-e7ab37603c6f?w=200&h=200&fit=crop&crop=face" },
 ];
 
-const gradients = [
-  "from-[hsl(225,80%,55%)] to-[hsl(260,70%,60%)]",
-  "from-[hsl(160,60%,45%)] to-[hsl(190,70%,50%)]",
-  "from-[hsl(280,60%,55%)] to-[hsl(320,70%,60%)]",
-  "from-[hsl(30,80%,55%)] to-[hsl(15,70%,55%)]",
-  "from-[hsl(200,70%,50%)] to-[hsl(225,80%,55%)]",
-  "from-[hsl(340,65%,55%)] to-[hsl(0,70%,55%)]",
-];
+
+
 
 // Staggered mosaic positions — asymmetric floating layout
 const mosaicPositions = [
