@@ -59,9 +59,15 @@ const TestimonialWall = () => {
           {cols.map((col, ci) => (
             <div key={ci} className="space-y-4">
               {col.map((t, i) => (
-                <div key={i} className="tw-card rounded-xl p-4 bg-card border border-border hover:shadow-elevated hover:border-primary/20 transition-all duration-300 group"
+                <div key={i} className="tw-card glare-card rounded-xl p-4 bg-card border border-border transition-all duration-300 group relative overflow-hidden"
                   style={{ perspective: '600px' }}>
-                  <div className="transition-transform duration-300 group-hover:scale-[1.02]">
+                  {/* Glare overlay */}
+                  <div className="glare-overlay absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"
+                    style={{
+                      background: 'linear-gradient(105deg, transparent 40%, hsl(var(--primary) / 0.08) 45%, hsl(var(--primary) / 0.15) 50%, hsl(var(--primary) / 0.08) 55%, transparent 60%)',
+                    }}
+                  />
+                  <div className="transition-transform duration-300 group-hover:scale-[1.02] relative z-10">
                     <div className="flex items-center gap-2.5 mb-2.5">
                       <div className="w-8 h-8 rounded-full bg-primary/15 flex items-center justify-center flex-shrink-0">
                         <span className="text-xs font-bold text-primary">{t.name[0]}</span>
@@ -80,6 +86,12 @@ const TestimonialWall = () => {
                     </div>
                     <p className="text-sm text-foreground/80 leading-relaxed">{t.text}</p>
                   </div>
+                  {/* Hover border glow */}
+                  <div className="absolute inset-0 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"
+                    style={{
+                      boxShadow: 'inset 0 0 0 1px hsl(var(--primary) / 0.3), 0 0 20px hsl(var(--primary) / 0.1)',
+                    }}
+                  />
                 </div>
               ))}
             </div>

@@ -1,4 +1,4 @@
-import { createContext, useContext, useState, useEffect, ReactNode, useCallback, useRef } from 'react';
+import { createContext, useContext, useState, useEffect, ReactNode, useCallback } from 'react';
 
 interface ThemeContextType {
   theme: 'dark' | 'light';
@@ -18,6 +18,7 @@ export const ThemeProvider = ({ children }: { children: ReactNode }) => {
     return 'dark';
   });
   const [isTransitioning, setIsTransitioning] = useState(false);
+  const [slideDirection, setSlideDirection] = useState<'none' | 'slide'>('none');
 
   useEffect(() => {
     document.documentElement.classList.toggle('dark', theme === 'dark');
@@ -25,24 +26,35 @@ export const ThemeProvider = ({ children }: { children: ReactNode }) => {
   }, [theme]);
 
   const toggleTheme = useCallback(() => {
+    if (isTransitioning) return;
     setIsTransitioning(true);
-    // Add transition class to html for smooth color transitions
-    document.documentElement.style.transition = 'background-color 0.4s ease, color 0.4s ease';
-    document.body.style.transition = 'background-color 0.4s ease, color 0.4s ease';
-    
-    setTheme(prev => prev === 'dark' ? 'light' : 'dark');
-    
+    setSlideDirection('slide');
+
+    // Quick transition
+    setTimeout(() => {
+      setTheme(prev => prev === 'dark' ? 'light' : 'dark');
+    }, 150);
+
     setTimeout(() => {
       setIsTransitioning(false);
-      document.documentElement.style.transition = '';
-      document.body.style.transition = '';
-    }, 400);
-  }, []);
+      setSlideDirection('none');
+    }, 500);
+  }, [isTransitioning]);
 
   return (
     <ThemeContext.Provider value={{ theme, toggleTheme, isTransitioning }}>
-      <div className="theme-transition-wrapper">
-        {children}
+      <div
+        className="theme-transition-wrapper"
+        style={{
+          transition: slideDirection === 'slide' ? 'transform 0.4s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s ease' : 'none',
+          transform: isTransitioning ? 'translateX(0)' : 'translateX(0)',
+        }}
+      >
+        <div style={{
+          animation: slideDirection === 'slide' ? 'themePush 0.5s cubic-bezier(0.4, 0, 0.2, 1)' : 'none',
+        }}>
+          {children}
+        </div>
       </div>
     </ThemeContext.Provider>
   );

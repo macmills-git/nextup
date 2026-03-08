@@ -3,13 +3,14 @@ import { Link } from "react-router-dom";
 import { ArrowRight } from "lucide-react";
 import { Cobe } from "@/components/eldoraui/cobe-globe";
 import { useTheme } from "@/contexts/ThemeContext";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import gsap from "gsap";
 
 const HeroSection = () => {
   const { theme } = useTheme();
   const isDark = theme === 'dark';
   const contentRef = useRef<HTMLDivElement>(null);
+  const [hoverBtn, setHoverBtn] = useState(false);
 
   useEffect(() => {
     if (!contentRef.current) return;
@@ -56,14 +57,16 @@ const HeroSection = () => {
       <div ref={contentRef} className="relative z-10 container mx-auto px-4 lg:px-8 pt-32 pb-16 lg:pt-40 lg:pb-20 flex flex-col items-center justify-center min-h-screen">
         <div className="text-center max-w-4xl mx-auto">
           <h1 className="hero-anim text-4xl md:text-6xl lg:text-7xl font-bold mb-5 leading-tight" style={{ fontFamily: "'DM Sans', system-ui, sans-serif", fontWeight: 700 }}>
-            <span style={{
-              backgroundImage: 'linear-gradient(135deg, hsl(var(--primary)) 0%, hsl(280, 70%, 60%) 50%, hsl(var(--primary)) 100%)',
-              backgroundSize: '200% 200%',
-              WebkitBackgroundClip: 'text',
-              WebkitTextFillColor: 'transparent',
-              animation: 'gradientTextFlow 4s ease infinite',
-            }}>
-              Your All-in-One
+            <span className="inline-block relative">
+              <span style={{
+                backgroundImage: 'linear-gradient(135deg, hsl(var(--primary)) 0%, hsl(280, 70%, 60%) 50%, hsl(var(--primary)) 100%)',
+                backgroundSize: '200% 200%',
+                WebkitBackgroundClip: 'text',
+                WebkitTextFillColor: 'transparent',
+                animation: 'gradientTextFlow 4s ease infinite',
+              }}>
+                Your All-in-One
+              </span>
             </span>
             <br />
             <span className="text-foreground">Event Companion</span>
@@ -72,11 +75,30 @@ const HeroSection = () => {
             Simplify event planning, vendor management, and team coordination with cutting-edge tools designed for everyone.
           </p>
           <div className="hero-anim flex flex-col sm:flex-row items-center justify-center gap-3">
-            <Button size="lg" asChild className="rounded-full px-8 py-3 text-sm font-medium border-none text-white transition-all duration-300 hover:scale-105 hover:shadow-[0_0_30px_hsl(225,90%,60%,0.4)] gradient-primary" style={{
-              boxShadow: '0 4px 20px hsl(225, 90%, 60%, 0.35)',
-            }}>
-              <Link to="/signup">Get Started <ArrowRight className="ml-2 h-4 w-4" /></Link>
-            </Button>
+            {/* Hover border gradient button */}
+            <div
+              className="relative rounded-full p-[2px] overflow-hidden group"
+              onMouseEnter={() => setHoverBtn(true)}
+              onMouseLeave={() => setHoverBtn(false)}
+              style={{
+                background: hoverBtn
+                  ? 'linear-gradient(135deg, hsl(var(--primary)), hsl(280, 70%, 60%), hsl(var(--primary)))'
+                  : 'hsl(var(--border))',
+                transition: 'background 0.3s ease',
+              }}
+            >
+              <div style={{
+                position: 'absolute',
+                inset: '-50%',
+                background: 'conic-gradient(from 0deg, hsl(var(--primary)), hsl(280, 70%, 60%), hsl(var(--primary)))',
+                animation: hoverBtn ? 'spin 2s linear infinite' : 'none',
+                opacity: hoverBtn ? 1 : 0,
+                transition: 'opacity 0.3s',
+              }} />
+              <Button size="lg" asChild className="relative rounded-full px-8 py-3 text-sm font-medium border-none text-white transition-all duration-300 gradient-primary z-10">
+                <Link to="/signup">Get Started <ArrowRight className="ml-2 h-4 w-4" /></Link>
+              </Button>
+            </div>
           </div>
         </div>
       </div>
