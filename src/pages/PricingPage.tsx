@@ -33,7 +33,7 @@ const creditOptions = [
 ];
 
 const faqs = [
-  { q: "What is EventNest?", a: "EventNest is an AI-powered event planning platform that helps you manage events, vendors, teams, and budgets all in one place." },
+  { q: "What is Nested?", a: "Nested is an AI-powered event planning platform that helps you manage events, vendors, teams, and budgets all in one place." },
   { q: "Do I need a credit card to start?", a: "No. The Starter plan is completely free with no credit card required." },
   { q: "Can I switch plans anytime?", a: "Yes, you can upgrade or downgrade your plan at any time. Changes take effect immediately." },
   { q: "Is there a refund policy?", a: "Yes, we offer a 14-day money-back guarantee on all paid plans." },
