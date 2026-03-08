@@ -32,13 +32,13 @@ const Navbar = () => {
       style={{ padding: scrolled ? "12px 16px 0" : "0px" }}
     >
       <nav
-        className="w-full bg-background/80 backdrop-blur-xl border-b transition-all duration-500 ease-[cubic-bezier(0.4,0,0.2,1)]"
+        className="w-full backdrop-blur-lg backdrop-saturate-150 border transition-all duration-500 ease-[cubic-bezier(0.4,0,0.2,1)] dark:bg-white/[0.06] bg-white/30 border-white/20 dark:border-white/10 shadow-lg"
         style={{
           maxWidth: scrolled ? "860px" : "100%",
-          borderRadius: scrolled ? "16px" : "0px",
-          borderWidth: scrolled ? "1px" : "0 0 1px 0",
-          borderColor: "hsl(var(--border) / 0.2)",
-          boxShadow: scrolled ? "0 8px 32px -8px hsl(var(--foreground) / 0.1)" : "none",
+          borderRadius: scrolled ? "20px" : "0 0 16px 16px",
+          boxShadow: scrolled
+            ? "0 8px 32px -8px rgba(0,0,0,0.15), inset 0 0.5px 0 0 rgba(255,255,255,0.1)"
+            : "0 4px 24px -4px rgba(0,0,0,0.08), inset 0 0.5px 0 0 rgba(255,255,255,0.1)",
         }}
       >
         <div className="flex items-center justify-between h-14 px-4 lg:px-6">
