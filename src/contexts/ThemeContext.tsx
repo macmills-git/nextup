@@ -3,10 +3,9 @@ import { createContext, useContext, useState, useEffect, ReactNode, useCallback 
 interface ThemeContextType {
   theme: 'dark' | 'light';
   toggleTheme: () => void;
-  isTransitioning: boolean;
 }
 
-const ThemeContext = createContext<ThemeContextType>({ theme: 'dark', toggleTheme: () => {}, isTransitioning: false });
+const ThemeContext = createContext<ThemeContextType>({ theme: 'dark', toggleTheme: () => {} });
 
 export const useTheme = () => useContext(ThemeContext);
 
@@ -17,8 +16,6 @@ export const ThemeProvider = ({ children }: { children: ReactNode }) => {
     }
     return 'dark';
   });
-  const [isTransitioning, setIsTransitioning] = useState(false);
-  const [slideDirection, setSlideDirection] = useState<'none' | 'slide'>('none');
 
   useEffect(() => {
     document.documentElement.classList.toggle('dark', theme === 'dark');
@@ -26,37 +23,12 @@ export const ThemeProvider = ({ children }: { children: ReactNode }) => {
   }, [theme]);
 
   const toggleTheme = useCallback(() => {
-    if (isTransitioning) return;
-    setIsTransitioning(true);
-    setSlideDirection('slide');
-    document.documentElement.classList.add('theme-transitioning');
-
-    setTimeout(() => {
-      setTheme(prev => prev === 'dark' ? 'light' : 'dark');
-    }, 100);
-
-    setTimeout(() => {
-      setIsTransitioning(false);
-      setSlideDirection('none');
-      document.documentElement.classList.remove('theme-transitioning');
-    }, 600);
-  }, [isTransitioning]);
+    setTheme(prev => prev === 'dark' ? 'light' : 'dark');
+  }, []);
 
   return (
-    <ThemeContext.Provider value={{ theme, toggleTheme, isTransitioning }}>
-      <div
-        className="theme-transition-wrapper"
-        style={{
-          transition: slideDirection === 'slide' ? 'transform 0.4s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s ease' : 'none',
-          transform: isTransitioning ? 'translateX(0)' : 'translateX(0)',
-        }}
-      >
-        <div style={{
-          animation: slideDirection === 'slide' ? 'themePush 0.5s cubic-bezier(0.4, 0, 0.2, 1)' : 'none',
-        }}>
-          {children}
-        </div>
-      </div>
+    <ThemeContext.Provider value={{ theme, toggleTheme }}>
+      {children}
     </ThemeContext.Provider>
   );
 };
