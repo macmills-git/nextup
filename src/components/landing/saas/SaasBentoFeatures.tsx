@@ -357,7 +357,7 @@ const SaasBentoFeatures = () => {
                 </div>
               </div>
               <div className="border border-border/30 rounded-lg px-3 py-2.5 flex items-center justify-between mt-2">
-                <span className="text-xs text-muted-foreground">Ask Event Nest AI</span>
+                <span className="text-xs text-muted-foreground">Ask Nested AI</span>
                 <div className="flex items-center gap-2">
                   <span className="text-muted-foreground text-xs">📎</span>
                   <span className="text-muted-foreground text-xs">➤</span>

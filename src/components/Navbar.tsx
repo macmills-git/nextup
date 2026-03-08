@@ -48,7 +48,7 @@ const Navbar = () => {
               className="font-semibold text-sm text-foreground transition-all duration-500"
               style={{ opacity: scrolled ? 0 : 1, width: scrolled ? 0 : "auto", overflow: "hidden" }}
             >
-              Event Nest
+              Nested
             </span>
           </Link>
 
