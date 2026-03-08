@@ -22,43 +22,36 @@ const MacBookShowcase = () => {
       },
     });
 
-    // Animate the whole laptop up
     tl.fromTo(ref.current.querySelector('.macbook-container'),
       { y: 80, opacity: 0, scale: 0.9 },
       { y: 0, opacity: 1, scale: 1, duration: 1, ease: 'power3.out' }
     );
 
-    // Animate text
     gsap.fromTo(ref.current.querySelectorAll('.mac-text'),
-      { y: 30, opacity: 0 },
-      { y: 0, opacity: 1, duration: 0.6, stagger: 0.1, ease: 'power2.out',
+      { y: 20, opacity: 0, filter: 'blur(6px)' },
+      { y: 0, opacity: 1, filter: 'blur(0px)', duration: 0.7, stagger: 0.1, ease: 'power3.out',
         scrollTrigger: { trigger: ref.current, start: 'top 85%' }
       }
     );
   }, []);
 
   return (
-    <section ref={ref} className="py-24 bg-transparent relative overflow-hidden">
+    <section ref={ref} className="py-28 bg-transparent relative overflow-hidden">
       <div className="absolute inset-0 pointer-events-none" style={{
         background: 'radial-gradient(ellipse at center 40%, hsl(var(--primary) / 0.04) 0%, transparent 60%)',
       }} />
 
       <div className="container mx-auto px-4 lg:px-8 text-center relative z-10">
-        <div className="mac-text flex justify-center mb-6">
-          <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center">
-            <svg className="w-5 h-5 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-              <path strokeLinecap="round" strokeLinejoin="round" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-            </svg>
-          </div>
-        </div>
+        <span className="mac-text inline-flex items-center text-[11px] font-medium text-primary bg-primary/10 border border-primary/20 px-3.5 py-1 rounded-full mb-4">
+          Dashboard
+        </span>
         <h2 className="mac-text text-3xl md:text-5xl font-bold mb-3 text-foreground">Perfect set of tools</h2>
         <p className="mac-text text-sm md:text-base text-muted-foreground max-w-lg mx-auto mb-14">
           Event Nest comes with perfect tools for the perfect events out there.
         </p>
 
-        {/* MacBook with opening lid animation */}
+        {/* MacBook */}
         <div className="macbook-container max-w-4xl mx-auto" style={{ perspective: '1500px' }}>
-          {/* Screen / Lid */}
           <div
             className="relative origin-bottom"
             style={{
@@ -67,19 +60,16 @@ const MacBookShowcase = () => {
               transformStyle: 'preserve-3d',
             }}
           >
-            <div className="relative rounded-t-2xl overflow-hidden border-[6px] border-muted/40 dark:border-muted bg-card shadow-elevated" style={{ aspectRatio: '16/10' }}>
-              {/* Glow when open */}
+            <div className="relative rounded-t-2xl overflow-hidden border-[6px] border-border/40 bg-card/80 backdrop-blur-sm shadow-elevated" style={{ aspectRatio: '16/10' }}>
               <div className="absolute inset-0 pointer-events-none z-20 rounded-t-xl" style={{
                 boxShadow: lidOpen ? 'inset 0 0 60px hsl(var(--primary) / 0.05)' : 'none',
                 transition: 'box-shadow 1s ease 0.5s',
               }} />
 
-              {/* Mock dashboard */}
               <div className="w-full h-full p-3 bg-card overflow-hidden" style={{
                 opacity: lidOpen ? 1 : 0,
                 transition: 'opacity 0.6s ease 0.8s',
               }}>
-                {/* Top bar */}
                 <div className="flex items-center gap-1.5 mb-3">
                   <div className="w-2 h-2 rounded-full bg-destructive/60" />
                   <div className="w-2 h-2 rounded-full bg-warning/60" />
@@ -89,7 +79,6 @@ const MacBookShowcase = () => {
                   </div>
                 </div>
                 <div className="flex gap-3 h-[calc(100%-2rem)]">
-                  {/* Sidebar */}
                   <div className="w-[15%] bg-secondary rounded-lg p-2 space-y-1.5 hidden md:block">
                     {['Dashboard', 'Events', 'Vendors', 'Messages', 'Analytics', 'Team', 'Settings'].map((item, i) => (
                       <div key={item} className={`h-4 rounded text-[6px] flex items-center px-1.5 ${i === 0 ? 'bg-primary/15 text-primary font-medium' : 'text-muted-foreground'}`}>
@@ -97,7 +86,6 @@ const MacBookShowcase = () => {
                       </div>
                     ))}
                   </div>
-                  {/* Main content */}
                   <div className="flex-1 space-y-2.5">
                     <div className="flex gap-2">
                       <div className="flex-1 bg-secondary rounded-lg p-2.5">
@@ -141,15 +129,13 @@ const MacBookShowcase = () => {
             </div>
           </div>
 
-          {/* Base / Keyboard */}
           <div className="relative">
-            <div className="h-3 bg-muted/50 dark:bg-muted rounded-b-sm mx-4" style={{
+            <div className="h-3 bg-muted/50 rounded-b-sm mx-4" style={{
               background: 'linear-gradient(180deg, hsl(var(--muted) / 0.6), hsl(var(--muted) / 0.3))',
             }} />
             <div className="h-1.5 bg-muted/30 rounded-b-xl mx-8" />
-            {/* Reflection glow */}
             <div className="absolute -bottom-8 left-1/2 -translate-x-1/2 w-3/4 h-8 rounded-full opacity-30" style={{
-              background: 'radial-gradient(ellipse, hsl(var(--primary) / 0.2), transparent 70%)',
+              background: 'radial-gradient(ellipse, hsl(var(--primary) / 0.15), transparent 70%)',
               filter: 'blur(10px)',
             }} />
           </div>

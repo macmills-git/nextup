@@ -32,10 +32,18 @@ const TestimonialWall = () => {
 
   useEffect(() => {
     if (!ref.current) return;
+    // Staggered card entrance
     gsap.fromTo(ref.current.querySelectorAll('.tw-card'),
-      { y: 20, opacity: 0 },
-      { y: 0, opacity: 1, duration: 0.4, stagger: 0.03, ease: 'power2.out',
+      { y: 30, opacity: 0, scale: 0.97 },
+      { y: 0, opacity: 1, scale: 1, duration: 0.5, stagger: 0.04, ease: 'power3.out',
         scrollTrigger: { trigger: ref.current, start: 'top 85%' }
+      }
+    );
+    // Heading
+    gsap.fromTo(ref.current.querySelectorAll('.tw-heading'),
+      { y: 20, opacity: 0, filter: 'blur(6px)' },
+      { y: 0, opacity: 1, filter: 'blur(0px)', duration: 0.7, stagger: 0.08, ease: 'power3.out',
+        scrollTrigger: { trigger: ref.current, start: 'top 90%' }
       }
     );
   }, []);
@@ -44,32 +52,35 @@ const TestimonialWall = () => {
   testimonials.forEach((t, i) => cols[i % 4].push(t));
 
   return (
-    <section className="py-24 bg-transparent">
+    <section ref={ref} className="py-28 bg-transparent">
       <div className="container mx-auto px-4 lg:px-8">
-        <div className="text-center mb-14">
-          <h2 className="text-3xl md:text-5xl font-bold text-foreground mb-3">
+        <div className="text-center mb-16">
+          <span className="tw-heading inline-flex items-center text-[11px] font-medium text-primary bg-primary/10 border border-primary/20 px-3.5 py-1 rounded-full mb-4">
+            Wall of Love
+          </span>
+          <h2 className="tw-heading text-3xl md:text-5xl font-bold text-foreground mb-3">
             Loved by thousands of people
           </h2>
-          <p className="text-sm text-muted-foreground max-w-md mx-auto">
+          <p className="tw-heading text-sm text-muted-foreground max-w-md mx-auto">
             Here's what some of our users have to say about Event Nest.
           </p>
         </div>
 
-        <div ref={ref} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 max-w-6xl mx-auto">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 max-w-6xl mx-auto">
           {cols.map((col, ci) => (
             <div key={ci} className="space-y-4">
               {col.map((t, i) => (
-                <div key={i} className="tw-card glare-card rounded-xl p-4 bg-card border border-border transition-all duration-300 group relative overflow-hidden"
-                  style={{ perspective: '600px' }}>
-                  {/* Glare overlay */}
-                  <div className="glare-overlay absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"
-                    style={{
-                      background: 'linear-gradient(105deg, transparent 40%, hsl(var(--primary) / 0.08) 45%, hsl(var(--primary) / 0.15) 50%, hsl(var(--primary) / 0.08) 55%, transparent 60%)',
-                    }}
-                  />
-                  <div className="transition-transform duration-300 group-hover:scale-[1.02] relative z-10">
+                <div
+                  key={i}
+                  className="tw-card group rounded-2xl p-4 bg-card/80 backdrop-blur-sm border border-border/60 transition-all duration-500 hover:border-primary/20 hover:shadow-elevated relative overflow-hidden"
+                >
+                  {/* Hover glow */}
+                  <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" style={{
+                    background: 'linear-gradient(105deg, transparent 40%, hsl(var(--primary) / 0.06) 45%, hsl(var(--primary) / 0.12) 50%, hsl(var(--primary) / 0.06) 55%, transparent 60%)',
+                  }} />
+                  <div className="relative z-10">
                     <div className="flex items-center gap-2.5 mb-2.5">
-                      <div className="w-8 h-8 rounded-full bg-primary/15 flex items-center justify-center flex-shrink-0">
+                      <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0 transition-transform duration-300 group-hover:scale-110">
                         <span className="text-xs font-bold text-primary">{t.name[0]}</span>
                       </div>
                       <div className="min-w-0">
@@ -86,12 +97,6 @@ const TestimonialWall = () => {
                     </div>
                     <p className="text-sm text-foreground/80 leading-relaxed">{t.text}</p>
                   </div>
-                  {/* Hover border glow */}
-                  <div className="absolute inset-0 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"
-                    style={{
-                      boxShadow: 'inset 0 0 0 1px hsl(var(--primary) / 0.3), 0 0 20px hsl(var(--primary) / 0.1)',
-                    }}
-                  />
                 </div>
               ))}
             </div>

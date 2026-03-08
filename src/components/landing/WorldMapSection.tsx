@@ -28,8 +28,8 @@ const WorldMapSection = () => {
   useEffect(() => {
     if (!ref.current) return;
     gsap.fromTo(ref.current.querySelectorAll('.wm-el'),
-      { y: 30, opacity: 0 },
-      { y: 0, opacity: 1, duration: 0.6, stagger: 0.1, ease: 'power2.out',
+      { y: 20, opacity: 0, filter: 'blur(6px)' },
+      { y: 0, opacity: 1, filter: 'blur(0px)', duration: 0.7, stagger: 0.1, ease: 'power3.out',
         scrollTrigger: { trigger: ref.current, start: 'top 80%' }
       }
     );
@@ -48,18 +48,20 @@ const WorldMapSection = () => {
   }, []);
 
   return (
-    <section ref={ref} className="py-24 bg-transparent relative overflow-hidden">
+    <section ref={ref} className="py-28 bg-transparent relative overflow-hidden">
       <div className="container mx-auto px-4 lg:px-8 text-center">
-        <span className="wm-el inline-block text-xs font-medium border border-border rounded-full px-4 py-1.5 mb-4 text-muted-foreground">Availability</span>
+        <span className="wm-el inline-flex items-center text-[11px] font-medium text-primary bg-primary/10 border border-primary/20 px-3.5 py-1 rounded-full mb-4">
+          Availability
+        </span>
         <h2 className="wm-el text-3xl md:text-5xl font-bold mb-3 text-foreground">
           Connect to team members everywhere
         </h2>
-        <p className="wm-el text-sm text-muted-foreground max-w-lg mx-auto mb-12">
+        <p className="wm-el text-sm text-muted-foreground max-w-lg mx-auto mb-14">
           Our platform is available in all countries, with support from over 20,000+ event professionals.
         </p>
 
-        {/* Map container - zoomed in */}
-        <div className="relative max-w-5xl mx-auto overflow-hidden rounded-2xl" style={{ aspectRatio: '2/1' }}>
+        {/* Map container */}
+        <div className="relative max-w-5xl mx-auto overflow-hidden rounded-3xl border border-border/40 bg-card/40 backdrop-blur-sm" style={{ aspectRatio: '2/1' }}>
           <div className="absolute inset-0 scale-[1.15] origin-center">
             <svg viewBox="0 0 1000 500" className="w-full h-full opacity-20" fill="hsl(var(--muted-foreground))">
               {Array.from({ length: 80 }).map((_, row) =>
@@ -100,10 +102,10 @@ const WorldMapSection = () => {
             {avatars.map((av, i) => (
               <div key={i} className="avatar-pin absolute w-10 h-10 -translate-x-1/2 -translate-y-1/2 group cursor-pointer"
                 style={{ top: av.top, left: av.left }}>
-                <div className="w-10 h-10 rounded-full border-2 border-background shadow-elevated overflow-hidden bg-primary/20 flex items-center justify-center transition-transform duration-200 group-hover:scale-125">
+                <div className="w-10 h-10 rounded-full border-2 border-background shadow-elevated overflow-hidden bg-primary/20 flex items-center justify-center transition-transform duration-300 group-hover:scale-125">
                   <span className="text-xs font-bold text-primary">{av.name[0]}</span>
                 </div>
-                <div className="absolute -bottom-6 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity bg-card border border-border rounded-md px-2 py-0.5 whitespace-nowrap shadow-sm">
+                <div className="absolute -bottom-6 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-all duration-200 group-hover:-translate-y-1 bg-card border border-border rounded-md px-2 py-0.5 whitespace-nowrap shadow-sm pointer-events-none">
                   <span className="text-[10px] text-foreground font-medium">{av.name}</span>
                 </div>
               </div>
