@@ -125,7 +125,7 @@ const FeaturesPage = () => {
               <p className="text-sm text-muted-foreground mb-4">Centralized messaging with vendors, team, and guests.</p>
               <div className="rounded-xl bg-secondary p-3 space-y-1.5">
                 {["Hello! Give me all vendor contacts for this event", "Sure! Here are 12 vendor contacts with ratings.", "Can you draft the vendor brief?", "Done! Brief generated and sent."].map((msg, i) => (
-                  <div key={i} className={`rounded-lg px-2.5 py-1.5 text-[10px] ${i % 2 === 0 ? 'ml-auto max-w-[80%] bg-foreground text-background' : 'mr-auto max-w-[80%] bg-card border border-border text-foreground'}`}>
+                  <div key={i} className={`rounded-lg px-2.5 py-1.5 text-[10px] ${i % 2 === 0 ? 'ml-auto max-w-[80%] bg-primary text-white' : 'mr-auto max-w-[80%] bg-card border border-border text-foreground'}`}>
                     {msg}
                   </div>
                 ))}
