@@ -7,91 +7,83 @@
 
 @layer base {
   :root {
-    --background: 60 9% 98%;
-    --foreground: 0 0% 6%;
-    --card: 60 9% 98%;
-    --card-foreground: 0 0% 6%;
-    --popover: 60 9% 98%;
-    --popover-foreground: 0 0% 6%;
-    --primary: 262 83% 58%;
+    --background: 0 0% 99%;
+    --foreground: 0 0% 7%;
+    --card: 0 0% 100%;
+    --card-foreground: 0 0% 7%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 0 0% 7%;
+    --primary: 12 76% 61%;
     --primary-foreground: 0 0% 100%;
-    --secondary: 47 100% 62%;
-    --secondary-foreground: 0 0% 6%;
-    --muted: 60 5% 92%;
-    --muted-foreground: 0 0% 40%;
-    --accent: 170 75% 50%;
-    --accent-foreground: 0 0% 6%;
+    --secondary: 0 0% 96%;
+    --secondary-foreground: 0 0% 7%;
+    --muted: 0 0% 94%;
+    --muted-foreground: 0 0% 45%;
+    --accent: 0 0% 94%;
+    --accent-foreground: 0 0% 7%;
     --destructive: 0 84% 60%;
     --destructive-foreground: 0 0% 100%;
-    --border: 0 0% 90%;
-    --input: 0 0% 90%;
-    --ring: 262 83% 58%;
+    --border: 0 0% 91%;
+    --input: 0 0% 91%;
+    --ring: 12 76% 61%;
     --radius: 0.75rem;
-    --sidebar-background: 60 9% 98%;
-    --sidebar-foreground: 0 0% 30%;
-    --sidebar-primary: 262 83% 58%;
+    --sidebar-background: 0 0% 100%;
+    --sidebar-foreground: 0 0% 40%;
+    --sidebar-primary: 12 76% 61%;
     --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 47 100% 85%;
-    --sidebar-accent-foreground: 0 0% 6%;
-    --sidebar-border: 0 0% 92%;
-    --sidebar-ring: 262 83% 58%;
+    --sidebar-accent: 0 0% 96%;
+    --sidebar-accent-foreground: 0 0% 7%;
+    --sidebar-border: 0 0% 93%;
+    --sidebar-ring: 12 76% 61%;
     --success: 142 71% 45%;
     --success-foreground: 0 0% 100%;
     --warning: 38 92% 50%;
     --warning-foreground: 0 0% 100%;
     --info: 225 90% 60%;
     --info-foreground: 0 0% 100%;
-    --shadow-card: 0 1px 3px hsl(0 0% 0% / 0.04);
-    --shadow-elevated: 0 4px 16px hsl(0 0% 0% / 0.08);
-    --shadow-brutal: 0 1px 3px hsl(0 0% 0% / 0.04);
-    --shadow-brutal-lg: 0 4px 16px hsl(0 0% 0% / 0.08);
-    --shadow-brutal-xl: 0 8px 24px hsl(0 0% 0% / 0.1);
-    --shadow-brutal-hover: 0 4px 16px hsl(0 0% 0% / 0.08);
-    --gradient-primary: linear-gradient(135deg, hsl(262, 83%, 58%), hsl(280, 70%, 55%));
-    --hero-bg: 60 9% 98%;
-    --section-bg: 60 9% 96%;
-    --section-alt-bg: 60 9% 98%;
+    --shadow-card: 0 1px 3px hsl(0 0% 0% / 0.03);
+    --shadow-elevated: 0 4px 20px hsl(0 0% 0% / 0.06);
+    --gradient-primary: linear-gradient(135deg, hsl(12, 76%, 61%), hsl(16, 80%, 55%));
+    --hero-bg: 0 0% 99%;
+    --section-bg: 0 0% 97%;
+    --section-alt-bg: 0 0% 99%;
     --nav-bg: 0 0% 100%;
-    --nav-text: 0 0% 6%;
+    --nav-text: 0 0% 7%;
   }
 
   .dark {
-    --background: 240 6% 8%;
-    --foreground: 60 9% 98%;
-    --card: 240 6% 12%;
-    --card-foreground: 60 9% 98%;
-    --popover: 240 6% 12%;
-    --popover-foreground: 60 9% 98%;
-    --primary: 262 83% 65%;
+    --background: 0 0% 5%;
+    --foreground: 0 0% 96%;
+    --card: 0 0% 8%;
+    --card-foreground: 0 0% 96%;
+    --popover: 0 0% 8%;
+    --popover-foreground: 0 0% 96%;
+    --primary: 12 76% 61%;
     --primary-foreground: 0 0% 100%;
-    --secondary: 47 100% 62%;
-    --secondary-foreground: 0 0% 6%;
-    --muted: 240 6% 16%;
-    --muted-foreground: 60 5% 65%;
-    --accent: 170 75% 50%;
-    --accent-foreground: 0 0% 6%;
+    --secondary: 0 0% 12%;
+    --secondary-foreground: 0 0% 96%;
+    --muted: 0 0% 14%;
+    --muted-foreground: 0 0% 60%;
+    --accent: 0 0% 14%;
+    --accent-foreground: 0 0% 96%;
     --destructive: 0 63% 45%;
-    --destructive-foreground: 60 9% 98%;
-    --border: 60 9% 85%;
-    --input: 60 9% 85%;
-    --ring: 262 83% 65%;
-    --sidebar-background: 240 6% 10%;
-    --sidebar-foreground: 60 5% 80%;
-    --sidebar-primary: 262 83% 65%;
+    --destructive-foreground: 0 0% 96%;
+    --border: 0 0% 16%;
+    --input: 0 0% 16%;
+    --ring: 12 76% 61%;
+    --sidebar-background: 0 0% 7%;
+    --sidebar-foreground: 0 0% 60%;
+    --sidebar-primary: 12 76% 61%;
     --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 240 6% 16%;
-    --sidebar-accent-foreground: 60 9% 98%;
-    --sidebar-border: 60 9% 85%;
-    --sidebar-ring: 262 83% 65%;
-    --shadow-card: 0 1px 3px hsl(0 0% 100% / 0.04);
-    --shadow-elevated: 0 4px 16px hsl(0 0% 0% / 0.3);
-    --shadow-brutal: 0 1px 3px hsl(0 0% 100% / 0.04);
-    --shadow-brutal-lg: 0 4px 16px hsl(0 0% 0% / 0.3);
-    --shadow-brutal-xl: 0 8px 24px hsl(0 0% 0% / 0.4);
-    --shadow-brutal-hover: 0 4px 16px hsl(0 0% 0% / 0.3);
-    --hero-bg: 240 6% 8%;
-    --section-bg: 240 6% 6%;
-    --section-alt-bg: 240 6% 10%;
+    --sidebar-accent: 0 0% 14%;
+    --sidebar-accent-foreground: 0 0% 96%;
+    --sidebar-border: 0 0% 16%;
+    --sidebar-ring: 12 76% 61%;
+    --shadow-card: 0 1px 3px hsl(0 0% 100% / 0.02);
+    --shadow-elevated: 0 4px 20px hsl(0 0% 0% / 0.3);
+    --hero-bg: 0 0% 5%;
+    --section-bg: 0 0% 4%;
+    --section-alt-bg: 0 0% 7%;
   }
 }
 
@@ -106,21 +98,12 @@
 }
 
 @layer utilities {
-  .shadow-brutal {
-    box-shadow: var(--shadow-brutal);
-  }
-  .shadow-brutal-lg {
-    box-shadow: var(--shadow-brutal-lg);
-  }
-  .shadow-brutal-xl {
-    box-shadow: var(--shadow-brutal-xl);
-  }
   .gradient-primary {
     background: var(--gradient-primary);
   }
 }
 
-/* Smooth theme transition — skip during view transitions */
+/* Smooth theme transition */
 ::view-transition-old(root),
 ::view-transition-new(root) {
   animation: none;
@@ -137,12 +120,8 @@
 }
 
 @keyframes viewTransitionReveal {
-  from {
-    clip-path: circle(0% at 50% 0%);
-  }
-  to {
-    clip-path: circle(150% at 50% 0%);
-  }
+  from { clip-path: circle(0% at 50% 0%); }
+  to { clip-path: circle(150% at 50% 0%); }
 }
 
 html {
@@ -152,19 +131,6 @@ html {
 @keyframes spin {
   from { transform: rotate(0deg); }
   to { transform: rotate(360deg); }
-}
-
-/* Neo-Brutalist hover — translate instead of shadow blur */
-.brutal-hover {
-  transition: transform 0.15s ease, box-shadow 0.15s ease;
-}
-.brutal-hover:hover {
-  transform: translate(-2px, -2px);
-  box-shadow: var(--shadow-brutal-hover);
-}
-.brutal-hover:active {
-  transform: translate(0px, 0px);
-  box-shadow: 2px 2px 0px hsl(var(--border));
 }
 
 /* Infinite scroll carousel */
