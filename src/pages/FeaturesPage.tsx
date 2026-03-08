@@ -1,5 +1,5 @@
 import Navbar from "@/components/Navbar";
-import VariantFooter from "@/components/VariantFooter";
+import SaasFooter from "@/components/landing/saas/SaasFooter";
 import { Calendar, DollarSign, Users, Sparkles, MessageSquare, Clock, Store, CheckCircle, Zap, Shield, Globe, BarChart3, ArrowRight, Bot, Layers, FileText, Bell } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
