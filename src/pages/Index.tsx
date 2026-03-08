@@ -11,7 +11,7 @@ import PageTransition from "@/components/PageTransition";
 
 const Index = () => {
   return (
-    <div className="min-h-screen bg-transparent relative z-[1]">
+    <div className="min-h-screen bg-background relative z-[1]">
       <Navbar />
       <PageTransition>
         <HeroSection />

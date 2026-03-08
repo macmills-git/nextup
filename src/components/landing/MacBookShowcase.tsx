@@ -28,29 +28,24 @@ const MacBookShowcase = () => {
     );
 
     gsap.fromTo(ref.current.querySelectorAll('.mac-text'),
-      { y: 20, opacity: 0, filter: 'blur(6px)' },
-      { y: 0, opacity: 1, filter: 'blur(0px)', duration: 0.7, stagger: 0.1, ease: 'power3.out',
+      { y: 20, opacity: 0 },
+      { y: 0, opacity: 1, duration: 0.5, stagger: 0.08, ease: 'power3.out',
         scrollTrigger: { trigger: ref.current, start: 'top 85%' }
       }
     );
   }, []);
 
   return (
-    <section ref={ref} className="py-28 bg-transparent relative overflow-hidden">
-      <div className="absolute inset-0 pointer-events-none" style={{
-        background: 'radial-gradient(ellipse at center 40%, hsl(var(--primary) / 0.04) 0%, transparent 60%)',
-      }} />
-
+    <section ref={ref} className="py-28 bg-background relative overflow-hidden">
       <div className="container mx-auto px-4 lg:px-8 text-center relative z-10">
-        <span className="mac-text inline-flex items-center text-[11px] font-medium text-primary bg-primary/10 border border-primary/20 px-3.5 py-1 rounded-full mb-4">
+        <span className="mac-text inline-flex items-center text-xs font-bold text-foreground bg-secondary border-2 border-border px-4 py-1 rounded-lg shadow-brutal mb-4">
           Dashboard
         </span>
-        <h2 className="mac-text text-3xl md:text-5xl font-bold mb-3 text-foreground">Perfect set of tools</h2>
-        <p className="mac-text text-sm md:text-base text-muted-foreground max-w-lg mx-auto mb-14">
+        <h2 className="mac-text text-3xl md:text-5xl font-black mb-3 text-foreground">Perfect set of tools</h2>
+        <p className="mac-text text-sm md:text-base text-muted-foreground max-w-lg mx-auto mb-14 font-medium">
           Event Nest comes with perfect tools for the perfect events out there.
         </p>
 
-        {/* MacBook */}
         <div className="macbook-container max-w-4xl mx-auto" style={{ perspective: '1500px' }}>
           <div
             className="relative origin-bottom"
@@ -60,45 +55,39 @@ const MacBookShowcase = () => {
               transformStyle: 'preserve-3d',
             }}
           >
-            <div className="relative rounded-t-2xl overflow-hidden border-[6px] border-border/40 bg-card/80 backdrop-blur-sm shadow-elevated" style={{ aspectRatio: '16/10' }}>
-              <div className="absolute inset-0 pointer-events-none z-20 rounded-t-xl" style={{
-                boxShadow: lidOpen ? 'inset 0 0 60px hsl(var(--primary) / 0.05)' : 'none',
-                transition: 'box-shadow 1s ease 0.5s',
-              }} />
-
+            <div className="relative rounded-t-2xl overflow-hidden border-2 border-border bg-card shadow-brutal-xl" style={{ aspectRatio: '16/10' }}>
               <div className="w-full h-full p-3 bg-card overflow-hidden" style={{
                 opacity: lidOpen ? 1 : 0,
                 transition: 'opacity 0.6s ease 0.8s',
               }}>
                 <div className="flex items-center gap-1.5 mb-3">
-                  <div className="w-2 h-2 rounded-full bg-destructive/60" />
-                  <div className="w-2 h-2 rounded-full bg-warning/60" />
-                  <div className="w-2 h-2 rounded-full bg-success/60" />
-                  <div className="flex-1 ml-4 h-5 rounded bg-secondary flex items-center px-2">
-                    <span className="text-[8px] text-muted-foreground">eventnest.app/dashboard</span>
+                  <div className="w-3 h-3 rounded-md bg-destructive border border-border" />
+                  <div className="w-3 h-3 rounded-md bg-warning border border-border" />
+                  <div className="w-3 h-3 rounded-md bg-success border border-border" />
+                  <div className="flex-1 ml-4 h-6 rounded-lg bg-muted border-2 border-border flex items-center px-2">
+                    <span className="text-[9px] font-bold text-muted-foreground">eventnest.app/dashboard</span>
                   </div>
                 </div>
-                <div className="flex gap-3 h-[calc(100%-2rem)]">
-                  <div className="w-[15%] bg-secondary rounded-lg p-2 space-y-1.5 hidden md:block">
+                <div className="flex gap-3 h-[calc(100%-2.5rem)]">
+                  <div className="w-[15%] bg-muted border-2 border-border rounded-lg p-2 space-y-1.5 hidden md:block">
                     {['Dashboard', 'Events', 'Vendors', 'Messages', 'Analytics', 'Team', 'Settings'].map((item, i) => (
-                      <div key={item} className={`h-4 rounded text-[6px] flex items-center px-1.5 ${i === 0 ? 'bg-primary/15 text-primary font-medium' : 'text-muted-foreground'}`}>
+                      <div key={item} className={`h-5 rounded-md text-[7px] font-bold flex items-center px-1.5 border ${i === 0 ? 'bg-primary text-primary-foreground border-border' : 'text-muted-foreground border-transparent'}`}>
                         {item}
                       </div>
                     ))}
                   </div>
                   <div className="flex-1 space-y-2.5">
                     <div className="flex gap-2">
-                      <div className="flex-1 bg-secondary rounded-lg p-2.5">
-                        <p className="text-[7px] text-muted-foreground mb-0.5">Your Posts</p>
-                        <p className="text-sm font-bold text-foreground">242,000</p>
-                        <p className="text-[6px] text-muted-foreground">Total posts</p>
+                      <div className="flex-1 bg-muted border-2 border-border rounded-lg p-2.5">
+                        <p className="text-[8px] font-bold text-muted-foreground mb-0.5">Your Posts</p>
+                        <p className="text-sm font-black text-foreground">242,000</p>
+                        <p className="text-[7px] text-muted-foreground">Total posts</p>
                         <svg viewBox="0 0 100 30" className="w-full h-6 mt-1" fill="none">
-                          <polyline points="0,25 8,22 16,20 24,18 32,15 40,16 48,10 56,12 64,8 72,11 80,6 88,9 100,4" stroke="hsl(var(--primary))" strokeWidth="1.5" fill="none" />
-                          <text x="70" y="8" fontSize="3" fill="hsl(var(--primary))">March $48,200</text>
+                          <polyline points="0,25 8,22 16,20 24,18 32,15 40,16 48,10 56,12 64,8 72,11 80,6 88,9 100,4" stroke="hsl(var(--primary))" strokeWidth="2" fill="none" />
                         </svg>
                       </div>
-                      <div className="flex-1 bg-secondary rounded-lg p-2.5 hidden sm:block">
-                        <p className="text-[7px] text-muted-foreground mb-0.5">Latest Transactions</p>
+                      <div className="flex-1 bg-muted border-2 border-border rounded-lg p-2.5 hidden sm:block">
+                        <p className="text-[8px] font-bold text-muted-foreground mb-0.5">Latest Transactions</p>
                         {[
                           { name: 'Invoice #AA-04-19', desc: 'New Madleton LLC.', amount: '$118.00' },
                           { name: 'Client Bernard Stanley', desc: 'bernard.scanley@gmail.com', amount: '$3200.00' },
@@ -107,19 +96,19 @@ const MacBookShowcase = () => {
                         ].map((t, i) => (
                           <div key={i} className="flex items-center justify-between py-0.5">
                             <div>
-                              <span className="text-[5px] text-foreground block">{t.name}</span>
-                              <span className="text-[4px] text-muted-foreground">{t.desc}</span>
+                              <span className="text-[6px] font-bold text-foreground block">{t.name}</span>
+                              <span className="text-[5px] text-muted-foreground">{t.desc}</span>
                             </div>
-                            <span className="text-[5px] text-foreground font-medium">{t.amount}</span>
+                            <span className="text-[6px] text-foreground font-bold">{t.amount}</span>
                           </div>
                         ))}
                       </div>
                     </div>
-                    <div className="bg-secondary rounded-lg p-2.5">
-                      <p className="text-[7px] text-muted-foreground mb-1">Posts Breakdown</p>
+                    <div className="bg-muted border-2 border-border rounded-lg p-2.5">
+                      <p className="text-[8px] font-bold text-muted-foreground mb-1">Posts Breakdown</p>
                       <div className="flex items-end gap-[2px] h-8">
                         {[40,55,35,70,50,80,65,90,45,75,60,85].map((h,i) => (
-                          <div key={i} className="flex-1 bg-primary/30 rounded-t-sm" style={{ height: `${h}%` }} />
+                          <div key={i} className="flex-1 bg-primary rounded-t-sm border border-border" style={{ height: `${h}%` }} />
                         ))}
                       </div>
                     </div>
@@ -130,14 +119,8 @@ const MacBookShowcase = () => {
           </div>
 
           <div className="relative">
-            <div className="h-3 bg-muted/50 rounded-b-sm mx-4" style={{
-              background: 'linear-gradient(180deg, hsl(var(--muted) / 0.6), hsl(var(--muted) / 0.3))',
-            }} />
-            <div className="h-1.5 bg-muted/30 rounded-b-xl mx-8" />
-            <div className="absolute -bottom-8 left-1/2 -translate-x-1/2 w-3/4 h-8 rounded-full opacity-30" style={{
-              background: 'radial-gradient(ellipse, hsl(var(--primary) / 0.15), transparent 70%)',
-              filter: 'blur(10px)',
-            }} />
+            <div className="h-4 bg-muted rounded-b-lg mx-4 border-2 border-t-0 border-border" />
+            <div className="h-2 bg-muted/50 rounded-b-xl mx-8 border-2 border-t-0 border-border" />
           </div>
         </div>
       </div>

@@ -13,44 +13,36 @@ const CTASection = () => {
   useEffect(() => {
     if (!ctaRef.current) return;
     gsap.fromTo(ctaRef.current.querySelectorAll('.cta-el'),
-      { y: 30, opacity: 0, filter: 'blur(6px)' },
-      { y: 0, opacity: 1, filter: 'blur(0px)', duration: 0.7, stagger: 0.1, ease: 'power3.out',
+      { y: 30, opacity: 0 },
+      { y: 0, opacity: 1, duration: 0.5, stagger: 0.08, ease: 'power3.out',
         scrollTrigger: { trigger: ctaRef.current, start: 'top 80%' },
       }
     );
   }, []);
 
   return (
-    <section className="relative py-28 overflow-hidden bg-transparent">
-      {/* Soft radial glow */}
-      <div className="absolute inset-0 pointer-events-none" style={{
-        background: 'radial-gradient(ellipse at 50% 50%, hsl(var(--primary) / 0.06) 0%, transparent 70%)',
-      }} />
-
+    <section className="relative py-28 overflow-hidden bg-background">
       <div className="container mx-auto px-4 lg:px-8">
         <div
           ref={ctaRef}
-          className="relative max-w-3xl mx-auto rounded-3xl border border-border/60 bg-card/80 backdrop-blur-xl px-8 py-16 md:px-14 md:py-20 text-center overflow-hidden"
-          style={{
-            boxShadow: '0 25px 80px -20px hsl(var(--foreground) / 0.1), 0 10px 30px -10px hsl(var(--primary) / 0.06)',
-          }}
+          className="relative max-w-3xl mx-auto rounded-2xl border-2 border-border bg-primary text-primary-foreground px-8 py-16 md:px-14 md:py-20 text-center shadow-brutal-xl"
         >
-          <div className="absolute inset-0 pointer-events-none rounded-3xl" style={{
-            background: 'radial-gradient(ellipse at 50% 0%, hsl(var(--primary) / 0.04) 0%, transparent 60%)',
-          }} />
+          {/* Decorative elements */}
+          <div className="absolute top-4 right-4 w-12 h-12 bg-secondary border-2 border-border rounded-lg rotate-12 shadow-brutal" />
+          <div className="absolute bottom-6 left-6 w-10 h-10 bg-accent border-2 border-border rounded-full shadow-brutal" />
 
           <div className="relative z-10">
-            <h2 className="cta-el text-4xl md:text-5xl font-bold mb-5 text-foreground">
+            <h2 className="cta-el text-4xl md:text-5xl font-black mb-5">
               Ready to transform your events?
             </h2>
-            <p className="cta-el text-sm md:text-base mb-8 max-w-xl mx-auto text-muted-foreground">
+            <p className="cta-el text-sm md:text-base mb-8 max-w-xl mx-auto opacity-90 font-medium">
               Join thousands of event planners who trust Event Nest to deliver unforgettable experiences.
             </p>
             <div className="cta-el">
-              <Button size="lg" asChild className="group/btn rounded-full px-8 py-3 text-sm font-medium border-none text-white transition-all duration-300 hover:shadow-elevated gradient-primary">
+              <Button size="lg" asChild className="group/btn rounded-xl px-8 py-3 text-sm font-black border-2 border-border bg-background text-foreground shadow-brutal-lg brutal-hover">
                 <Link to="/signup">
                   Get Started Now
-                  <ArrowRight className="ml-2 h-4 w-4 transition-transform duration-300 group-hover/btn:translate-x-1" />
+                  <ArrowRight className="ml-2 h-4 w-4 transition-transform duration-150 group-hover/btn:translate-x-1" />
                 </Link>
               </Button>
             </div>

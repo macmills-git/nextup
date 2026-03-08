@@ -27,22 +27,27 @@ const testimonials = [
   { name: "Enis", handle: "@enisdev", text: "Bro this is too beautiful, why is this even free??", verified: true },
 ];
 
+const accentColors = [
+  "bg-secondary",
+  "bg-accent/20",
+  "bg-primary/10",
+  "bg-destructive/10",
+];
+
 const TestimonialWall = () => {
   const ref = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (!ref.current) return;
-    // Staggered card entrance
     gsap.fromTo(ref.current.querySelectorAll('.tw-card'),
-      { y: 30, opacity: 0, scale: 0.97 },
-      { y: 0, opacity: 1, scale: 1, duration: 0.5, stagger: 0.04, ease: 'power3.out',
+      { y: 30, opacity: 0 },
+      { y: 0, opacity: 1, duration: 0.4, stagger: 0.03, ease: 'power3.out',
         scrollTrigger: { trigger: ref.current, start: 'top 85%' }
       }
     );
-    // Heading
     gsap.fromTo(ref.current.querySelectorAll('.tw-heading'),
-      { y: 20, opacity: 0, filter: 'blur(6px)' },
-      { y: 0, opacity: 1, filter: 'blur(0px)', duration: 0.7, stagger: 0.08, ease: 'power3.out',
+      { y: 20, opacity: 0 },
+      { y: 0, opacity: 1, duration: 0.5, stagger: 0.08, ease: 'power3.out',
         scrollTrigger: { trigger: ref.current, start: 'top 90%' }
       }
     );
@@ -52,16 +57,16 @@ const TestimonialWall = () => {
   testimonials.forEach((t, i) => cols[i % 4].push(t));
 
   return (
-    <section ref={ref} className="py-28 bg-transparent">
+    <section ref={ref} className="py-28 bg-background" id="testimonials">
       <div className="container mx-auto px-4 lg:px-8">
         <div className="text-center mb-16">
-          <span className="tw-heading inline-flex items-center text-[11px] font-medium text-primary bg-primary/10 border border-primary/20 px-3.5 py-1 rounded-full mb-4">
+          <span className="tw-heading inline-flex items-center text-xs font-bold text-foreground bg-secondary border-2 border-border px-4 py-1 rounded-lg shadow-brutal mb-4">
             Wall of Love
           </span>
-          <h2 className="tw-heading text-3xl md:text-5xl font-bold text-foreground mb-3">
+          <h2 className="tw-heading text-3xl md:text-5xl font-black text-foreground mb-3">
             Loved by thousands of people
           </h2>
-          <p className="tw-heading text-sm text-muted-foreground max-w-md mx-auto">
+          <p className="tw-heading text-sm text-muted-foreground max-w-md mx-auto font-medium">
             Here's what some of our users have to say about Event Nest.
           </p>
         </div>
@@ -72,31 +77,25 @@ const TestimonialWall = () => {
               {col.map((t, i) => (
                 <div
                   key={i}
-                  className="tw-card group rounded-2xl p-4 bg-card/80 backdrop-blur-sm border border-border/60 transition-all duration-500 hover:border-primary/20 hover:shadow-elevated relative overflow-hidden"
+                  className="tw-card group rounded-xl p-4 bg-card border-2 border-border shadow-brutal transition-all duration-150 hover:translate-x-[-2px] hover:translate-y-[-2px] hover:shadow-brutal-lg"
                 >
-                  {/* Hover glow */}
-                  <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" style={{
-                    background: 'linear-gradient(105deg, transparent 40%, hsl(var(--primary) / 0.06) 45%, hsl(var(--primary) / 0.12) 50%, hsl(var(--primary) / 0.06) 55%, transparent 60%)',
-                  }} />
-                  <div className="relative z-10">
-                    <div className="flex items-center gap-2.5 mb-2.5">
-                      <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0 transition-transform duration-300 group-hover:scale-110">
-                        <span className="text-xs font-bold text-primary">{t.name[0]}</span>
-                      </div>
-                      <div className="min-w-0">
-                        <div className="flex items-center gap-1">
-                          <span className="text-sm font-semibold text-foreground truncate">{t.name}</span>
-                          {t.verified && (
-                            <svg className="w-3.5 h-3.5 text-primary flex-shrink-0" viewBox="0 0 24 24" fill="currentColor">
-                              <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z" />
-                            </svg>
-                          )}
-                        </div>
-                        <span className="text-[11px] text-muted-foreground">{t.handle}</span>
-                      </div>
+                  <div className="flex items-center gap-2.5 mb-2.5">
+                    <div className={`w-8 h-8 rounded-lg ${accentColors[(ci + i) % accentColors.length]} border-2 border-border flex items-center justify-center flex-shrink-0`}>
+                      <span className="text-xs font-black text-foreground">{t.name[0]}</span>
                     </div>
-                    <p className="text-sm text-foreground/80 leading-relaxed">{t.text}</p>
+                    <div className="min-w-0">
+                      <div className="flex items-center gap-1">
+                        <span className="text-sm font-bold text-foreground truncate">{t.name}</span>
+                        {t.verified && (
+                          <svg className="w-3.5 h-3.5 text-primary flex-shrink-0" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z" />
+                          </svg>
+                        )}
+                      </div>
+                      <span className="text-[11px] text-muted-foreground font-medium">{t.handle}</span>
+                    </div>
                   </div>
+                  <p className="text-sm text-foreground/80 leading-relaxed">{t.text}</p>
                 </div>
               ))}
             </div>
