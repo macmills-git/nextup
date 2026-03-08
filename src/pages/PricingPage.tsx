@@ -1,5 +1,5 @@
 import Navbar from "@/components/Navbar";
-import VariantFooter from "@/components/VariantFooter";
+import SaasFooter from "@/components/landing/saas/SaasFooter";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 import { ArrowRight, Check, CreditCard, ChevronRight, Plus, Quote } from "lucide-react";
@@ -209,7 +209,7 @@ const PricingPage = () => {
           </div>
         </div>
       </div>
-      <VariantFooter />
+      <SaasFooter />
     </div>
   );
 };

@@ -1,5 +1,5 @@
 import Navbar from "@/components/Navbar";
-import VariantFooter from "@/components/VariantFooter";
+import SaasFooter from "@/components/landing/saas/SaasFooter";
 import { Search, Eye, Shuffle, ListFilter, CalendarDays } from "lucide-react";
 import { useState } from "react";
 
@@ -119,7 +119,7 @@ const TemplatesPage = () => {
           )}
         </div>
       </div>
-      <VariantFooter />
+      <SaasFooter />
     </div>
   );
 };
