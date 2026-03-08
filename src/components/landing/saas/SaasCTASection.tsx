@@ -30,43 +30,76 @@ const SaasCTASection = () => {
   }, []);
 
   return (
-    <section className="relative py-24 overflow-hidden bg-background">
-      <div ref={ctaRef} className="container mx-auto px-4 lg:px-8 max-w-3xl">
-        {/* FAQ Header */}
-        <div className="text-center mb-12">
-          <p className="cta-el text-sm text-primary font-medium mb-4">FAQs</p>
-          <h2 className="cta-el text-3xl md:text-5xl font-bold text-foreground mb-4">
-            Frequently Asked Questions
-          </h2>
-          <p className="cta-el text-base text-muted-foreground max-w-lg mx-auto mb-8">
-            Find all your doubts and questions in one place. Still couldn't find what you're looking for?
-          </p>
-          <div className="cta-el flex items-center justify-center gap-3">
-            <Button asChild className="rounded-full px-6 h-10 text-sm font-semibold bg-foreground text-background hover:bg-foreground/90">
-              <Link to="/docs">Read Docs</Link>
-            </Button>
-            <Button variant="outline" asChild className="rounded-full px-6 h-10 text-sm font-medium border border-border/40 bg-background hover:bg-muted/50">
-              <Link to="/help">Contact Us</Link>
-            </Button>
-          </div>
-        </div>
+    <section className="relative overflow-hidden bg-background">
+      {/* CTA Section - "Connect your Current Stack" */}
+      <div ref={ctaRef} className="py-24 relative">
+        <div className="container mx-auto px-4 lg:px-8 text-center relative z-10">
+          {/* Floating icons */}
+          <div className="relative max-w-3xl mx-auto mb-8">
+            {/* Large radial gradient bg */}
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] rounded-full bg-muted/30 blur-3xl pointer-events-none" />
 
-        {/* FAQ Accordion */}
-        <div className="cta-el space-y-0 border-t border-border/15">
-          {faqs.map((faq, i) => (
-            <div key={i} className="border-b border-border/15">
-              <button
-                onClick={() => setOpenFaq(openFaq === i ? null : i)}
-                className="w-full flex items-center justify-between py-5 text-left group"
-              >
-                <span className="text-sm md:text-base font-medium text-foreground group-hover:text-primary transition-colors">{faq.q}</span>
-                <ChevronDown className={`w-4 h-4 text-muted-foreground flex-shrink-0 ml-4 transition-transform duration-200 ${openFaq === i ? 'rotate-180' : ''}`} />
-              </button>
-              <div className={`overflow-hidden transition-all duration-300 ${openFaq === i ? 'max-h-40 pb-5' : 'max-h-0'}`}>
-                <p className="text-sm text-muted-foreground leading-relaxed pr-8">{faq.a}</p>
-              </div>
+            {/* Floating tool icons */}
+            <div className="cta-el relative flex items-center justify-center gap-8 mb-12 py-8">
+              {["📘", "🔗", "📊", "💬", "📅"].map((emoji, i) => (
+                <div key={i} className={`w-10 h-10 rounded-xl bg-card border border-border/30 shadow-sm flex items-center justify-center ${i % 2 === 0 ? '-mt-4' : 'mt-4'}`}>
+                  <span className="text-sm">{emoji}</span>
+                </div>
+              ))}
             </div>
-          ))}
+          </div>
+
+          <h2 className="cta-el text-3xl md:text-5xl lg:text-6xl font-bold text-foreground mb-6 leading-tight">
+            Connect your Current Stack
+            <br />
+            and Start Automating
+          </h2>
+
+          <Button asChild className="cta-el rounded-full px-8 h-12 text-sm font-semibold bg-foreground text-background hover:bg-foreground/90 transition-all duration-300" style={{
+            boxShadow: '0 8px 30px hsl(var(--foreground) / 0.2)',
+          }}>
+            <Link to="/signup">Start Building for Free</Link>
+          </Button>
+        </div>
+      </div>
+
+      {/* FAQ Section */}
+      <div className="py-24 border-t border-border/10">
+        <div className="container mx-auto px-4 lg:px-8 max-w-3xl">
+          <div className="text-center mb-12">
+            <p className="cta-el text-sm text-primary font-medium mb-4">FAQs</p>
+            <h2 className="cta-el text-3xl md:text-5xl font-bold text-foreground mb-4">
+              Frequently Asked Questions
+            </h2>
+            <p className="cta-el text-base text-muted-foreground max-w-lg mx-auto mb-8">
+              Find all your doubts and questions in one place. Still couldn't find what you're looking for?
+            </p>
+            <div className="cta-el flex items-center justify-center gap-3">
+              <Button asChild className="rounded-full px-6 h-10 text-sm font-semibold bg-foreground text-background hover:bg-foreground/90">
+                <Link to="/docs">Read Docs</Link>
+              </Button>
+              <Button variant="outline" asChild className="rounded-full px-6 h-10 text-sm font-medium border border-border/40 bg-background hover:bg-muted/50">
+                <Link to="/help">Contact Us</Link>
+              </Button>
+            </div>
+          </div>
+
+          <div className="cta-el space-y-0 border-t border-border/15">
+            {faqs.map((faq, i) => (
+              <div key={i} className="border-b border-border/15">
+                <button
+                  onClick={() => setOpenFaq(openFaq === i ? null : i)}
+                  className="w-full flex items-center justify-between py-5 text-left group"
+                >
+                  <span className="text-sm md:text-base font-medium text-foreground group-hover:text-primary transition-colors">{faq.q}</span>
+                  <ChevronDown className={`w-4 h-4 text-muted-foreground flex-shrink-0 ml-4 transition-transform duration-200 ${openFaq === i ? 'rotate-180' : ''}`} />
+                </button>
+                <div className={`overflow-hidden transition-all duration-300 ${openFaq === i ? 'max-h-40 pb-5' : 'max-h-0'}`}>
+                  <p className="text-sm text-muted-foreground leading-relaxed pr-8">{faq.a}</p>
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
       </div>
     </section>
