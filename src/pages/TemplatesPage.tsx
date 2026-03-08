@@ -1,5 +1,5 @@
 import Navbar from "@/components/Navbar";
-import Footer from "@/components/Footer";
+import VariantFooter from "@/components/VariantFooter";
 import { Search, Eye, Shuffle, ListFilter, CalendarDays } from "lucide-react";
 import { useState } from "react";
 
