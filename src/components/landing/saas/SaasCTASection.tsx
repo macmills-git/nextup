@@ -8,7 +8,7 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 gsap.registerPlugin(ScrollTrigger);
 
 const faqs = [
-  { q: "What exactly does this platform do?", a: "Event Nest is an all-in-one event planning platform that helps you manage vendors, coordinate teams, track budgets, and create unforgettable events — all from a single dashboard." },
+  { q: "What exactly does this platform do?", a: "Nested is an all-in-one event planning platform that helps you manage vendors, coordinate teams, track budgets, and create unforgettable events — all from a single dashboard." },
   { q: "How do I get started with creating my first event?", a: "Simply sign up for a free account, click 'Create Event', and our AI-powered assistant will guide you through setting up your event timeline, budget, and vendor requirements." },
   { q: "What tools and services can I integrate?", a: "We integrate with popular tools like Slack, Google Calendar, Stripe for payments, and over 50+ other services to streamline your workflow." },
   { q: "Is my data secure when using Event Nest?", a: "Absolutely. We use enterprise-grade encryption, SOC 2 compliance, and regular security audits to ensure your data is always protected." },
