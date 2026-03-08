@@ -246,13 +246,15 @@ html {
   }
 }
 
-/* Smooth theme color transitions */
+/* Theme transition override - default no transition on colors */
 *, *::before, *::after {
-  transition-property: background-color, border-color, color, fill, stroke, box-shadow;
-  transition-duration: 0s;
+  transition-property: transform, opacity;
+  transition-duration: 0.2s;
 }
 
-.theme-transition-wrapper * {
+/* When theme is transitioning, animate color properties */
+html.theme-transitioning * {
+  transition-property: background-color, border-color, color, fill, stroke, box-shadow, transform, opacity;
   transition-duration: 0.4s;
   transition-timing-function: ease;
 }
