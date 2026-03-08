@@ -48,7 +48,7 @@ const WorldMapSection = () => {
   }, []);
 
   return (
-    <section ref={ref} className="py-24 bg-background relative overflow-hidden">
+    <section ref={ref} className="py-24 bg-transparent relative overflow-hidden">
       <div className="container mx-auto px-4 lg:px-8 text-center">
         <span className="wm-el inline-block text-xs font-medium border border-border rounded-full px-4 py-1.5 mb-4 text-muted-foreground">Availability</span>
         <h2 className="wm-el text-3xl md:text-5xl font-bold mb-3 text-foreground">

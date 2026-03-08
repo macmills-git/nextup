@@ -44,7 +44,7 @@ const TestimonialWall = () => {
   testimonials.forEach((t, i) => cols[i % 4].push(t));
 
   return (
-    <section className="py-24 bg-background">
+    <section className="py-24 bg-transparent">
       <div className="container mx-auto px-4 lg:px-8">
         <div className="text-center mb-14">
           <h2 className="text-3xl md:text-5xl font-bold text-foreground mb-3">
