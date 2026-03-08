@@ -213,7 +213,7 @@ const SaasBentoFeatures = () => {
                 <h3 className="text-base font-semibold text-foreground">Native Tools Integration</h3>
               </div>
               <p className="text-sm text-muted-foreground max-w-2xl">
-                Track real-time activity of agents with detailed records of triggers, tools used, outcomes, and timestamps.
+                Connect your favorite tools — calendars, payment processors, communication platforms — and let Nested sync everything in real time.
               </p>
             </div>
             <div className="feat-anim p-8 md:p-12 flex items-center justify-center min-h-[320px] relative overflow-hidden">
