@@ -20,9 +20,8 @@ const AnimatedLogo = ({ size = 28, className = '' }: { size?: number; className?
       />
       <defs>
         <linearGradient id={id} x1="0" y1="0" x2="40" y2="40">
-          <stop offset="0%" stopColor="hsl(40, 55%, 55%)" />
-          <stop offset="50%" stopColor="hsl(35, 45%, 50%)" />
-          <stop offset="100%" stopColor="hsl(220, 60%, 25%)" />
+          <stop offset="0%" stopColor="hsl(12, 76%, 61%)" />
+          <stop offset="100%" stopColor="hsl(12, 60%, 45%)" />
         </linearGradient>
       </defs>
     </svg>
