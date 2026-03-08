@@ -126,9 +126,9 @@ const SaasBentoFeatures = () => {
         <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-px bg-border/10 border border-border/15 rounded-2xl overflow-hidden mb-24">
           {/* Row 1 */}
           {[
-            { icon: Rocket, title: "Launch Faster", desc: "Visually orchestrate autonomous event plans without writing boilerplate code" },
+            { icon: Rocket, title: "Launch Faster", desc: "Go from concept to fully planned event in hours, not weeks — with AI-generated timelines and checklists" },
             null, // center mockup spans 2 rows
-            { icon: Settings2, title: "Reuse Intelligence", desc: "Visually orchestrate autonomous event plans without writing boilerplate code" },
+            { icon: Settings2, title: "Reuse Templates", desc: "Save successful event plans as templates and reuse them across future events with one click" },
           ].map((item, i) => {
             if (!item) return (
               <div key={i} className="feat-anim bg-card row-span-2 flex flex-col items-center justify-center p-8 relative overflow-hidden">
@@ -159,10 +159,10 @@ const SaasBentoFeatures = () => {
                     <div className="w-2 h-2 rounded-full bg-red-400" />
                     <div className="w-2 h-2 rounded-full bg-yellow-400" />
                     <div className="w-2 h-2 rounded-full bg-green-400" />
-                    <span className="ml-auto text-[8px] text-muted-foreground">△ Meeting created</span>
+                    <span className="ml-auto text-[8px] text-muted-foreground">△ Event created</span>
                   </div>
                   <p className="text-[10px] font-semibold text-foreground">Dashboard</p>
-                  <p className="text-[8px] text-muted-foreground">API Calls</p>
+                  <p className="text-[8px] text-muted-foreground">Event Analytics</p>
                 </div>
               </div>
             );
@@ -176,8 +176,8 @@ const SaasBentoFeatures = () => {
           })}
           {/* Row 2 */}
           {[
-            { icon: RefreshCw, title: "Iterate Rapidly", desc: "Visually orchestrate autonomous event plans without writing boilerplate code" },
-            { icon: CheckCircle, title: "Prevent Breakdowns", desc: "Visually orchestrate autonomous event plans without writing boilerplate code" },
+            { icon: RefreshCw, title: "Iterate Rapidly", desc: "Adjust budgets, swap vendors, and shift timelines on the fly with real-time updates across your team" },
+            { icon: CheckCircle, title: "Prevent Overruns", desc: "Smart budget alerts and deadline tracking ensure your events stay on time and within budget" },
           ].map((item, i) => (
             <div key={`r2-${i}`} className={`feat-anim bg-card p-8 ${i === 0 ? 'md:col-start-1' : 'md:col-start-3'}`}>
               <item.icon className="w-5 h-5 text-primary mb-4" />
@@ -187,9 +187,9 @@ const SaasBentoFeatures = () => {
           ))}
           {/* Row 3 */}
           {[
-            { icon: BarChart3, title: "Scale Smarter", desc: "Visually orchestrate autonomous event plans without writing boilerplate code" },
+            { icon: BarChart3, title: "Scale Smarter", desc: "From intimate dinners to 10,000-person conferences — Nested scales with your ambitions" },
             null,
-            { icon: Code2, title: "Custom Workflows", desc: "Visually orchestrate autonomous event plans without writing boilerplate code" },
+            { icon: Code2, title: "Custom Workflows", desc: "Build automated sequences for RSVPs, vendor follow-ups, and post-event surveys" },
           ].map((item, i) => {
             if (!item) return (
               <div key={`r3-${i}`} className="feat-anim bg-card p-8" />
@@ -213,7 +213,7 @@ const SaasBentoFeatures = () => {
                 <h3 className="text-base font-semibold text-foreground">Native Tools Integration</h3>
               </div>
               <p className="text-sm text-muted-foreground max-w-2xl">
-                Track real-time activity of agents with detailed records of triggers, tools used, outcomes, and timestamps.
+                Connect your favorite tools — calendars, payment processors, communication platforms — and let Nested sync everything in real time.
               </p>
             </div>
             <div className="feat-anim p-8 md:p-12 flex items-center justify-center min-h-[320px] relative overflow-hidden">
@@ -227,9 +227,9 @@ const SaasBentoFeatures = () => {
                 {/* Tool labels on left */}
                 <div className="absolute left-0 top-1/2 -translate-y-1/2 space-y-6">
                   {[
-                    { icon: "📅", label: "Meeting Summarizer", color: "bg-primary/20" },
-                    { icon: "💻", label: "Code Reviewer", color: "bg-primary/30" },
-                    { icon: "📞", label: "Customer Support", color: "bg-yellow-500/20" },
+                    { icon: "📅", label: "Google Calendar", color: "bg-primary/20" },
+                    { icon: "💻", label: "Stripe Payments", color: "bg-primary/30" },
+                    { icon: "📞", label: "Slack Notifications", color: "bg-yellow-500/20" },
                   ].map((tool, i) => (
                     <div key={i} className="flex items-center gap-2">
                       <Monitor className="w-3.5 h-3.5 text-muted-foreground" />
@@ -259,9 +259,9 @@ const SaasBentoFeatures = () => {
             {/* Bottom feature strip */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-px bg-border/10 border-t border-border/10">
               {[
-                { icon: Shield, title: "One Click Auth", desc: "A drag-and-drop interface to create, connect, and configure event workflows" },
-                { icon: RefreshCw, title: "Realtime Sync", desc: "Agents operate independently and coordinate tasks to complete complex goals" },
-                { icon: Code2, title: "Custom Connector SDK", desc: "Run event workflows in a sandbox to preview behavior, debug logic, and test interactions" },
+                { icon: Shield, title: "One Click Auth", desc: "Secure team access with role-based permissions and single sign-on for your organization" },
+                { icon: RefreshCw, title: "Realtime Sync", desc: "Changes to events, budgets, and vendor assignments sync instantly across all team members" },
+                { icon: Code2, title: "Custom Integrations", desc: "Use our API and webhooks to connect Nested with your existing event management tools" },
               ].map((item, i) => (
                 <div key={i} className="feat-anim bg-card p-6 md:p-8">
                   <item.icon className="w-5 h-5 text-primary mb-3" />
@@ -282,7 +282,7 @@ const SaasBentoFeatures = () => {
               <h3 className="text-base font-semibold text-foreground">Vendor Model Selector</h3>
             </div>
             <p className="text-sm text-muted-foreground mb-6">
-              Track real-time activity of vendors with detailed records of triggers, tools used, outcomes, and timestamps.
+              Browse and compare verified vendors by category, ratings, availability, and pricing — all within your event workspace.
             </p>
             {/* Mock vendor list */}
             <div className="space-y-3">
@@ -330,7 +330,7 @@ const SaasBentoFeatures = () => {
               <h3 className="text-base font-semibold text-foreground">Text to workflow builder</h3>
             </div>
             <p className="text-sm text-muted-foreground mb-6">
-              Preview and debug workflow logic in a safe sandbox before deploying, helping you iterate with confidence.
+              Describe your event in plain language and let AI generate a complete plan — with timelines, vendor suggestions, and budget estimates.
             </p>
             {/* Chat mockup */}
             <div className="bg-card border border-border/30 rounded-xl p-5 shadow-sm space-y-4">
@@ -339,13 +339,13 @@ const SaasBentoFeatures = () => {
                   <span className="text-[8px]">🤖</span>
                 </div>
                 <div className="bg-muted/30 rounded-lg rounded-bl-sm px-3 py-2 text-xs text-muted-foreground">
-                  I'm good, thank you. How can I help you today?
+                  Hi! I can help you plan any event. What do you have in mind?
                 </div>
               </div>
               <div className="flex items-start gap-2 flex-row-reverse">
                 <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=50&h=50&fit=crop&crop=face" alt="User" className="w-6 h-6 rounded-full object-cover flex-shrink-0" />
                 <div className="bg-primary rounded-lg rounded-br-sm px-3 py-2 text-xs text-primary-foreground">
-                  I want to create a workflow that will send an email to all my clients
+                  Plan a 200-person corporate gala with catering, live music, and photography
                 </div>
               </div>
               <div className="flex items-start gap-2">
@@ -353,7 +353,7 @@ const SaasBentoFeatures = () => {
                   <span className="text-[8px]">🤖</span>
                 </div>
                 <div className="bg-muted/30 rounded-lg rounded-bl-sm px-3 py-2 text-xs text-muted-foreground">
-                  Nah, do it yourself.
+                  Done! I've created a 12-week timeline with 5 vendor recommendations and a $45K budget breakdown. Ready to review?
                 </div>
               </div>
               <div className="border border-border/30 rounded-lg px-3 py-2.5 flex items-center justify-between mt-2">

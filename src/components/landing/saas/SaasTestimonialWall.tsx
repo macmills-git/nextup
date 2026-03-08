@@ -38,7 +38,7 @@ const SaasTestimonialWall = () => {
               <div className="flex-1 p-8 md:p-10 flex flex-col justify-center">
                 <p className="tw-el text-sm font-bold tracking-[0.2em] text-muted-foreground/60 mb-6">A R C H</p>
                 <blockquote className="tw-el text-lg md:text-xl font-medium text-foreground leading-relaxed mb-8">
-                  "The automation capabilities are incredible. Our event pipeline went from manual chaos to seamless orchestration. We can focus on creating experiences instead of managing logistics."
+                  "The automation capabilities are incredible. Our event pipeline went from manual chaos to seamless orchestration. Nested lets us focus on creating experiences instead of managing logistics."
                 </blockquote>
                 <div className="tw-el">
                   <p className="text-sm font-bold text-foreground">Sarah Chen</p>

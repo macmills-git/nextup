@@ -7,8 +7,8 @@ const sections = [
   {
     group: "GETTING STARTED", icon: BookOpen, title: "Introduction",
     content: [
-      { type: "text", value: "Welcome to EventNest! Follow these steps to get up and running in minutes. This documentation covers everything you need to know." },
-      { type: "video", label: "Gemini 3 changes everything for EventNest", duration: "12:34" },
+      { type: "text", value: "Welcome to Nested! Follow these steps to get up and running in minutes. This documentation covers everything you need to plan, manage, and execute unforgettable events." },
+      { type: "video", label: "Getting started with Nested", duration: "12:34" },
       { type: "features", items: [
         { icon: Sparkles, title: "Advanced AI Models", desc: "Leverage cutting-edge AI to automate event planning tasks." },
         { icon: Code, title: "Multi-Page Sites", desc: "Create comprehensive event microsites with multiple pages." },
@@ -17,7 +17,7 @@ const sections = [
       ]},
       { type: "reference", title: "What You Can Reference", items: ["Events – Link to any event in your workspace", "Vendors – Reference vendor profiles and portfolios", "Team Members – Mention teammates for assignments", "Budgets – Pull in budget data for analysis", "Tasks – Reference task lists and milestones"] },
       { type: "steps", items: [
-        { title: "Create an account", desc: "Sign up for free at eventnest.com/signup with your email or Google account." },
+        { title: "Create an account", desc: "Sign up for free at nested.com/signup with your email or Google account." },
         { title: "Set up your profile", desc: "Add your name, photo, and organization details in Settings." },
         { title: "Create your first event", desc: "Head to Dashboard → Events → Create Event to get started." },
         { title: "Invite your team", desc: "Add collaborators from the Team page and assign roles." },
