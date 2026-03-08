@@ -330,7 +330,7 @@ const SaasBentoFeatures = () => {
               <h3 className="text-base font-semibold text-foreground">Text to workflow builder</h3>
             </div>
             <p className="text-sm text-muted-foreground mb-6">
-              Preview and debug workflow logic in a safe sandbox before deploying, helping you iterate with confidence.
+              Describe your event in plain language and let AI generate a complete plan — with timelines, vendor suggestions, and budget estimates.
             </p>
             {/* Chat mockup */}
             <div className="bg-card border border-border/30 rounded-xl p-5 shadow-sm space-y-4">
@@ -339,13 +339,13 @@ const SaasBentoFeatures = () => {
                   <span className="text-[8px]">🤖</span>
                 </div>
                 <div className="bg-muted/30 rounded-lg rounded-bl-sm px-3 py-2 text-xs text-muted-foreground">
-                  I'm good, thank you. How can I help you today?
+                  Hi! I can help you plan any event. What do you have in mind?
                 </div>
               </div>
               <div className="flex items-start gap-2 flex-row-reverse">
                 <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=50&h=50&fit=crop&crop=face" alt="User" className="w-6 h-6 rounded-full object-cover flex-shrink-0" />
                 <div className="bg-primary rounded-lg rounded-br-sm px-3 py-2 text-xs text-primary-foreground">
-                  I want to create a workflow that will send an email to all my clients
+                  Plan a 200-person corporate gala with catering, live music, and photography
                 </div>
               </div>
               <div className="flex items-start gap-2">
@@ -353,7 +353,7 @@ const SaasBentoFeatures = () => {
                   <span className="text-[8px]">🤖</span>
                 </div>
                 <div className="bg-muted/30 rounded-lg rounded-bl-sm px-3 py-2 text-xs text-muted-foreground">
-                  Nah, do it yourself.
+                  Done! I've created a 12-week timeline with 5 vendor recommendations and a $45K budget breakdown. Ready to review?
                 </div>
               </div>
               <div className="border border-border/30 rounded-lg px-3 py-2.5 flex items-center justify-between mt-2">
