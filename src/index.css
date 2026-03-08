@@ -53,6 +53,8 @@
     --nav-active-bg: 0 0% 100% / 0.15;
     --glass-bg: 220 20% 14% / 0.85;
     --glass-border: 0 0% 100% / 0.1;
+    --grid-line: 215 20% 80% / 0.25;
+    --grid-glow: 225 90% 60% / 0.06;
   }
 
   .dark {
@@ -92,6 +94,8 @@
     --nav-active-bg: 0 0% 100% / 0.15;
     --glass-bg: 0 0% 100% / 0.06;
     --glass-border: 0 0% 100% / 0.08;
+    --grid-line: 215 20% 40% / 0.3;
+    --grid-glow: 260 80% 60% / 0.15;
   }
 }
 
@@ -105,18 +109,20 @@
   }
 }
 
-/* Global dark sphere grid background */
+/* Global grid background - theme aware */
 body::before {
   content: '';
   position: fixed;
   inset: 0;
   z-index: 0;
   pointer-events: none;
+  background-color: hsl(var(--background));
   background-image:
-    linear-gradient(to right, hsl(var(--border) / 0.15) 1px, transparent 1px),
-    linear-gradient(to bottom, hsl(var(--border) / 0.15) 1px, transparent 1px),
-    radial-gradient(circle at 50% 50%, hsl(var(--primary) / 0.08) 0%, transparent 70%);
+    linear-gradient(to right, hsl(var(--grid-line)) 1px, transparent 1px),
+    linear-gradient(to bottom, hsl(var(--grid-line)) 1px, transparent 1px),
+    radial-gradient(circle at 50% 50%, hsl(var(--grid-glow)) 0%, transparent 70%);
   background-size: 32px 32px, 32px 32px, 100% 100%;
+  transition: background-color 0.5s ease, background-image 0.5s ease;
 }
 
 @layer utilities {
@@ -140,7 +146,10 @@ body::before {
   }
 }
 
-/* Theme transition classes managed by ThemeContext */
+/* Smooth theme transition on all color properties */
+*, *::before, *::after {
+  transition: background-color 0.4s ease, border-color 0.4s ease, color 0.4s ease, fill 0.3s ease, stroke 0.3s ease, box-shadow 0.3s ease;
+}
 
 /* Gradient flow animation for cards */
 @keyframes gradientCardFlow {
@@ -148,7 +157,6 @@ body::before {
   50% { box-shadow: 0 0 25px 2px hsl(var(--primary) / 0.2), 0 30px 50px hsl(var(--foreground) / 0.1); }
 }
 
-/* Energy orb animation */
 @keyframes energyOrbMove {
   0% { top: 0; opacity: 0; }
   5% { opacity: 1; }
@@ -159,57 +167,48 @@ body::before {
   100% { top: 85%; opacity: 0; }
 }
 
-/* Ambient line glow */
 @keyframes ambientLineGlow {
   0% { background-position: 0% 0%; }
   100% { background-position: 0% 200%; }
 }
 
-/* Globe glow pulse */
 @keyframes globeGlow {
   0%, 100% { box-shadow: 0 0 60px 20px hsl(var(--primary) / 0.15); }
   50% { box-shadow: 0 0 100px 40px hsl(var(--primary) / 0.25); }
 }
 
-/* Card sequential glow */
 @keyframes cardGlow1 { 0%,25% { box-shadow: 0 0 30px 3px hsl(var(--primary) / 0.3); } 26%,100% { box-shadow: none; } }
 @keyframes cardGlow2 { 0%,25% { box-shadow: none; } 26%,50% { box-shadow: 0 0 30px 3px hsl(var(--primary) / 0.3); } 51%,100% { box-shadow: none; } }
 @keyframes cardGlow3 { 0%,50% { box-shadow: none; } 51%,75% { box-shadow: 0 0 30px 3px hsl(var(--primary) / 0.3); } 76%,100% { box-shadow: none; } }
 @keyframes cardGlow4 { 0%,75% { box-shadow: none; } 76%,100% { box-shadow: 0 0 30px 3px hsl(var(--primary) / 0.3); } }
 
-/* Float animation for carousel */
 @keyframes floatY {
   0%, 100% { transform: translateY(0); }
   50% { transform: translateY(-8px); }
 }
 
-/* Gradient text flow */
 @keyframes gradientTextFlow {
   0% { background-position: 0% 50%; }
   50% { background-position: 100% 50%; }
   100% { background-position: 0% 50%; }
 }
 
-/* Moving gradient background */
 @keyframes movingGradient {
   0% { background-position: 0% 50%; }
   50% { background-position: 100% 50%; }
   100% { background-position: 0% 50%; }
 }
 
-/* Smooth scroll */
 html {
   scroll-behavior: smooth;
 }
 
-/* Glassmorphism utility */
 .glass {
   background: hsl(var(--card) / 0.6);
   backdrop-filter: blur(20px);
   border: 1px solid hsl(var(--border) / 0.5);
 }
 
-/* Loading skeleton shimmer */
 @keyframes shimmer {
   0% { background-position: -200% 0; }
   100% { background-position: 200% 0; }
@@ -221,37 +220,34 @@ html {
   animation: shimmer 1.5s ease-in-out infinite;
 }
 
-/* Theme push transition */
-@keyframes themePush {
-  0% {
-    transform: translateX(-30px);
-    opacity: 0.7;
-  }
-  40% {
-    transform: translateX(0);
-    opacity: 1;
-  }
-  100% {
-    transform: translateX(0);
-    opacity: 1;
-  }
-}
-
-/* Theme transition override - default no transition on colors */
-*, *::before, *::after {
-  transition-property: transform, opacity;
-  transition-duration: 0.2s;
-}
-
-/* When theme is transitioning, animate color properties */
-html.theme-transitioning * {
-  transition-property: background-color, border-color, color, fill, stroke, box-shadow, transform, opacity;
-  transition-duration: 0.4s;
-  transition-timing-function: ease;
-}
-
-/* Spinning animation for hover border gradient */
 @keyframes spin {
   from { transform: rotate(0deg); }
   to { transform: rotate(360deg); }
+}
+
+/* Micro interaction utilities */
+.micro-hover {
+  transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.25s ease;
+}
+.micro-hover:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px -8px hsl(var(--primary) / 0.2);
+}
+
+.micro-press:active {
+  transform: scale(0.97);
+}
+
+/* Infinite scroll carousel */
+@keyframes scrollLeft {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+.carousel-scroll {
+  animation: scrollLeft 30s linear infinite;
+}
+
+.carousel-scroll:hover {
+  animation-play-state: paused;
 }
