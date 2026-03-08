@@ -142,13 +142,12 @@ const LeadersCarousel = () => {
                         }`}
                       >
                         {!isPlaceholder ? (
-                          <div
-                            className={`w-full h-full bg-gradient-to-br ${gradients[i % gradients.length]} flex items-center justify-center`}
-                          >
-                            <span className="text-sm md:text-base font-bold text-white/90">
-                              {leader.initials}
-                            </span>
-                          </div>
+                          <img
+                            src={leader.img}
+                            alt={leader.name}
+                            className="w-full h-full object-cover"
+                            loading="lazy"
+                          />
                         ) : (
                           <div className="w-full h-full" />
                         )}
