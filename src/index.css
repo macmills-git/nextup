@@ -23,8 +23,8 @@
     --accent-foreground: 0 0% 6%;
     --destructive: 0 84% 60%;
     --destructive-foreground: 0 0% 100%;
-    --border: 0 0% 6%;
-    --input: 0 0% 6%;
+    --border: 0 0% 90%;
+    --input: 0 0% 90%;
     --ring: 262 83% 58%;
     --radius: 0.75rem;
     --sidebar-background: 60 9% 98%;
@@ -33,7 +33,7 @@
     --sidebar-primary-foreground: 0 0% 100%;
     --sidebar-accent: 47 100% 85%;
     --sidebar-accent-foreground: 0 0% 6%;
-    --sidebar-border: 0 0% 6%;
+    --sidebar-border: 0 0% 92%;
     --sidebar-ring: 262 83% 58%;
     --success: 142 71% 45%;
     --success-foreground: 0 0% 100%;
@@ -41,16 +41,18 @@
     --warning-foreground: 0 0% 100%;
     --info: 225 90% 60%;
     --info-foreground: 0 0% 100%;
-    --shadow-brutal: 4px 4px 0px hsl(0 0% 6%);
-    --shadow-brutal-lg: 6px 6px 0px hsl(0 0% 6%);
-    --shadow-brutal-xl: 8px 8px 0px hsl(0 0% 6%);
-    --shadow-brutal-hover: 6px 6px 0px hsl(0 0% 6%);
+    --shadow-card: 0 1px 3px hsl(0 0% 0% / 0.04);
+    --shadow-elevated: 0 4px 16px hsl(0 0% 0% / 0.08);
+    --shadow-brutal: 0 1px 3px hsl(0 0% 0% / 0.04);
+    --shadow-brutal-lg: 0 4px 16px hsl(0 0% 0% / 0.08);
+    --shadow-brutal-xl: 0 8px 24px hsl(0 0% 0% / 0.1);
+    --shadow-brutal-hover: 0 4px 16px hsl(0 0% 0% / 0.08);
     --gradient-primary: linear-gradient(135deg, hsl(262, 83%, 58%), hsl(280, 70%, 55%));
     --hero-bg: 60 9% 98%;
     --section-bg: 60 9% 96%;
     --section-alt-bg: 60 9% 98%;
-    --nav-bg: 0 0% 6%;
-    --nav-text: 0 0% 100%;
+    --nav-bg: 0 0% 100%;
+    --nav-text: 0 0% 6%;
   }
 
   .dark {
@@ -81,10 +83,12 @@
     --sidebar-accent-foreground: 60 9% 98%;
     --sidebar-border: 60 9% 85%;
     --sidebar-ring: 262 83% 65%;
-    --shadow-brutal: 4px 4px 0px hsl(60 9% 85%);
-    --shadow-brutal-lg: 6px 6px 0px hsl(60 9% 85%);
-    --shadow-brutal-xl: 8px 8px 0px hsl(60 9% 85%);
-    --shadow-brutal-hover: 6px 6px 0px hsl(60 9% 85%);
+    --shadow-card: 0 1px 3px hsl(0 0% 100% / 0.04);
+    --shadow-elevated: 0 4px 16px hsl(0 0% 0% / 0.3);
+    --shadow-brutal: 0 1px 3px hsl(0 0% 100% / 0.04);
+    --shadow-brutal-lg: 0 4px 16px hsl(0 0% 0% / 0.3);
+    --shadow-brutal-xl: 0 8px 24px hsl(0 0% 0% / 0.4);
+    --shadow-brutal-hover: 0 4px 16px hsl(0 0% 0% / 0.3);
     --hero-bg: 240 6% 8%;
     --section-bg: 240 6% 6%;
     --section-alt-bg: 240 6% 10%;
