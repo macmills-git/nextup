@@ -57,17 +57,7 @@ const HeroSection = () => {
       <div ref={contentRef} className="relative z-10 container mx-auto px-4 lg:px-8 pt-32 pb-16 lg:pt-40 lg:pb-20 flex flex-col items-center justify-center min-h-screen">
         <div className="text-center max-w-4xl mx-auto">
           <h1 className="hero-anim text-4xl md:text-6xl lg:text-7xl font-bold mb-5 leading-tight" style={{ fontFamily: "'DM Sans', system-ui, sans-serif", fontWeight: 700 }}>
-            <span className="inline-block relative">
-              <span style={{
-                backgroundImage: 'linear-gradient(135deg, hsl(var(--primary)) 0%, hsl(280, 70%, 60%) 50%, hsl(var(--primary)) 100%)',
-                backgroundSize: '200% 200%',
-                WebkitBackgroundClip: 'text',
-                WebkitTextFillColor: 'transparent',
-                animation: 'gradientTextFlow 4s ease infinite',
-              }}>
-                Your All-in-One
-              </span>
-            </span>
+            <span className="text-primary">Your All-in-One</span>
             <br />
             <span className="text-foreground">Event Companion</span>
           </h1>

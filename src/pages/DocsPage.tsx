@@ -93,7 +93,7 @@ const DocsPage = () => {
   let lastGroup = '';
 
   return (
-    <div className="min-h-screen bg-background grid-bg">
+    <div className="min-h-screen bg-background relative z-[1]">
       <Navbar />
       <div className="pt-28 pb-20 container mx-auto px-4 lg:px-8">
         <div className="flex flex-col lg:flex-row gap-8">

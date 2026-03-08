@@ -29,16 +29,17 @@ export const ThemeProvider = ({ children }: { children: ReactNode }) => {
     if (isTransitioning) return;
     setIsTransitioning(true);
     setSlideDirection('slide');
+    document.documentElement.classList.add('theme-transitioning');
 
-    // Quick transition
     setTimeout(() => {
       setTheme(prev => prev === 'dark' ? 'light' : 'dark');
-    }, 150);
+    }, 100);
 
     setTimeout(() => {
       setIsTransitioning(false);
       setSlideDirection('none');
-    }, 500);
+      document.documentElement.classList.remove('theme-transitioning');
+    }, 600);
   }, [isTransitioning]);
 
   return (

@@ -105,6 +105,20 @@
   }
 }
 
+/* Global dark sphere grid background */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background-image:
+    linear-gradient(to right, hsl(var(--border) / 0.15) 1px, transparent 1px),
+    linear-gradient(to bottom, hsl(var(--border) / 0.15) 1px, transparent 1px),
+    radial-gradient(circle at 50% 50%, hsl(var(--primary) / 0.08) 0%, transparent 70%);
+  background-size: 32px 32px, 32px 32px, 100% 100%;
+}
+
 @layer utilities {
   .gradient-primary {
     background: var(--gradient-primary);
@@ -126,16 +140,7 @@
   }
 }
 
-/* Smooth theme transition */
-.theme-transition-wrapper * {
-  transition-property: background-color, border-color, color, fill, stroke;
-  transition-duration: 0s;
-  transition-timing-function: ease;
-}
-
-html.theme-transitioning .theme-transition-wrapper * {
-  transition-duration: 0.4s;
-}
+/* Theme transition classes managed by ThemeContext */
 
 /* Gradient flow animation for cards */
 @keyframes gradientCardFlow {
@@ -232,13 +237,15 @@ html {
   }
 }
 
-/* Smooth theme color transitions */
+/* Theme transition override - default no transition on colors */
 *, *::before, *::after {
-  transition-property: background-color, border-color, color, fill, stroke, box-shadow;
-  transition-duration: 0s;
+  transition-property: transform, opacity;
+  transition-duration: 0.2s;
 }
 
-.theme-transition-wrapper * {
+/* When theme is transitioning, animate color properties */
+html.theme-transitioning * {
+  transition-property: background-color, border-color, color, fill, stroke, box-shadow, transform, opacity;
   transition-duration: 0.4s;
   transition-timing-function: ease;
 }

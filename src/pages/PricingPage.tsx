@@ -45,7 +45,7 @@ const PricingPage = () => {
   const [openFaq, setOpenFaq] = useState<number | null>(null);
 
   return (
-    <div className="min-h-screen bg-background grid-bg">
+    <div className="min-h-screen bg-background relative z-[1]">
       <Navbar />
       <div className="pt-32 pb-20 container mx-auto px-4 lg:px-8">
         {/* Hero */}
