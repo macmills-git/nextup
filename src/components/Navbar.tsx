@@ -43,7 +43,7 @@ const Navbar = () => {
       >
         <div className="flex items-center justify-between h-14 px-4 lg:px-6">
           <Link to="/" className="flex items-center gap-2">
-            <AnimatedLogo size={24} />
+            <AnimatedLogo size={32} />
             <span
               className="font-semibold text-sm text-foreground transition-all duration-500"
               style={{ opacity: scrolled ? 0 : 1, width: scrolled ? 0 : "auto", overflow: "hidden" }}
