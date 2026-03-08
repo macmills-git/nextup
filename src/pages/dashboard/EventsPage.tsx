@@ -24,10 +24,10 @@ const initialEvents: Event[] = [
 const categories = ["All", "Wedding", "Corporate", "Conference", "Social"];
 
 const statusColors: Record<string, string> = {
-  upcoming: "bg-primary/10 text-primary",
-  planning: "bg-warning/10 text-warning",
+  upcoming: "bg-emerald-50 text-emerald-600 dark:bg-emerald-500/10 dark:text-emerald-400",
+  planning: "bg-amber-50 text-amber-600 dark:bg-amber-500/10 dark:text-amber-400",
   draft: "bg-muted text-muted-foreground",
-  completed: "bg-success/10 text-success",
+  completed: "bg-blue-50 text-blue-600 dark:bg-blue-500/10 dark:text-blue-400",
 };
 
 const EventsPage = () => {
@@ -51,7 +51,7 @@ const EventsPage = () => {
   const renderCards = (list: Event[]) => (
     <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
       {list.map(event => (
-        <div key={event.id} className="bg-card rounded-xl border border-border p-5 shadow-card hover:shadow-elevated transition-shadow relative">
+        <div key={event.id} className="bg-card rounded-xl border border-border p-5 hover:shadow-elevated transition-all relative">
           <div className="flex items-start justify-between mb-3">
             <div className="flex items-center gap-2">
               <Badge className={statusColors[event.status]}>{event.status}</Badge>
@@ -63,13 +63,13 @@ const EventsPage = () => {
               </button>
               {menuOpen === event.id && (
                 <div className="absolute right-0 top-6 bg-card border border-border rounded-lg shadow-elevated z-20 py-1 min-w-[140px]">
-                  <button className="w-full flex items-center gap-2 px-3 py-2 text-sm text-foreground hover:bg-secondary" onClick={() => { navigate(`/dashboard/events/${event.id}`); setMenuOpen(null); }}>
+                  <button className="w-full flex items-center gap-2 px-3 py-2 text-sm text-foreground hover:bg-muted" onClick={() => { navigate(`/dashboard/events/${event.id}`); setMenuOpen(null); }}>
                     <Eye className="h-3.5 w-3.5" /> View Details
                   </button>
-                  <button className="w-full flex items-center gap-2 px-3 py-2 text-sm text-foreground hover:bg-secondary" onClick={() => { navigate(`/dashboard/events/${event.id}`); setMenuOpen(null); }}>
+                  <button className="w-full flex items-center gap-2 px-3 py-2 text-sm text-foreground hover:bg-muted" onClick={() => { navigate(`/dashboard/events/${event.id}`); setMenuOpen(null); }}>
                     <Edit className="h-3.5 w-3.5" /> Edit Event
                   </button>
-                  <button className="w-full flex items-center gap-2 px-3 py-2 text-sm text-destructive hover:bg-secondary" onClick={() => handleDelete(event.id)}>
+                  <button className="w-full flex items-center gap-2 px-3 py-2 text-sm text-destructive hover:bg-muted" onClick={() => handleDelete(event.id)}>
                     <Trash2 className="h-3.5 w-3.5" /> Delete
                   </button>
                 </div>
@@ -78,14 +78,14 @@ const EventsPage = () => {
           </div>
           <h3 className="font-semibold text-foreground mb-3">{event.title}</h3>
           <div className="space-y-2 text-sm text-muted-foreground">
-            <div className="flex items-center gap-2"><Calendar className="h-4 w-4" />{event.date}</div>
-            <div className="flex items-center gap-2"><Clock className="h-4 w-4" />{event.time}</div>
-            <div className="flex items-center gap-2"><MapPin className="h-4 w-4" />{event.location}</div>
-            <div className="flex items-center gap-2"><Users className="h-4 w-4" />{event.guests} guests</div>
+            <div className="flex items-center gap-2"><Calendar className="h-3.5 w-3.5" />{event.date}</div>
+            <div className="flex items-center gap-2"><Clock className="h-3.5 w-3.5" />{event.time}</div>
+            <div className="flex items-center gap-2"><MapPin className="h-3.5 w-3.5" />{event.location}</div>
+            <div className="flex items-center gap-2"><Users className="h-3.5 w-3.5" />{event.guests} guests</div>
           </div>
           <div className="mt-4 pt-3 border-t border-border flex items-center justify-between">
             <span className="text-sm font-semibold text-foreground">{event.budget}</span>
-            <Button variant="ghost" size="sm" onClick={() => navigate(`/dashboard/events/${event.id}`)}>View Details</Button>
+            <Button variant="ghost" size="sm" className="text-xs" onClick={() => navigate(`/dashboard/events/${event.id}`)}>View Details</Button>
           </div>
         </div>
       ))}
@@ -96,10 +96,10 @@ const EventsPage = () => {
     <div className="space-y-6">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-foreground">Events</h1>
+          <h1 className="text-xl font-semibold text-foreground">Events</h1>
           <p className="text-sm text-muted-foreground">Manage and track all your events</p>
         </div>
-        <Button className="gradient-primary text-primary-foreground gap-2" onClick={() => navigate('/dashboard/events/new')}>
+        <Button className="bg-foreground text-background hover:bg-foreground/90 gap-2 rounded-lg" onClick={() => navigate('/dashboard/events/new')}>
           <Plus className="h-4 w-4" /> Create Event
         </Button>
       </div>
@@ -109,17 +109,18 @@ const EventsPage = () => {
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
           <Input placeholder="Search events..." className="pl-9" value={search} onChange={e => setSearch(e.target.value)} />
         </div>
-        <div className="flex gap-2 flex-wrap">
+        <div className="flex gap-1.5 flex-wrap">
           {categories.map(cat => (
-            <Button key={cat} variant={categoryFilter === cat ? "default" : "outline"} size="sm" onClick={() => setCategoryFilter(cat)}>
+            <button key={cat} onClick={() => setCategoryFilter(cat)}
+              className={`px-3.5 py-1.5 rounded-lg text-xs font-medium transition-all ${categoryFilter === cat ? 'bg-foreground text-background' : 'text-muted-foreground hover:bg-muted hover:text-foreground border border-border'}`}>
               {cat}
-            </Button>
+            </button>
           ))}
         </div>
       </div>
 
       <Tabs defaultValue="all">
-        <TabsList>
+        <TabsList className="bg-muted">
           <TabsTrigger value="all">All Events</TabsTrigger>
           <TabsTrigger value="upcoming">Upcoming</TabsTrigger>
           <TabsTrigger value="planning">Planning</TabsTrigger>

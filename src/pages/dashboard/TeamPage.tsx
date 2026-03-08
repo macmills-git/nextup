@@ -10,9 +10,7 @@ type TeamMember = {
   status: string; avatar: string; events: string[]; permission: string;
 };
 
-type InvitedMember = {
-  id: number; name: string; email: string; initials: string;
-};
+type InvitedMember = { id: number; name: string; email: string; initials: string };
 
 const teamMembers: TeamMember[] = [
   { id: 1, name: "Jane Doe", role: "Project Manager", email: "jane@eventnest.com", phone: "+1 555-0201", status: "online", avatar: "JD", events: ["Annual Corporate Gala", "Product Launch Party"], permission: "Admin" },
@@ -29,8 +27,8 @@ const initialInvited: InvitedMember[] = [
   { id: 3, name: "Michael Crombie", email: "michael@company.com", initials: "MC" },
 ];
 
-const statusDot: Record<string, string> = { online: "bg-success", away: "bg-warning", offline: "bg-muted-foreground" };
-const permissionColors: Record<string, string> = { Admin: "bg-destructive/10 text-destructive", Editor: "bg-primary/10 text-primary", Viewer: "bg-muted text-muted-foreground" };
+const statusDot: Record<string, string> = { online: "bg-emerald-500", away: "bg-amber-500", offline: "bg-muted-foreground" };
+const permissionColors: Record<string, string> = { Admin: "bg-rose-50 text-rose-600 dark:bg-rose-500/10 dark:text-rose-400", Editor: "bg-blue-50 text-blue-600 dark:bg-blue-500/10 dark:text-blue-400", Viewer: "bg-muted text-muted-foreground" };
 
 const allEvents = [...new Set(teamMembers.flatMap(m => m.events))];
 
@@ -57,10 +55,7 @@ const TeamPage = () => {
     setPermissionModal(null);
   };
 
-  const removeMember = (id: number) => {
-    setMembers(prev => prev.filter(m => m.id !== id));
-    setMenuOpen(null);
-  };
+  const removeMember = (id: number) => { setMembers(prev => prev.filter(m => m.id !== id)); setMenuOpen(null); };
 
   const handleInvite = () => {
     if (!inviteEmail.trim()) return;
@@ -69,85 +64,73 @@ const TeamPage = () => {
     setInviteEmail("");
   };
 
-  const removeInvited = (id: number) => {
-    setInvitedMembers(prev => prev.filter(m => m.id !== id));
-  };
+  const removeInvited = (id: number) => setInvitedMembers(prev => prev.filter(m => m.id !== id));
 
   return (
     <div className="space-y-6">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-foreground">Team</h1>
+          <h1 className="text-xl font-semibold text-foreground">Team</h1>
           <p className="text-sm text-muted-foreground">Manage your team members and roles</p>
         </div>
-        <Button className="gradient-primary text-primary-foreground gap-2" onClick={() => setShowInvite(true)}>
+        <Button className="bg-foreground text-background hover:bg-foreground/90 gap-2 rounded-lg" onClick={() => setShowInvite(true)}>
           <Plus className="h-4 w-4" /> Invite Member
         </Button>
       </div>
 
-      {/* Invite Members Panel */}
       {showInvite && (
-        <div className="bg-card rounded-xl border-2 border-border p-6 space-y-5">
+        <div className="bg-card rounded-xl border border-border p-6 space-y-5">
           <div className="flex items-center justify-between">
             <div>
-              <h2 className="text-lg font-semibold text-foreground">Invite members</h2>
-              <p className="text-sm text-muted-foreground mt-1">Add new team members to your workspace. Please consider your organization's policies when adding external people.</p>
+              <h2 className="text-base font-semibold text-foreground">Invite members</h2>
+              <p className="text-sm text-muted-foreground mt-1">Add new team members to your workspace.</p>
             </div>
-            <button onClick={() => setShowInvite(false)} className="text-muted-foreground hover:text-foreground">
-              <X className="h-5 w-5" />
-            </button>
+            <button onClick={() => setShowInvite(false)} className="text-muted-foreground hover:text-foreground"><X className="h-5 w-5" /></button>
           </div>
-
           <div className="flex gap-2 flex-wrap">
             <select value={inviteRole} onChange={e => setInviteRole(e.target.value)}
-              className="h-9 rounded-lg border border-border bg-secondary dark:bg-accent text-sm text-foreground px-3 outline-none">
+              className="h-9 rounded-lg border border-border bg-muted text-sm text-foreground px-3 outline-none">
               <option value="Guest">Guest</option>
               <option value="Member">Member</option>
               <option value="Admin">Admin</option>
             </select>
             <Input value={inviteEmail} onChange={e => setInviteEmail(e.target.value)} placeholder="name@company.com" className="flex-1 min-w-[200px]"
               onKeyDown={e => { if (e.key === 'Enter') handleInvite(); }} />
-            <Button onClick={handleInvite} className="gap-1.5 gradient-primary text-white">
+            <Button onClick={handleInvite} className="gap-1.5 bg-foreground text-background hover:bg-foreground/90">
               <UserPlus className="h-4 w-4" /> Invite
             </Button>
           </div>
-
-          {/* Existing members */}
           <div>
             <h3 className="text-sm font-medium text-muted-foreground mb-3">People with existing access</h3>
-            <div className="space-y-2">
+            <div className="space-y-1">
               {members.slice(0, 3).map(member => (
-                <div key={member.id} className="flex items-center justify-between py-2 px-3 rounded-lg hover:bg-secondary/50 dark:hover:bg-accent/50 transition-colors">
+                <div key={member.id} className="flex items-center justify-between py-2 px-3 rounded-lg hover:bg-muted/50 transition-colors">
                   <div className="flex items-center gap-3">
-                    <div className="w-8 h-8 rounded-full gradient-primary flex items-center justify-center">
-                      <span className="text-primary-foreground font-bold text-xs">{member.avatar}</span>
+                    <div className="w-8 h-8 rounded-full bg-foreground flex items-center justify-center">
+                      <span className="text-background font-semibold text-xs">{member.avatar}</span>
                     </div>
                     <span className="text-sm font-medium text-foreground">{member.name}</span>
                   </div>
-                  <span className="text-xs px-2.5 py-1 rounded-full bg-secondary dark:bg-accent text-muted-foreground">member</span>
+                  <span className="text-xs px-2.5 py-1 rounded-md bg-muted text-muted-foreground">member</span>
                 </div>
               ))}
             </div>
           </div>
-
-          {/* Pending invitations */}
           {invitedMembers.length > 0 && (
             <div>
               <h3 className="text-sm font-medium text-muted-foreground mb-3">Pending invitations</h3>
-              <div className="space-y-2">
+              <div className="space-y-1">
                 {invitedMembers.map(member => (
-                  <div key={member.id} className="flex items-center justify-between py-2 px-3 rounded-lg hover:bg-secondary/50 dark:hover:bg-accent/50 transition-colors">
+                  <div key={member.id} className="flex items-center justify-between py-2 px-3 rounded-lg hover:bg-muted/50 transition-colors">
                     <div className="flex items-center gap-3">
                       <div className="w-8 h-8 rounded-full bg-muted flex items-center justify-center">
-                        <span className="text-muted-foreground font-bold text-xs">{member.initials}</span>
+                        <span className="text-muted-foreground font-semibold text-xs">{member.initials}</span>
                       </div>
                       <span className="text-sm text-muted-foreground">{member.email}</span>
                     </div>
                     <div className="flex items-center gap-3">
-                      <span className="text-xs text-warning">Pending invitation</span>
-                      <button onClick={() => removeInvited(member.id)} className="text-destructive/60 hover:text-destructive transition-colors">
-                        <Trash2 className="h-3.5 w-3.5" />
-                      </button>
+                      <span className="text-xs text-amber-500">Pending</span>
+                      <button onClick={() => removeInvited(member.id)} className="text-destructive/60 hover:text-destructive"><Trash2 className="h-3.5 w-3.5" /></button>
                     </div>
                   </div>
                 ))}
@@ -162,30 +145,30 @@ const TeamPage = () => {
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
           <Input placeholder="Search team members..." className="pl-9" value={search} onChange={e => setSearch(e.target.value)} />
         </div>
-        <div className="flex gap-2 flex-wrap">
-          <Button variant={eventFilter === "All" ? "default" : "outline"} size="sm" onClick={() => setEventFilter("All")}>All Events</Button>
+        <div className="flex gap-1.5 flex-wrap">
+          <button onClick={() => setEventFilter("All")} className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${eventFilter === "All" ? 'bg-foreground text-background' : 'text-muted-foreground hover:bg-muted border border-border'}`}>All Events</button>
           {allEvents.map(ev => (
-            <Button key={ev} variant={eventFilter === ev ? "default" : "outline"} size="sm" onClick={() => setEventFilter(ev)} className="text-xs">
+            <button key={ev} onClick={() => setEventFilter(ev)} className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${eventFilter === ev ? 'bg-foreground text-background' : 'text-muted-foreground hover:bg-muted border border-border'}`}>
               {ev.length > 20 ? ev.slice(0, 20) + '...' : ev}
-            </Button>
+            </button>
           ))}
         </div>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
         {filtered.map(member => (
-          <div key={member.id} className="bg-card rounded-xl border-2 border-border p-5 hover:border-primary/30 transition-all relative">
+          <div key={member.id} className="bg-card rounded-xl border border-border p-5 hover:shadow-elevated transition-all relative">
             <div className="flex items-start justify-between mb-4">
               <div className="flex items-center gap-3">
                 <div className="relative">
-                  <div className="w-12 h-12 rounded-full gradient-primary flex items-center justify-center">
-                    <span className="text-primary-foreground font-bold text-sm">{member.avatar}</span>
+                  <div className="w-11 h-11 rounded-full bg-foreground flex items-center justify-center">
+                    <span className="text-background font-semibold text-sm">{member.avatar}</span>
                   </div>
-                  <span className={`absolute -bottom-0.5 -right-0.5 w-3.5 h-3.5 rounded-full border-2 border-card ${statusDot[member.status]}`} />
+                  <span className={`absolute -bottom-0.5 -right-0.5 w-3 h-3 rounded-full border-2 border-card ${statusDot[member.status]}`} />
                 </div>
                 <div>
-                  <h3 className="font-semibold text-foreground">{member.name}</h3>
-                  <p className="text-sm text-muted-foreground">{member.role}</p>
+                  <h3 className="font-semibold text-foreground text-sm">{member.name}</h3>
+                  <p className="text-xs text-muted-foreground">{member.role}</p>
                 </div>
               </div>
               <div className="relative">
@@ -194,70 +177,55 @@ const TeamPage = () => {
                 </button>
                 {menuOpen === member.id && (
                   <div className="absolute right-0 top-6 bg-card border border-border rounded-lg shadow-elevated z-20 py-1 min-w-[150px]">
-                    <button className="w-full flex items-center gap-2 px-3 py-2 text-sm text-foreground hover:bg-secondary" onClick={() => { navigate('/dashboard/messages'); setMenuOpen(null); }}>
+                    <button className="w-full flex items-center gap-2 px-3 py-2 text-sm text-foreground hover:bg-muted" onClick={() => { navigate('/dashboard/messages'); setMenuOpen(null); }}>
                       <MessageSquare className="h-3.5 w-3.5" /> Message
                     </button>
-                    <button className="w-full flex items-center gap-2 px-3 py-2 text-sm text-foreground hover:bg-secondary" onClick={() => { setPermissionModal(member.id); setMenuOpen(null); }}>
+                    <button className="w-full flex items-center gap-2 px-3 py-2 text-sm text-foreground hover:bg-muted" onClick={() => { setPermissionModal(member.id); setMenuOpen(null); }}>
                       <Shield className="h-3.5 w-3.5" /> Permissions
                     </button>
-                    <button className="w-full flex items-center gap-2 px-3 py-2 text-sm text-destructive hover:bg-secondary" onClick={() => removeMember(member.id)}>
+                    <button className="w-full flex items-center gap-2 px-3 py-2 text-sm text-destructive hover:bg-muted" onClick={() => removeMember(member.id)}>
                       <Trash2 className="h-3.5 w-3.5" /> Remove
                     </button>
                   </div>
                 )}
               </div>
             </div>
-
-            <Badge className={`${permissionColors[member.permission]} mb-3`}>{member.permission}</Badge>
-
-            <div className="space-y-2 text-sm text-muted-foreground mb-3">
+            <Badge className={`${permissionColors[member.permission]} mb-3 text-[11px]`}>{member.permission}</Badge>
+            <div className="space-y-1.5 text-sm text-muted-foreground mb-3">
               <div className="flex items-center gap-2"><Mail className="h-3.5 w-3.5" />{member.email}</div>
               <div className="flex items-center gap-2"><Phone className="h-3.5 w-3.5" />{member.phone}</div>
             </div>
-
             <div className="mb-4">
               <p className="text-xs text-muted-foreground mb-1.5">Assigned Events:</p>
               <div className="flex flex-wrap gap-1">
                 {member.events.map(ev => (
-                  <Badge key={ev} variant="outline" className="text-xs">{ev.length > 18 ? ev.slice(0, 18) + '...' : ev}</Badge>
+                  <Badge key={ev} variant="outline" className="text-[10px]">{ev.length > 18 ? ev.slice(0, 18) + '...' : ev}</Badge>
                 ))}
               </div>
             </div>
-
             <div className="flex gap-2">
-              <Button variant="outline" size="sm" className="flex-1" onClick={() => navigate('/dashboard/messages')}>Message</Button>
-              <Button variant="outline" size="sm" className="flex-1 gap-1" onClick={() => setPermissionModal(member.id)}>
-                <Shield className="h-3.5 w-3.5" /> Permissions
+              <Button variant="outline" size="sm" className="flex-1 text-xs rounded-lg" onClick={() => navigate('/dashboard/messages')}>Message</Button>
+              <Button variant="outline" size="sm" className="flex-1 gap-1 text-xs rounded-lg" onClick={() => setPermissionModal(member.id)}>
+                <Shield className="h-3 w-3" /> Permissions
               </Button>
             </div>
           </div>
         ))}
       </div>
 
-      {/* Permission Modal */}
       {permissionModal && (
-        <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4" onClick={() => setPermissionModal(null)}>
+        <div className="fixed inset-0 bg-black/40 z-50 flex items-center justify-center p-4" onClick={() => setPermissionModal(null)}>
           <div className="bg-card rounded-2xl border border-border p-6 w-full max-w-sm shadow-elevated" onClick={e => e.stopPropagation()}>
-            <h2 className="text-lg font-bold text-foreground mb-4">Set Permissions</h2>
-            <p className="text-sm text-muted-foreground mb-4">
-              {members.find(m => m.id === permissionModal)?.name}
-            </p>
+            <h2 className="text-base font-semibold text-foreground mb-4">Set Permissions</h2>
+            <p className="text-sm text-muted-foreground mb-4">{members.find(m => m.id === permissionModal)?.name}</p>
             <div className="space-y-2">
               {["Admin", "Editor", "Viewer"].map(perm => (
-                <button
-                  key={perm}
-                  className="w-full flex items-center justify-between p-3 rounded-lg border border-border hover:bg-secondary transition-colors"
-                  onClick={() => updatePermission(permissionModal, perm)}
-                >
+                <button key={perm} className="w-full flex items-center justify-between p-3 rounded-lg border border-border hover:bg-muted transition-colors" onClick={() => updatePermission(permissionModal, perm)}>
                   <div>
                     <p className="text-sm font-medium text-foreground">{perm}</p>
-                    <p className="text-xs text-muted-foreground">
-                      {perm === "Admin" ? "Full access to all features" : perm === "Editor" ? "Can edit events and vendors" : "View-only access"}
-                    </p>
+                    <p className="text-xs text-muted-foreground">{perm === "Admin" ? "Full access" : perm === "Editor" ? "Can edit events and vendors" : "View-only access"}</p>
                   </div>
-                  {members.find(m => m.id === permissionModal)?.permission === perm && (
-                    <div className="w-4 h-4 rounded-full bg-primary" />
-                  )}
+                  {members.find(m => m.id === permissionModal)?.permission === perm && <div className="w-4 h-4 rounded-full bg-foreground" />}
                 </button>
               ))}
             </div>
