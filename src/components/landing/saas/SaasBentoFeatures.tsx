@@ -126,9 +126,9 @@ const SaasBentoFeatures = () => {
         <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-px bg-border/10 border border-border/15 rounded-2xl overflow-hidden mb-24">
           {/* Row 1 */}
           {[
-            { icon: Rocket, title: "Launch Faster", desc: "Visually orchestrate autonomous event plans without writing boilerplate code" },
+            { icon: Rocket, title: "Launch Faster", desc: "Go from concept to fully planned event in hours, not weeks — with AI-generated timelines and checklists" },
             null, // center mockup spans 2 rows
-            { icon: Settings2, title: "Reuse Intelligence", desc: "Visually orchestrate autonomous event plans without writing boilerplate code" },
+            { icon: Settings2, title: "Reuse Templates", desc: "Save successful event plans as templates and reuse them across future events with one click" },
           ].map((item, i) => {
             if (!item) return (
               <div key={i} className="feat-anim bg-card row-span-2 flex flex-col items-center justify-center p-8 relative overflow-hidden">
@@ -159,10 +159,10 @@ const SaasBentoFeatures = () => {
                     <div className="w-2 h-2 rounded-full bg-red-400" />
                     <div className="w-2 h-2 rounded-full bg-yellow-400" />
                     <div className="w-2 h-2 rounded-full bg-green-400" />
-                    <span className="ml-auto text-[8px] text-muted-foreground">△ Meeting created</span>
+                    <span className="ml-auto text-[8px] text-muted-foreground">△ Event created</span>
                   </div>
                   <p className="text-[10px] font-semibold text-foreground">Dashboard</p>
-                  <p className="text-[8px] text-muted-foreground">API Calls</p>
+                  <p className="text-[8px] text-muted-foreground">Event Analytics</p>
                 </div>
               </div>
             );
@@ -176,8 +176,8 @@ const SaasBentoFeatures = () => {
           })}
           {/* Row 2 */}
           {[
-            { icon: RefreshCw, title: "Iterate Rapidly", desc: "Visually orchestrate autonomous event plans without writing boilerplate code" },
-            { icon: CheckCircle, title: "Prevent Breakdowns", desc: "Visually orchestrate autonomous event plans without writing boilerplate code" },
+            { icon: RefreshCw, title: "Iterate Rapidly", desc: "Adjust budgets, swap vendors, and shift timelines on the fly with real-time updates across your team" },
+            { icon: CheckCircle, title: "Prevent Overruns", desc: "Smart budget alerts and deadline tracking ensure your events stay on time and within budget" },
           ].map((item, i) => (
             <div key={`r2-${i}`} className={`feat-anim bg-card p-8 ${i === 0 ? 'md:col-start-1' : 'md:col-start-3'}`}>
               <item.icon className="w-5 h-5 text-primary mb-4" />
@@ -187,9 +187,9 @@ const SaasBentoFeatures = () => {
           ))}
           {/* Row 3 */}
           {[
-            { icon: BarChart3, title: "Scale Smarter", desc: "Visually orchestrate autonomous event plans without writing boilerplate code" },
+            { icon: BarChart3, title: "Scale Smarter", desc: "From intimate dinners to 10,000-person conferences — Nested scales with your ambitions" },
             null,
-            { icon: Code2, title: "Custom Workflows", desc: "Visually orchestrate autonomous event plans without writing boilerplate code" },
+            { icon: Code2, title: "Custom Workflows", desc: "Build automated sequences for RSVPs, vendor follow-ups, and post-event surveys" },
           ].map((item, i) => {
             if (!item) return (
               <div key={`r3-${i}`} className="feat-anim bg-card p-8" />
