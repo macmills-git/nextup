@@ -239,7 +239,7 @@ const DocsPage = () => {
           </div>
         </div>
       </div>
-      <Footer />
+      <VariantFooter />
     </div>
   );
 };

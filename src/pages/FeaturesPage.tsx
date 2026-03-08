@@ -194,7 +194,7 @@ const FeaturesPage = () => {
           </Button>
         </div>
       </div>
-      <Footer />
+      <VariantFooter />
     </div>
   );
 };
