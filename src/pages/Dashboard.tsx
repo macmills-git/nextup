@@ -58,9 +58,9 @@ const budgetCategories = [
   { name: "Entertainment", amount: 3010, share: "14.3%", color: "hsl(0, 0%, 85%)" },
 ];
 
-const ProfileDropdown = ({ onClose, onNavigate }: { onClose: () => void; onNavigate: (path: string) => void }) => (
-  <div className="fixed inset-0 z-50 flex items-start justify-end pt-16 pr-6" onClick={onClose}>
-    <div className="w-[380px] bg-card rounded-2xl border border-border shadow-elevated p-6 animate-scale-in" onClick={e => e.stopPropagation()}>
+const ProfileDropdown = ({ onClose, onNavigate, onSignOut, userEmail, userName }: { onClose: () => void; onNavigate: (path: string) => void; onSignOut: () => void; userEmail: string; userName?: string }) => (
+  <div className="fixed inset-0 z-50 flex items-start justify-end pt-16 pr-4 sm:pr-6" onClick={onClose}>
+    <div className="w-[92vw] max-w-[380px] bg-card rounded-2xl border border-border shadow-elevated p-6 animate-scale-in" onClick={e => e.stopPropagation()}>
       <div className="flex items-center justify-between mb-5">
         <span className="text-xs font-medium text-muted-foreground uppercase tracking-wider">Account</span>
         <button onClick={onClose} className="w-7 h-7 rounded-full border border-border flex items-center justify-center text-muted-foreground hover:text-foreground transition-colors">
@@ -68,10 +68,12 @@ const ProfileDropdown = ({ onClose, onNavigate }: { onClose: () => void; onNavig
         </button>
       </div>
       <div className="flex items-center gap-3 mb-6">
-        <div className="w-11 h-11 rounded-full bg-foreground flex items-center justify-center text-background font-semibold text-sm">K</div>
-        <div>
-          <p className="font-semibold text-foreground text-sm">Kusi Boateng Mills</p>
-          <p className="text-xs text-muted-foreground">kusi@nested.com</p>
+        <div className="w-11 h-11 rounded-full bg-foreground flex items-center justify-center text-background font-semibold text-sm">
+          {(userName || userEmail).charAt(0).toUpperCase()}
+        </div>
+        <div className="min-w-0">
+          <p className="font-semibold text-foreground text-sm truncate">{userName || userEmail.split("@")[0]}</p>
+          <p className="text-xs text-muted-foreground truncate">{userEmail}</p>
         </div>
       </div>
       <div className="space-y-4 mb-5">
@@ -103,7 +105,7 @@ const ProfileDropdown = ({ onClose, onNavigate }: { onClose: () => void; onNavig
           { icon: LogOut, label: "Log out", path: "/signin", isLogout: true },
         ].map(item => (
           <button key={item.label} className="w-full flex items-center gap-3 px-3 py-2 rounded-lg text-sm text-muted-foreground hover:text-foreground hover:bg-muted transition-colors"
-            onClick={() => { if ((item as any).isLogout) { sessionStorage.removeItem("nested_auth_user"); } onNavigate(item.path); onClose(); }}>
+            onClick={() => { if ((item as any).isLogout) { onSignOut(); } onNavigate(item.path); onClose(); }}>
             <item.icon className="w-4 h-4" />
             {item.label}
           </button>
