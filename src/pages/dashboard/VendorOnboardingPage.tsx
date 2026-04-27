@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Store, Camera, MapPin, DollarSign, Image as ImageIcon, CheckCircle, ArrowRight, ArrowLeft, Sparkles, Plus, X, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -31,6 +31,11 @@ const VendorOnboardingPage = () => {
   const [pricingTier, setPricingTier] = useState<"$" | "$$" | "$$$">("$$");
   const [startingPrice, setStartingPrice] = useState("");
   const [portfolio, setPortfolio] = useState<string[]>([]);
+  const [portfolioDraft, setPortfolioDraft] = useState("");
+  const [contactEmail, setContactEmail] = useState(user?.email || "");
+  const [instagram, setInstagram] = useState("");
+  const [responseTime, setResponseTime] = useState("Within 24 hours");
+  const [isEditing, setIsEditing] = useState(false);
 
   const steps = [
     { label: "Business", icon: Store },
@@ -58,10 +63,37 @@ const VendorOnboardingPage = () => {
     setNewService("");
   };
 
+  useEffect(() => {
+    try {
+      const raw = sessionStorage.getItem("nested_vendor_profile");
+      if (!raw) return;
+      const parsed = JSON.parse(raw);
+      setBusinessName(parsed.businessName || user?.name || "");
+      setTagline(parsed.tagline || "");
+      setBio(parsed.bio || "");
+      setCategory(parsed.category || "");
+      setServiceArea(parsed.serviceArea || "");
+      setWebsite(parsed.website || "");
+      setPhone(parsed.phone || "");
+      setServices(Array.isArray(parsed.services) ? parsed.services : []);
+      setPricingTier(parsed.pricingTier || "$$");
+      setStartingPrice(parsed.startingPrice || "");
+      setPortfolio(Array.isArray(parsed.portfolio) ? parsed.portfolio : []);
+      setContactEmail(parsed.contactEmail || user?.email || "");
+      setInstagram(parsed.instagram || "");
+      setResponseTime(parsed.responseTime || "Within 24 hours");
+      setIsEditing(true);
+    } catch {
+      // ignore corrupted local profile
+    }
+  }, [user?.email, user?.name]);
+
   const handleAddPortfolioFromUrl = () => {
-    const url = prompt("Paste an image URL for your portfolio");
+    const url = portfolioDraft.trim();
     if (!url) return;
+    if (portfolio.includes(url)) return;
     setPortfolio([...portfolio, url]);
+    setPortfolioDraft("");
   };
 
   const handleSubmit = () => {
@@ -72,10 +104,15 @@ const VendorOnboardingPage = () => {
       try {
         sessionStorage.setItem("nested_vendor_profile", JSON.stringify({
           businessName, tagline, bio, category, serviceArea, website, phone,
-          services, pricingTier, startingPrice, portfolio,
+          services, pricingTier, startingPrice, portfolio, contactEmail, instagram, responseTime,
         }));
       } catch {}
-      toast({ title: "Vendor profile published 🎉", description: "Planners can now discover your business." });
+      toast({
+        title: isEditing ? "Vendor profile updated" : "Vendor profile published 🎉",
+        description: isEditing
+          ? "Your business details were saved successfully."
+          : "Planners can now discover your business.",
+      });
       setSubmitting(false);
       navigate("/dashboard");
     }, 800);
@@ -89,7 +126,9 @@ const VendorOnboardingPage = () => {
       {/* Header */}
       <div className="mb-8">
         <p className="text-xs font-medium text-primary mb-1.5">Vendor onboarding</p>
-        <h1 className="text-2xl md:text-3xl font-bold text-foreground tracking-tight">Let's set up your business</h1>
+        <h1 className="text-2xl md:text-3xl font-bold text-foreground tracking-tight">
+          {isEditing ? "Edit your vendor storefront" : "Let's set up your business"}
+        </h1>
         <p className="text-sm text-muted-foreground mt-2">Complete your profile so planners can discover, contact and book you.</p>
       </div>
 
@@ -243,8 +282,35 @@ const VendorOnboardingPage = () => {
 
         {step === 4 && (
           <div className="space-y-5 animate-fade-in">
-            <h2 className="text-lg font-semibold text-foreground">Add portfolio images</h2>
-            <p className="text-sm text-muted-foreground">Show off your best work. You can edit and add more later.</p>
+            <h2 className="text-lg font-semibold text-foreground">Portfolio, contact and visibility</h2>
+            <p className="text-sm text-muted-foreground">Show off your best work and set how organisers can reach you.</p>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <Field label="Contact email">
+                <input value={contactEmail} onChange={e => setContactEmail(e.target.value)} placeholder="bookings@akolo.studio" className="form-input" />
+              </Field>
+              <Field label="Response time">
+                <select value={responseTime} onChange={e => setResponseTime(e.target.value)} className="form-input">
+                  <option>Within 1 hour</option>
+                  <option>Within 24 hours</option>
+                  <option>Within 48 hours</option>
+                </select>
+              </Field>
+            </div>
+            <Field label="Instagram / social profile (optional)">
+              <input value={instagram} onChange={e => setInstagram(e.target.value)} placeholder="@yourbrand or https://instagram.com/yourbrand" className="form-input" />
+            </Field>
+            <div className="flex gap-2">
+              <input
+                value={portfolioDraft}
+                onChange={e => setPortfolioDraft(e.target.value)}
+                onKeyDown={e => e.key === "Enter" && (e.preventDefault(), handleAddPortfolioFromUrl())}
+                placeholder="Paste portfolio image URL"
+                className="form-input flex-1"
+              />
+              <Button type="button" onClick={handleAddPortfolioFromUrl} className="rounded-lg">
+                <Plus className="w-4 h-4 mr-1" /> Add
+              </Button>
+            </div>
             <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
               {portfolio.map((src, i) => (
                 <div key={i} className="relative aspect-square rounded-xl overflow-hidden border border-border bg-secondary group">
@@ -255,10 +321,10 @@ const VendorOnboardingPage = () => {
                   </button>
                 </div>
               ))}
-              <button onClick={handleAddPortfolioFromUrl}
+              <button onClick={() => setPortfolioDraft("https://images.unsplash.com/photo-1511578314322-379afb476865?w=900&h=900&fit=crop")}
                 className="aspect-square rounded-xl border-2 border-dashed border-border hover:border-foreground/40 hover:bg-muted transition-colors flex flex-col items-center justify-center gap-2 text-muted-foreground">
                 <ImageIcon className="w-5 h-5" />
-                <span className="text-xs font-medium">Add image</span>
+                <span className="text-xs font-medium">Try sample URL</span>
               </button>
             </div>
             <p className="text-xs text-muted-foreground italic">Tip: 6–10 high-quality images convert best.</p>
@@ -278,7 +344,7 @@ const VendorOnboardingPage = () => {
           </Button>
         ) : (
           <Button onClick={handleSubmit} disabled={submitting} className="rounded-lg bg-primary text-primary-foreground hover:brightness-110">
-            {submitting ? <><Loader2 className="w-4 h-4 mr-1.5 animate-spin" /> Publishing...</> : "Publish profile"}
+            {submitting ? <><Loader2 className="w-4 h-4 mr-1.5 animate-spin" /> Saving...</> : isEditing ? "Save profile changes" : "Publish profile"}
           </Button>
         )}
       </div>

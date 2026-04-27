@@ -45,7 +45,15 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   };
 
   const signIn = (email: string, role: UserRole = "planner") => {
-    persist({ email, role });
+    let vendorOnboarded = false;
+    if (role === "vendor") {
+      try {
+        vendorOnboarded = !!sessionStorage.getItem("nested_vendor_profile");
+      } catch {
+        vendorOnboarded = false;
+      }
+    }
+    persist({ email, role, vendorOnboarded });
   };
 
   const signUp = (email: string, name: string, role: UserRole = "planner") => {

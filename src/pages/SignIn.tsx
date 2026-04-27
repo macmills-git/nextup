@@ -18,7 +18,8 @@ const SignIn = () => {
     setLoading(true);
     signIn(email, role);
     setTimeout(() => {
-      navigate(role === "vendor" ? "/dashboard" : "/dashboard");
+      const vendorOnboarded = !!sessionStorage.getItem("nested_vendor_profile");
+      navigate(role === "vendor" && !vendorOnboarded ? "/dashboard/vendor-onboarding" : "/dashboard");
     }, 600);
   };
 

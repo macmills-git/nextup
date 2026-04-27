@@ -34,13 +34,17 @@ const EventsPage = () => {
   const [events, setEvents] = useState(initialEvents);
   const [search, setSearch] = useState("");
   const [categoryFilter, setCategoryFilter] = useState("All");
+  const [locationFilter, setLocationFilter] = useState("");
+  const [nearbyOnly, setNearbyOnly] = useState(false);
   const [menuOpen, setMenuOpen] = useState<number | null>(null);
   const navigate = useNavigate();
 
   const filtered = events.filter(e => {
     const matchSearch = e.title.toLowerCase().includes(search.toLowerCase());
     const matchCat = categoryFilter === "All" || e.category === categoryFilter;
-    return matchSearch && matchCat;
+    const matchLocation = !locationFilter || e.location.toLowerCase().includes(locationFilter.toLowerCase());
+    const nearByMatch = !nearbyOnly || /downtown|city|central|park|convention/i.test(e.location);
+    return matchSearch && matchCat && matchLocation && nearByMatch;
   });
 
   const handleDelete = (id: number) => {
@@ -102,6 +106,9 @@ const EventsPage = () => {
         <Button className="bg-foreground text-background hover:bg-foreground/90 gap-2 rounded-lg" onClick={() => navigate('/dashboard/events/new')}>
           <Plus className="h-4 w-4" /> Create Event
         </Button>
+        <Button variant="outline" className="gap-2 rounded-lg" onClick={() => navigate('/dashboard/events/publish')}>
+          <Plus className="h-4 w-4" /> Publish Event
+        </Button>
       </div>
 
       <div className="flex flex-col sm:flex-row gap-3">
@@ -109,6 +116,13 @@ const EventsPage = () => {
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
           <Input placeholder="Search events..." className="pl-9" value={search} onChange={e => setSearch(e.target.value)} />
         </div>
+        <Input placeholder="Filter by location..." className="sm:w-56" value={locationFilter} onChange={e => setLocationFilter(e.target.value)} />
+        <button
+          onClick={() => setNearbyOnly((prev) => !prev)}
+          className={`px-3.5 py-1.5 rounded-lg text-xs font-medium transition-all border ${nearbyOnly ? "bg-foreground text-background border-foreground" : "border-border text-muted-foreground hover:bg-muted hover:text-foreground"}`}
+        >
+          Events near me
+        </button>
         <div className="flex gap-1.5 flex-wrap">
           {categories.map(cat => (
             <button key={cat} onClick={() => setCategoryFilter(cat)}

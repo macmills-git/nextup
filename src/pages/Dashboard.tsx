@@ -22,6 +22,11 @@ import NotificationsPage from "./dashboard/NotificationsPage";
 import ReportsPage from "./dashboard/ReportsPage";
 import TicketingPage from "./dashboard/TicketingPage";
 import VendorOnboardingPage from "./dashboard/VendorOnboardingPage";
+import MarketingPage from "./dashboard/MarketingPage";
+import NearbyEventsPage from "./dashboard/NearbyEventsPage";
+import VendorDashboardPage from "./dashboard/VendorDashboardPage";
+import DashboardTemplatesPage from "./dashboard/DashboardTemplatesPage";
+import PublishEventPage from "./dashboard/PublishEventPage";
 
 const chartData = [
   { name: "Jan", events: 4 }, { name: "Feb", events: 3 }, { name: "Mar", events: 5 }, { name: "Apr", events: 7 },
@@ -117,6 +122,7 @@ const ProfileDropdown = ({ onClose, onNavigate, onSignOut, userEmail, userName }
 
 const DashboardHome = () => {
   const navigate = useNavigate();
+  const { user } = useAuth();
   const [budgetTab, setBudgetTab] = useState<"category" | "employee">("category");
 
   const budgetByEmployee = [
@@ -129,6 +135,55 @@ const DashboardHome = () => {
 
   const activeBudgetData = budgetTab === "category" ? budgetCategories : budgetByEmployee;
   const totalBudget = activeBudgetData.reduce((sum, item) => sum + item.amount, 0);
+
+  if (user?.role === "vendor") {
+    const publishedEvents = (() => {
+      try {
+        return JSON.parse(sessionStorage.getItem("nested_published_events") || "[]");
+      } catch {
+        return [];
+      }
+    })();
+
+    return (
+      <div className="space-y-6">
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+          {[
+            { label: "Active bookings", value: "12" },
+            { label: "New contacts", value: "28" },
+            { label: "Upcoming events", value: "6" },
+          ].map((card) => (
+            <div key={card.label} className="bg-card rounded-xl border border-border p-5">
+              <p className="text-xs text-muted-foreground">{card.label}</p>
+              <p className="text-2xl font-bold text-foreground mt-1">{card.value}</p>
+            </div>
+          ))}
+        </div>
+        <div className="bg-card rounded-xl border border-border p-5">
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="font-semibold text-foreground">Published events you can pitch to</h2>
+            <Button variant="outline" size="sm" onClick={() => navigate("/dashboard/messages")}>Open messages</Button>
+          </div>
+          <div className="space-y-2">
+            {publishedEvents.length === 0 && (
+              <p className="text-sm text-muted-foreground">No published events yet. Planners will appear here once they publish.</p>
+            )}
+            {publishedEvents.slice(0, 6).map((event: any) => (
+              <div key={event.id} className="border border-border rounded-lg p-3 flex items-center justify-between gap-3">
+                <div>
+                  <p className="text-sm font-medium text-foreground">{event.title}</p>
+                  <p className="text-xs text-muted-foreground">{event.date} • {event.city || event.location}</p>
+                </div>
+                <Button size="sm" className="rounded-lg" onClick={() => navigate("/dashboard/messages")}>
+                  Contact organiser
+                </Button>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-6">
@@ -285,8 +340,10 @@ const useRouteTitle = () => {
   if (path === "/dashboard") return "Analytics";
   const seg = path.split("/").filter(Boolean).pop() || "";
   if (seg === "vendor-onboarding") return "Vendor Onboarding";
+  if (seg === "vendor-dashboard") return "Vendor Dashboard";
+  if (seg === "nearby") return "Nearby Events";
   if (seg === "ai") return "AI Assistant";
-  return seg.charAt(0).toUpperCase() + seg.slice(1);
+  return seg.split("-").map((part) => part.charAt(0).toUpperCase() + part.slice(1)).join(" ");
 };
 
 const Dashboard = () => {
@@ -356,15 +413,20 @@ const Dashboard = () => {
             <Route index element={<DashboardHome />} />
             <Route path="events" element={<EventsPage />} />
             <Route path="events/new" element={<EventWorkspacePage />} />
+            <Route path="events/publish" element={<PublishEventPage />} />
+            <Route path="events/nearby" element={<NearbyEventsPage />} />
             <Route path="events/:eventId" element={<EventDetailPage />} />
+            <Route path="templates" element={<DashboardTemplatesPage />} />
             <Route path="vendors" element={<VendorsPage />} />
             <Route path="vendors/:vendorId" element={<VendorProfilePage />} />
+            <Route path="vendor-dashboard" element={<VendorDashboardPage />} />
             <Route path="vendor-onboarding" element={<VendorOnboardingPage />} />
             <Route path="team" element={<TeamPage />} />
             <Route path="messages" element={<MessagesPage />} />
             <Route path="ai" element={<AIAssistantPage />} />
             <Route path="reports" element={<ReportsPage />} />
             <Route path="ticketing" element={<TicketingPage />} />
+            <Route path="marketing" element={<MarketingPage />} />
             <Route path="settings" element={<SettingsPage />} />
             <Route path="notifications" element={<NotificationsPage />} />
           </Routes>

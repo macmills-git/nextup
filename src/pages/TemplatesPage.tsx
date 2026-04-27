@@ -1,7 +1,7 @@
 import Navbar from "@/components/Navbar";
 import SaasFooter from "@/components/landing/saas/SaasFooter";
 import { Search, Eye, Shuffle, ListFilter, CalendarDays, X, Calendar, MapPin, Users, DollarSign, CheckCircle } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 const categories = ["All", "Weddings", "Corporate", "Conferences", "Social", "Birthday", "Workshops", "Paid Templates"];
@@ -43,18 +43,70 @@ const TemplatesPage = () => {
   const [activeSort, setActiveSort] = useState("Popular");
   const [searchQuery, setSearchQuery] = useState("");
   const [previewTemplate, setPreviewTemplate] = useState<typeof templates[0] | null>(null);
+  const [isBootLoading, setIsBootLoading] = useState(true);
+  const [visibleCount, setVisibleCount] = useState(10);
+  const [isLoadingMore, setIsLoadingMore] = useState(false);
   const navigate = useNavigate();
+  const loadMoreRef = useRef<HTMLDivElement | null>(null);
 
   const filtered = templates.filter(t =>
     (activeCategory === "All" || activeCategory === "Paid Templates" ? (activeCategory === "Paid Templates" ? !!t.price : true) : t.category === activeCategory) &&
     (searchQuery === "" || t.name.toLowerCase().includes(searchQuery.toLowerCase()))
   );
 
-  const sorted = [...filtered].sort((a, b) => {
+  const sorted = useMemo(() => [...filtered].sort((a, b) => {
     if (activeSort === "Popular") return parseUses(b.uses) - parseUses(a.uses);
     if (activeSort === "Recent") return new Date(b.date).getTime() - new Date(a.date).getTime();
     return 0;
-  });
+  }), [filtered, activeSort]);
+
+  const visibleTemplates = sorted.slice(0, visibleCount);
+  const canLoadMore = visibleCount < sorted.length;
+
+  const preloadTemplates = async () => {
+    const preload = sorted.map((template) => new Promise<void>((resolve) => {
+      const img = new Image();
+      img.src = template.image;
+      img.onload = () => resolve();
+      img.onerror = () => resolve();
+    }));
+
+    await Promise.all(preload);
+    await new Promise((resolve) => setTimeout(resolve, 300));
+    setIsBootLoading(false);
+  };
+
+  const handleLoadMore = () => {
+    if (!canLoadMore || isLoadingMore) return;
+    setIsLoadingMore(true);
+    setTimeout(() => {
+      setVisibleCount((prev) => Math.min(prev + 8, sorted.length));
+      setIsLoadingMore(false);
+    }, 450);
+  };
+
+  useEffect(() => {
+    setVisibleCount(10);
+  }, [activeCategory, activeSort, searchQuery]);
+
+  useEffect(() => {
+    setIsBootLoading(true);
+    preloadTemplates();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [activeCategory, activeSort, searchQuery]);
+
+  useEffect(() => {
+    if (!loadMoreRef.current || !canLoadMore) return;
+    const node = loadMoreRef.current;
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) handleLoadMore();
+      },
+      { rootMargin: "120px" }
+    );
+    observer.observe(node);
+    return () => observer.disconnect();
+  }, [canLoadMore, isLoadingMore]);
 
   const handleUseTemplate = (t: typeof templates[0]) => {
     setPreviewTemplate(null);
@@ -97,38 +149,77 @@ const TemplatesPage = () => {
           ))}
         </div>
 
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
-          {sorted.map((t, i) => (
-            <div key={i} className="rounded-xl border border-border overflow-hidden bg-card hover:shadow-elevated transition-all duration-200 group cursor-pointer relative"
-              onClick={() => setPreviewTemplate(t)}>
-              <div className="relative h-32 bg-secondary overflow-hidden">
-                <img src={t.image} alt={t.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" loading="lazy" />
-                {/* Hover preview overlay */}
-                <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
-                  <span className="text-white text-xs font-medium px-3 py-1.5 rounded-full border border-white/30 bg-white/10 backdrop-blur-sm">
-                    <Eye className="w-3 h-3 inline mr-1" /> Preview
-                  </span>
-                </div>
-              </div>
-              <div className="p-3">
-                <div className="flex justify-between items-start gap-1.5 mb-1.5">
-                  <h3 className="text-xs font-semibold text-foreground truncate flex-1">{t.name}</h3>
-                  {t.isPro ? (
-                    <span className="text-[9px] bg-secondary px-1.5 py-0.5 rounded text-muted-foreground flex-shrink-0 font-medium">PRO</span>
-                  ) : (
-                    <span className="text-xs font-semibold text-foreground flex-shrink-0">{t.price}</span>
-                  )}
-                </div>
-                <div className="flex justify-between items-center text-[11px] text-muted-foreground">
-                  <span>{t.author}</span>
-                  <div className="flex items-center gap-2">
-                    <span className="flex items-center gap-0.5"><Eye className="w-2.5 h-2.5" /> {t.uses}</span>
+        {isBootLoading ? (
+          <div className="rounded-2xl border border-border bg-card p-8 md:p-10">
+            <div className="space-y-6">
+              <div className="h-3 w-40 rounded-full bg-muted animate-pulse" />
+              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
+                {Array.from({ length: 10 }).map((_, i) => (
+                  <div key={i} className="rounded-xl border border-border overflow-hidden bg-background">
+                    <div className="h-32 bg-muted animate-pulse" />
+                    <div className="p-3 space-y-2">
+                      <div className="h-3 bg-muted rounded animate-pulse" />
+                      <div className="h-2.5 w-2/3 bg-muted rounded animate-pulse" />
+                    </div>
                   </div>
-                </div>
+                ))}
               </div>
             </div>
-          ))}
-        </div>
+          </div>
+        ) : (
+          <>
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
+              {visibleTemplates.map((t, i) => (
+                <div
+                  key={`${t.name}-${i}`}
+                  className="rounded-xl border border-border overflow-hidden bg-card hover:shadow-elevated transition-all duration-300 group cursor-pointer relative animate-fade-in"
+                  style={{ animationDelay: `${Math.min(i, 9) * 35}ms` }}
+                  onClick={() => setPreviewTemplate(t)}
+                >
+                  <div className="relative h-32 bg-secondary overflow-hidden">
+                    <img src={t.image} alt={t.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" loading="lazy" />
+                    <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+                      <span className="text-white text-xs font-medium px-3 py-1.5 rounded-full border border-white/30 bg-white/10 backdrop-blur-sm">
+                        <Eye className="w-3 h-3 inline mr-1" /> Preview
+                      </span>
+                    </div>
+                  </div>
+                  <div className="p-3">
+                    <div className="flex justify-between items-start gap-1.5 mb-1.5">
+                      <h3 className="text-xs font-semibold text-foreground truncate flex-1">{t.name}</h3>
+                      {t.isPro ? (
+                        <span className="text-[9px] bg-secondary px-1.5 py-0.5 rounded text-muted-foreground flex-shrink-0 font-medium">PRO</span>
+                      ) : (
+                        <span className="text-xs font-semibold text-foreground flex-shrink-0">{t.price}</span>
+                      )}
+                    </div>
+                    <div className="flex justify-between items-center text-[11px] text-muted-foreground">
+                      <span>{t.author}</span>
+                      <div className="flex items-center gap-2">
+                        <span className="flex items-center gap-0.5"><Eye className="w-2.5 h-2.5" /> {t.uses}</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+            {sorted.length > 0 && (
+              <div ref={loadMoreRef} className="flex justify-center py-10">
+                {canLoadMore ? (
+                  <button
+                    onClick={handleLoadMore}
+                    disabled={isLoadingMore}
+                    className="h-10 px-5 rounded-full border border-border bg-card text-sm text-foreground hover:bg-muted transition-colors disabled:opacity-60"
+                  >
+                    {isLoadingMore ? "Loading more templates..." : "Load more templates"}
+                  </button>
+                ) : (
+                  <span className="text-xs text-muted-foreground">You have reached the end of templates</span>
+                )}
+              </div>
+            )}
+          </>
+        )}
 
         {filtered.length === 0 && (
           <div className="text-center py-20">

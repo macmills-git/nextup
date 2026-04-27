@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import {
   ArrowLeft, Calendar, Clock, MapPin, Users, DollarSign, Save, Plus, Trash2, CheckCircle,
-  AlertCircle, ChevronRight, UserPlus, Send, Bell, Activity, FileText
+  AlertCircle, ChevronRight, UserPlus, Send, Bell, Activity, FileText, Sparkles
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -34,6 +34,7 @@ const EventWorkspacePage = () => {
   const [eventDate, setEventDate] = useState("");
   const [eventTime, setEventTime] = useState("");
   const [eventVenue, setEventVenue] = useState("");
+  const [eventCity, setEventCity] = useState("");
   const [guestCount, setGuestCount] = useState("");
   const [eventDetails, setEventDetails] = useState("");
 
@@ -129,6 +130,22 @@ const EventWorkspacePage = () => {
 
   const handleSaveEvent = () => {
     if (!eventName.trim()) return;
+    try {
+      const existing = JSON.parse(sessionStorage.getItem("nested_published_events") || "[]");
+      existing.unshift({
+        id: Date.now(),
+        title: eventName,
+        date: eventDate || "TBD",
+        time: eventTime || "TBD",
+        location: eventVenue || "TBD",
+        city: eventCity || "Unknown",
+        guests: Number(guestCount || 0),
+        details: eventDetails,
+      });
+      sessionStorage.setItem("nested_published_events", JSON.stringify(existing));
+    } catch {
+      // no-op local persistence fallback
+    }
     navigate('/dashboard/events');
   };
 
@@ -144,6 +161,9 @@ const EventWorkspacePage = () => {
         </div>
         <Button className="gradient-primary text-white gap-2" onClick={handleSaveEvent}>
           <Save className="h-4 w-4" /> Save Event
+        </Button>
+        <Button variant="outline" className="gap-2" onClick={() => navigate("/dashboard/ai")}>
+          <Sparkles className="h-4 w-4" /> Create with AI
         </Button>
       </div>
 
@@ -194,6 +214,10 @@ const EventWorkspacePage = () => {
             <div><label className="text-sm font-medium text-foreground">Time</label><Input className="mt-1" type="time" value={eventTime} onChange={e => setEventTime(e.target.value)} /></div>
             <div><label className="text-sm font-medium text-foreground">Guests</label><Input className="mt-1" type="number" value={guestCount} onChange={e => setGuestCount(e.target.value)} placeholder="0" /></div>
             <div><label className="text-sm font-medium text-foreground">Venue</label><Input className="mt-1" value={eventVenue} onChange={e => setEventVenue(e.target.value)} placeholder="Venue name" /></div>
+          </div>
+          <div>
+            <label className="text-sm font-medium text-foreground">City / Location</label>
+            <Input className="mt-1" value={eventCity} onChange={e => setEventCity(e.target.value)} placeholder="e.g. Auckland" />
           </div>
           <div>
             <label className="text-sm font-medium text-foreground">Event Details</label>

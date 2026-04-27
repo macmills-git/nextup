@@ -1,8 +1,24 @@
 import { Link, useLocation } from "react-router-dom";
 import {
-  LayoutDashboard, Calendar, Users, Store, MessageSquare, Settings, Sparkles, Bell, BarChart3, Ticket, X, ChevronRight,
+  LayoutDashboard,
+  Store,
+  MessageSquare,
+  Settings,
+  Bell,
+  Sparkles,
+  Calendar,
+  Users,
+  Ticket,
+  BarChart3,
+  Megaphone,
+  MapPin,
+  ClipboardList,
+  UserRound,
+  Layers,
+  Brain,
+  UserCog,
+  X,
 } from "lucide-react";
-import { useState, useEffect } from "react";
 import { cn } from "@/lib/utils";
 import AnimatedLogo from "@/components/AnimatedLogo";
 import { useAuth } from "@/contexts/AuthContext";
@@ -14,26 +30,126 @@ type NavItem = {
   desc?: string;
 };
 
-// Primary rail: kept slim. Analytics renamed from Dashboard.
 const primaryItems: NavItem[] = [
-  { icon: LayoutDashboard, label: "Analytics", path: "/dashboard", desc: "Overview, KPIs and activity" },
-  { icon: Store, label: "Vendors", path: "/dashboard/vendors", desc: "Discover & manage vendors" },
-  { icon: MessageSquare, label: "Messages", path: "/dashboard/messages", desc: "Conversations & threads" },
-  { icon: Bell, label: "Notifications", path: "/dashboard/notifications", desc: "Alerts and updates" },
-  { icon: Settings, label: "Settings", path: "/dashboard/settings", desc: "Account & workspace" },
+  { icon: LayoutDashboard, label: "Analytics", path: "/dashboard" },
+  { icon: Store, label: "Vendors", path: "/dashboard/vendors" },
+  { icon: Layers, label: "Templates", path: "/dashboard/templates" },
+  { icon: Calendar, label: "Events", path: "/dashboard/events" },
+  { icon: Users, label: "Team", path: "/dashboard/team" },
+  { icon: Brain, label: "AI Assistant", path: "/dashboard/ai" },
+  { icon: BarChart3, label: "Reports", path: "/dashboard/reports" },
+  { icon: Ticket, label: "Ticketing", path: "/dashboard/ticketing" },
+  { icon: Megaphone, label: "Marketing", path: "/dashboard/marketing" },
+  { icon: MessageSquare, label: "Messages", path: "/dashboard/messages" },
+  { icon: Bell, label: "Notifications", path: "/dashboard/notifications" },
+  { icon: Settings, label: "Settings", path: "/dashboard/settings" },
 ];
 
-// Secondary panel: revealed when "More" is clicked
-const secondaryItems: NavItem[] = [
-  { icon: Calendar, label: "Events", path: "/dashboard/events", desc: "All your events" },
-  { icon: Users, label: "Team", path: "/dashboard/team", desc: "Members & permissions" },
-  { icon: Sparkles, label: "AI Assistant", path: "/dashboard/ai", desc: "Plan with AI" },
-  { icon: BarChart3, label: "Reports", path: "/dashboard/reports", desc: "Detailed event reports" },
-  { icon: Ticket, label: "Ticketing", path: "/dashboard/ticketing", desc: "Sell & manage tickets" },
-];
+const sectionTabs: Record<string, { title: string; items: NavItem[] }> = {
+  analytics: {
+    title: "Analytics",
+    items: [
+      { icon: LayoutDashboard, label: "Overview", path: "/dashboard", desc: "Performance snapshot" },
+      { icon: Calendar, label: "Events", path: "/dashboard/events", desc: "Create and publish events" },
+      { icon: MapPin, label: "Nearby events", path: "/dashboard/events/nearby", desc: "Events by location" },
+      { icon: Sparkles, label: "AI Assistant", path: "/dashboard/ai", desc: "Create events with AI" },
+      { icon: Ticket, label: "Ticketing", path: "/dashboard/ticketing", desc: "Tickets and check-ins" },
+      { icon: BarChart3, label: "Reports", path: "/dashboard/reports", desc: "Event analytics and trends" },
+      { icon: Megaphone, label: "Marketing", path: "/dashboard/marketing", desc: "Bulk email campaigns" },
+    ],
+  },
+  vendors: {
+    title: "Vendors",
+    items: [
+      { icon: Store, label: "Marketplace", path: "/dashboard/vendors", desc: "Browse and discover vendors" },
+      { icon: UserRound, label: "Vendor dashboard", path: "/dashboard/vendor-dashboard", desc: "Events, bookings and contacts" },
+      { icon: ClipboardList, label: "Onboarding", path: "/dashboard/vendor-onboarding", desc: "Set up and edit storefront" },
+      { icon: MessageSquare, label: "Vendor messages", path: "/dashboard/messages", desc: "Contact organisers and teams" },
+    ],
+  },
+  templates: {
+    title: "Templates",
+    items: [
+      { icon: Layers, label: "All templates", path: "/dashboard/templates", desc: "Browse all event templates" },
+      { icon: Sparkles, label: "Featured picks", path: "/dashboard/templates", desc: "Hand-picked starter layouts" },
+      { icon: UserCog, label: "My drafts", path: "/dashboard/templates", desc: "Saved and remixed templates" },
+    ],
+  },
+  events: {
+    title: "Events",
+    items: [
+      { icon: Calendar, label: "All events", path: "/dashboard/events", desc: "Track all event workflows" },
+      { icon: ClipboardList, label: "Publish event", path: "/dashboard/events/publish", desc: "Simple publish form" },
+      { icon: MapPin, label: "Events near you", path: "/dashboard/events/nearby", desc: "Location + category filters" },
+    ],
+  },
+  team: {
+    title: "Team",
+    items: [
+      { icon: Users, label: "Team board", path: "/dashboard/team", desc: "Members and role assignments" },
+      { icon: MessageSquare, label: "Team chat", path: "/dashboard/messages", desc: "Group collaboration threads" },
+      { icon: BarChart3, label: "Productivity", path: "/dashboard/reports", desc: "Execution and delivery stats" },
+    ],
+  },
+  ai: {
+    title: "AI Assistant",
+    items: [
+      { icon: Brain, label: "Assistant home", path: "/dashboard/ai", desc: "Prompt and planning workspace" },
+      { icon: Sparkles, label: "Create event by AI", path: "/dashboard/ai", desc: "Generate event plan quickly" },
+      { icon: Calendar, label: "Publish from AI", path: "/dashboard/events/publish", desc: "Push AI draft to event" },
+    ],
+  },
+  reports: {
+    title: "Reports",
+    items: [
+      { icon: BarChart3, label: "Overview reports", path: "/dashboard/reports", desc: "Performance and KPI trends" },
+      { icon: Ticket, label: "Ticketing reports", path: "/dashboard/ticketing", desc: "Sales and check-in metrics" },
+      { icon: Megaphone, label: "Campaign reports", path: "/dashboard/marketing", desc: "Email reach and opens" },
+    ],
+  },
+  ticketing: {
+    title: "Ticketing",
+    items: [
+      { icon: Ticket, label: "Ticket tiers", path: "/dashboard/ticketing", desc: "Create and manage tiers" },
+      { icon: Users, label: "Attendees", path: "/dashboard/ticketing", desc: "Track sold and expected guests" },
+      { icon: BarChart3, label: "Ticket analytics", path: "/dashboard/ticketing", desc: "Revenue and conversion data" },
+    ],
+  },
+  marketing: {
+    title: "Marketing",
+    items: [
+      { icon: Megaphone, label: "Campaign builder", path: "/dashboard/marketing", desc: "Send to invitees or buyers" },
+      { icon: MessageSquare, label: "Audience messages", path: "/dashboard/messages", desc: "Follow-up conversations" },
+      { icon: BarChart3, label: "Delivery stats", path: "/dashboard/marketing", desc: "Opens and engagement" },
+    ],
+  },
+  messages: {
+    title: "Messages",
+    items: [
+      { icon: MessageSquare, label: "Inbox", path: "/dashboard/messages", desc: "Chats, teams and vendors" },
+      { icon: Users, label: "Team", path: "/dashboard/team", desc: "Collaboration workspace" },
+      { icon: Megaphone, label: "Marketing", path: "/dashboard/marketing", desc: "Bulk email announcements" },
+    ],
+  },
+  notifications: {
+    title: "Notifications",
+    items: [
+      { icon: Bell, label: "All notifications", path: "/dashboard/notifications", desc: "Alerts and updates" },
+      { icon: Calendar, label: "Events", path: "/dashboard/events", desc: "Event reminders and status" },
+      { icon: Ticket, label: "Ticketing", path: "/dashboard/ticketing", desc: "Sales and attendance alerts" },
+    ],
+  },
+  settings: {
+    title: "Settings",
+    items: [
+      { icon: Settings, label: "General settings", path: "/dashboard/settings", desc: "Workspace preferences" },
+      { icon: Users, label: "Team", path: "/dashboard/team", desc: "Members and permissions" },
+      { icon: UserRound, label: "Vendor profile", path: "/dashboard/vendor-onboarding", desc: "Business and contact details" },
+    ],
+  },
+};
 
 interface Props {
-  // for mobile slide-in
   open?: boolean;
   onClose?: () => void;
 }
@@ -41,71 +157,55 @@ interface Props {
 const DashboardSidebar = ({ open = false, onClose }: Props) => {
   const location = useLocation();
   const { user } = useAuth();
-  const [showPanel, setShowPanel] = useState(false);
-  const [activeSection, setActiveSection] = useState<"primary" | "secondary">("primary");
-
-  // Auto-close panel on nav change
-  useEffect(() => {
-    setShowPanel(false);
-  }, [location.pathname]);
 
   const isActive = (path: string) =>
     location.pathname === path || (path !== "/dashboard" && location.pathname.startsWith(path));
 
-  const renderRailButton = (item: NavItem, onClick?: () => void) => {
-    const active = isActive(item.path);
-    return (
-      <Link
-        key={item.path}
-        to={item.path}
-        onClick={onClick}
-        title={item.label}
-        className={cn(
-          "group relative w-10 h-10 rounded-xl flex items-center justify-center transition-all duration-200",
-          active
-            ? "bg-foreground text-background"
-            : "text-muted-foreground hover:bg-muted hover:text-foreground"
-        )}
-      >
-        <item.icon className="h-4 w-4" />
-        {/* Tooltip */}
-        <span className="pointer-events-none absolute left-full ml-3 px-2 py-1 rounded-md bg-foreground text-background text-[11px] font-medium opacity-0 -translate-x-1 group-hover:opacity-100 group-hover:translate-x-0 transition whitespace-nowrap z-50 shadow-lg">
-          {item.label}
-        </span>
-      </Link>
-    );
+  const getSectionKey = () => {
+    if (location.pathname.startsWith("/dashboard/templates")) return "templates";
+    if (location.pathname.startsWith("/dashboard/events")) return "events";
+    if (location.pathname.startsWith("/dashboard/team")) return "team";
+    if (location.pathname.startsWith("/dashboard/ai")) return "ai";
+    if (location.pathname.startsWith("/dashboard/reports")) return "reports";
+    if (location.pathname.startsWith("/dashboard/ticketing")) return "ticketing";
+    if (location.pathname.startsWith("/dashboard/marketing")) return "marketing";
+    if (location.pathname.startsWith("/dashboard/vendors") || location.pathname.startsWith("/dashboard/vendor")) return "vendors";
+    if (location.pathname.startsWith("/dashboard/messages")) return "messages";
+    if (location.pathname.startsWith("/dashboard/notifications")) return "notifications";
+    if (location.pathname.startsWith("/dashboard/settings")) return "settings";
+    return "analytics";
   };
+
+  const activeSectionKey = getSectionKey();
+  const activeSection = sectionTabs[activeSectionKey];
 
   const Rail = (
     <div className="w-[60px] h-full bg-card border-r border-border flex flex-col items-center py-3">
       <Link to="/" className="mb-3" aria-label="Home">
         <AnimatedLogo size={22} />
       </Link>
-
       <nav className="flex-1 flex flex-col items-center gap-1 mt-2">
-        {primaryItems.map((item) => renderRailButton(item, () => { setActiveSection("primary"); setShowPanel(false); }))}
-
-        <div className="w-6 h-px bg-border my-2" />
-
-        {/* "More" toggles the secondary panel */}
-        <button
-          onClick={() => { setActiveSection("secondary"); setShowPanel(s => !s); }}
-          title="More"
-          className={cn(
-            "group relative w-10 h-10 rounded-xl flex items-center justify-center transition-all duration-200",
-            showPanel && activeSection === "secondary"
-              ? "bg-muted text-foreground"
-              : "text-muted-foreground hover:bg-muted hover:text-foreground"
-          )}
-        >
-          <ChevronRight className={cn("h-4 w-4 transition-transform", showPanel && "rotate-90")} />
-          <span className="pointer-events-none absolute left-full ml-3 px-2 py-1 rounded-md bg-foreground text-background text-[11px] font-medium opacity-0 -translate-x-1 group-hover:opacity-100 group-hover:translate-x-0 transition whitespace-nowrap z-50 shadow-lg">
-            More tools
-          </span>
-        </button>
+        {primaryItems.map((item) => {
+          const active = isActive(item.path);
+          return (
+            <Link
+              key={item.path}
+              to={item.path}
+              title={item.label}
+              className={cn(
+                "group relative w-10 h-10 rounded-xl flex items-center justify-center transition-all duration-200",
+                active ? "bg-foreground text-background" : "text-muted-foreground hover:bg-muted hover:text-foreground"
+              )}
+            >
+              <item.icon className="h-4 w-4" />
+              <span className="pointer-events-none absolute left-full ml-3 px-2 py-1 rounded-md bg-foreground text-background text-[11px] font-medium opacity-0 -translate-x-1 group-hover:opacity-100 group-hover:translate-x-0 transition whitespace-nowrap z-50 shadow-lg">
+                {item.label}
+              </span>
+            </Link>
+          );
+        })}
       </nav>
 
-      {/* Vendor onboarding hint at bottom */}
       {user?.role === "vendor" && !user?.vendorOnboarded && (
         <Link
           to="/dashboard/vendor-onboarding"
@@ -119,25 +219,15 @@ const DashboardSidebar = ({ open = false, onClose }: Props) => {
   );
 
   const Panel = (
-    <div
-      className={cn(
-        "h-full bg-card border-r border-border overflow-hidden transition-[width] duration-300 ease-out",
-        showPanel ? "w-[240px]" : "w-0"
-      )}
-    >
-      <div className="w-[240px] h-full flex flex-col">
-        <div className="px-5 pt-4 pb-3 border-b border-border flex items-center justify-between">
-          <div>
-            <p className="text-[10px] uppercase tracking-wider text-muted-foreground font-medium">Workspace</p>
-            <h3 className="text-sm font-semibold text-foreground mt-0.5">More tools</h3>
-          </div>
-          <button onClick={() => setShowPanel(false)} className="text-muted-foreground hover:text-foreground p-1 rounded-md hover:bg-muted">
-            <X className="h-3.5 w-3.5" />
-          </button>
+    <div className="h-full bg-card border-r border-border w-[250px]">
+      <div className="h-full flex flex-col">
+        <div className="px-5 pt-4 pb-3 border-b border-border">
+          <p className="text-[10px] uppercase tracking-wider text-muted-foreground font-medium">Navigation</p>
+          <h3 className="text-sm font-semibold text-foreground mt-0.5">{activeSection.title}</h3>
         </div>
 
         <div className="flex-1 overflow-y-auto p-2.5 space-y-0.5">
-          {secondaryItems.map((item) => {
+          {activeSection.items.map((item) => {
             const active = isActive(item.path);
             return (
               <Link
@@ -145,9 +235,7 @@ const DashboardSidebar = ({ open = false, onClose }: Props) => {
                 to={item.path}
                 className={cn(
                   "flex items-start gap-3 px-3 py-2.5 rounded-lg text-[13px] transition-all",
-                  active
-                    ? "bg-foreground text-background"
-                    : "text-muted-foreground hover:bg-muted hover:text-foreground"
+                  active ? "bg-foreground text-background" : "text-muted-foreground hover:bg-muted hover:text-foreground"
                 )}
               >
                 <item.icon className="h-4 w-4 mt-0.5 flex-shrink-0" />
@@ -167,19 +255,15 @@ const DashboardSidebar = ({ open = false, onClose }: Props) => {
     </div>
   );
 
-  // Mobile: full slide-in drawer with both rail and full labels combined
   const MobileDrawer = (
     <>
       <div
-        className={cn(
-          "fixed inset-0 bg-black/40 z-40 md:hidden transition-opacity",
-          open ? "opacity-100" : "opacity-0 pointer-events-none"
-        )}
+        className={cn("fixed inset-0 bg-black/40 z-40 md:hidden transition-opacity", open ? "opacity-100" : "opacity-0 pointer-events-none")}
         onClick={onClose}
       />
       <aside
         className={cn(
-          "fixed top-0 left-0 bottom-0 z-50 w-[280px] bg-card border-r border-border md:hidden transition-transform duration-300 ease-out flex flex-col",
+          "fixed top-0 left-0 bottom-0 z-50 w-[300px] bg-card border-r border-border md:hidden transition-transform duration-300 ease-out flex flex-col",
           open ? "translate-x-0" : "-translate-x-full"
         )}
       >
@@ -195,7 +279,7 @@ const DashboardSidebar = ({ open = false, onClose }: Props) => {
         <nav className="flex-1 overflow-y-auto py-3 px-2.5 space-y-4">
           <div>
             <p className="px-3 text-[10px] uppercase tracking-wider text-muted-foreground font-medium mb-1.5">Main</p>
-            {primaryItems.map(item => {
+            {primaryItems.map((item) => {
               const active = isActive(item.path);
               return (
                 <Link
@@ -213,8 +297,8 @@ const DashboardSidebar = ({ open = false, onClose }: Props) => {
             })}
           </div>
           <div>
-            <p className="px-3 text-[10px] uppercase tracking-wider text-muted-foreground font-medium mb-1.5">More tools</p>
-            {secondaryItems.map(item => {
+            <p className="px-3 text-[10px] uppercase tracking-wider text-muted-foreground font-medium mb-1.5">{activeSection.title}</p>
+            {activeSection.items.map((item) => {
               const active = isActive(item.path);
               return (
                 <Link
@@ -231,15 +315,6 @@ const DashboardSidebar = ({ open = false, onClose }: Props) => {
               );
             })}
           </div>
-          {user?.role === "vendor" && !user?.vendorOnboarded && (
-            <Link
-              to="/dashboard/vendor-onboarding"
-              onClick={onClose}
-              className="flex items-center gap-2 mx-2 px-3 py-2 rounded-lg bg-primary/10 text-primary text-[12px] font-medium"
-            >
-              <Sparkles className="h-3.5 w-3.5" /> Complete vendor profile
-            </Link>
-          )}
         </nav>
       </aside>
     </>
@@ -247,12 +322,10 @@ const DashboardSidebar = ({ open = false, onClose }: Props) => {
 
   return (
     <>
-      {/* Desktop: rail + expandable panel */}
       <div className="hidden md:flex h-screen sticky top-0">
         {Rail}
         {Panel}
       </div>
-      {/* Mobile: full drawer */}
       {MobileDrawer}
     </>
   );
