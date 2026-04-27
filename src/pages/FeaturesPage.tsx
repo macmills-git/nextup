@@ -1,16 +1,26 @@
 import Navbar from "@/components/Navbar";
 import SaasFooter from "@/components/landing/saas/SaasFooter";
-import { Calendar, DollarSign, Users, Sparkles, MessageSquare, Clock, Store, CheckCircle, Zap, Shield, ArrowRight, Bot, Heart, Layers, BarChart3, Ticket } from "lucide-react";
+import { Calendar, DollarSign, Users, Sparkles, MessageSquare, Clock, Store, CheckCircle, Zap, Shield, ArrowRight, Bot, Heart, Layers, BarChart3, Ticket, ChevronDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 gsap.registerPlugin(ScrollTrigger);
 
+const faqs = [
+  { q: "What exactly does Nested do?", a: "Nested is an all-in-one event planning platform that helps you manage vendors, coordinate teams, track budgets, publish events, sell tickets, and create unforgettable experiences — all from a single dashboard." },
+  { q: "How do I get started with creating my first event?", a: "Sign up for a free account, click 'Create Event', and our AI-powered assistant will guide you through setting up your event timeline, budget, and vendor requirements." },
+  { q: "Can vendors join Nested too?", a: "Yes. Vendors can sign up with a vendor account, complete a guided onboarding to publish their business profile, services, pricing, and portfolio, then be discovered by event planners across the platform." },
+  { q: "What tools and services can I integrate?", a: "We integrate with popular tools like Slack, Google Calendar, Stripe for payments, and over 50+ other services to streamline your workflow." },
+  { q: "Is my data secure when using Nested?", a: "Absolutely. We use enterprise-grade encryption, role-based access, and regular security audits to ensure your data is always protected." },
+  { q: "Do you support ticketing and reports?", a: "Ticketing is rolling out soon — you'll be able to sell paid, free and donation tickets directly from your event page. Detailed event reports are already live in your dashboard." },
+];
+
 const FeaturesPage = () => {
   const pageRef = useRef<HTMLDivElement>(null);
+  const [openFaq, setOpenFaq] = useState<number | null>(0);
 
   useEffect(() => {
     if (!pageRef.current) return;
@@ -171,10 +181,48 @@ const FeaturesPage = () => {
           </div>
         </div>
 
-        <div className="reveal text-center">
+        <div className="reveal text-center mb-24">
           <Button size="lg" asChild className="rounded-full px-8 py-3 text-sm font-medium bg-foreground text-background hover:bg-foreground/90">
             <Link to="/signup">Get Started Now <ArrowRight className="ml-2 h-4 w-4" /></Link>
           </Button>
+        </div>
+
+        {/* FAQ Section */}
+        <div className="max-w-3xl mx-auto pb-12">
+          <div className="text-center mb-12">
+            <p className="reveal text-sm text-primary font-medium mb-3">FAQs</p>
+            <h2 className="reveal text-3xl md:text-5xl font-bold text-foreground mb-4">
+              Frequently Asked Questions
+            </h2>
+            <p className="reveal text-base text-muted-foreground max-w-lg mx-auto mb-8">
+              Find answers to the most common questions about Nested. Still need help?
+            </p>
+            <div className="reveal flex items-center justify-center gap-3">
+              <Button asChild className="rounded-full px-6 h-10 text-sm font-semibold bg-foreground text-background hover:bg-foreground/90">
+                <Link to="/docs">Read Docs</Link>
+              </Button>
+              <Button variant="outline" asChild className="rounded-full px-6 h-10 text-sm font-medium border border-border/40 bg-background hover:bg-muted/50">
+                <Link to="/help">Contact Us</Link>
+              </Button>
+            </div>
+          </div>
+
+          <div className="reveal border-t border-border/15">
+            {faqs.map((faq, i) => (
+              <div key={i} className="border-b border-border/15">
+                <button
+                  onClick={() => setOpenFaq(openFaq === i ? null : i)}
+                  className="w-full flex items-center justify-between py-5 text-left group"
+                >
+                  <span className="text-sm md:text-base font-medium text-foreground group-hover:text-primary transition-colors">{faq.q}</span>
+                  <ChevronDown className={`w-4 h-4 text-muted-foreground flex-shrink-0 ml-4 transition-transform duration-200 ${openFaq === i ? 'rotate-180' : ''}`} />
+                </button>
+                <div className={`overflow-hidden transition-all duration-300 ${openFaq === i ? 'max-h-40 pb-5' : 'max-h-0'}`}>
+                  <p className="text-sm text-muted-foreground leading-relaxed pr-8">{faq.a}</p>
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
       </section>
       <SaasFooter />
