@@ -1,12 +1,13 @@
 import DashboardSidebar from "@/components/DashboardSidebar";
 import { Routes, Route, useNavigate } from "react-router-dom";
 import {
-  Calendar, DollarSign, Users, TrendingUp, MoreHorizontal, Bell, Search, Sparkles, CheckCircle, Clock, ArrowRight, Sun, Moon,
-  User, Settings, LogOut, X, PieChart,
+  Calendar, DollarSign, Users, TrendingUp, Bell, Search, Sparkles, CheckCircle, Clock, ArrowRight, Sun, Moon,
+  User, Settings, LogOut, X, Menu,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
 import { useTheme } from "@/contexts/ThemeContext";
+import { useAuth } from "@/contexts/AuthContext";
 import { useState } from "react";
 import EventsPage from "./dashboard/EventsPage";
 import EventDetailPage from "./dashboard/EventDetailPage";
@@ -20,6 +21,7 @@ import SettingsPage from "./dashboard/SettingsPage";
 import NotificationsPage from "./dashboard/NotificationsPage";
 import ReportsPage from "./dashboard/ReportsPage";
 import TicketingPage from "./dashboard/TicketingPage";
+import VendorOnboardingPage from "./dashboard/VendorOnboardingPage";
 
 const chartData = [
   { name: "Jan", events: 4 }, { name: "Feb", events: 3 }, { name: "Mar", events: 5 }, { name: "Apr", events: 7 },
