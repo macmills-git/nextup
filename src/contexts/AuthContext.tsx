@@ -1,48 +1,70 @@
 import { createContext, useContext, useState, useEffect, ReactNode } from "react";
 
+export type UserRole = "planner" | "vendor";
+
+export interface AuthUser {
+  email: string;
+  name?: string;
+  role: UserRole;
+  vendorOnboarded?: boolean;
+}
+
 interface AuthContextType {
   isAuthenticated: boolean;
-  user: { email: string; name?: string } | null;
-  signIn: (email: string) => void;
-  signUp: (email: string, name: string) => void;
+  user: AuthUser | null;
+  signIn: (email: string, role?: UserRole) => void;
+  signUp: (email: string, name: string, role?: UserRole) => void;
   signOut: () => void;
+  updateUser: (patch: Partial<AuthUser>) => void;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
+const STORAGE_KEY = "nested_auth_user";
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
-  const [user, setUser] = useState<{ email: string; name?: string } | null>(null);
+  const [user, setUser] = useState<AuthUser | null>(null);
 
   useEffect(() => {
     try {
-      const stored = sessionStorage.getItem("nested_auth_user");
+      const stored = sessionStorage.getItem(STORAGE_KEY);
       if (stored) {
-        setUser(JSON.parse(stored));
+        const parsed = JSON.parse(stored);
+        // backwards compat: default role to planner if missing
+        if (!parsed.role) parsed.role = "planner";
+        setUser(parsed);
       }
     } catch {
-      sessionStorage.removeItem("nested_auth_user");
+      sessionStorage.removeItem(STORAGE_KEY);
     }
   }, []);
 
-  const signIn = (email: string) => {
-    const u = { email };
+  const persist = (u: AuthUser | null) => {
     setUser(u);
-    sessionStorage.setItem("nested_auth_user", JSON.stringify(u));
+    if (u) sessionStorage.setItem(STORAGE_KEY, JSON.stringify(u));
+    else sessionStorage.removeItem(STORAGE_KEY);
   };
 
-  const signUp = (email: string, name: string) => {
-    const u = { email, name };
-    setUser(u);
-    sessionStorage.setItem("nested_auth_user", JSON.stringify(u));
+  const signIn = (email: string, role: UserRole = "planner") => {
+    persist({ email, role });
   };
 
-  const signOut = () => {
-    setUser(null);
-    sessionStorage.removeItem("nested_auth_user");
+  const signUp = (email: string, name: string, role: UserRole = "planner") => {
+    persist({ email, name, role, vendorOnboarded: false });
+  };
+
+  const signOut = () => persist(null);
+
+  const updateUser = (patch: Partial<AuthUser>) => {
+    setUser((prev) => {
+      if (!prev) return prev;
+      const next = { ...prev, ...patch };
+      sessionStorage.setItem(STORAGE_KEY, JSON.stringify(next));
+      return next;
+    });
   };
 
   return (
-    <AuthContext.Provider value={{ isAuthenticated: !!user, user, signIn, signUp, signOut }}>
+    <AuthContext.Provider value={{ isAuthenticated: !!user, user, signIn, signUp, signOut, updateUser }}>
       {children}
     </AuthContext.Provider>
   );

@@ -1,12 +1,13 @@
 import DashboardSidebar from "@/components/DashboardSidebar";
 import { Routes, Route, useNavigate } from "react-router-dom";
 import {
-  Calendar, DollarSign, Users, TrendingUp, MoreHorizontal, Bell, Search, Sparkles, CheckCircle, Clock, ArrowRight, Sun, Moon,
-  User, Settings, LogOut, X, PieChart,
+  Calendar, DollarSign, Users, TrendingUp, Bell, Search, Sparkles, CheckCircle, Clock, ArrowRight, Sun, Moon,
+  User, Settings, LogOut, X, Menu,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
 import { useTheme } from "@/contexts/ThemeContext";
+import { useAuth } from "@/contexts/AuthContext";
 import { useState } from "react";
 import EventsPage from "./dashboard/EventsPage";
 import EventDetailPage from "./dashboard/EventDetailPage";
@@ -20,6 +21,7 @@ import SettingsPage from "./dashboard/SettingsPage";
 import NotificationsPage from "./dashboard/NotificationsPage";
 import ReportsPage from "./dashboard/ReportsPage";
 import TicketingPage from "./dashboard/TicketingPage";
+import VendorOnboardingPage from "./dashboard/VendorOnboardingPage";
 
 const chartData = [
   { name: "Jan", events: 4 }, { name: "Feb", events: 3 }, { name: "Mar", events: 5 }, { name: "Apr", events: 7 },
@@ -56,9 +58,9 @@ const budgetCategories = [
   { name: "Entertainment", amount: 3010, share: "14.3%", color: "hsl(0, 0%, 85%)" },
 ];
 
-const ProfileDropdown = ({ onClose, onNavigate }: { onClose: () => void; onNavigate: (path: string) => void }) => (
-  <div className="fixed inset-0 z-50 flex items-start justify-end pt-16 pr-6" onClick={onClose}>
-    <div className="w-[380px] bg-card rounded-2xl border border-border shadow-elevated p-6 animate-scale-in" onClick={e => e.stopPropagation()}>
+const ProfileDropdown = ({ onClose, onNavigate, onSignOut, userEmail, userName }: { onClose: () => void; onNavigate: (path: string) => void; onSignOut: () => void; userEmail: string; userName?: string }) => (
+  <div className="fixed inset-0 z-50 flex items-start justify-end pt-16 pr-4 sm:pr-6" onClick={onClose}>
+    <div className="w-[92vw] max-w-[380px] bg-card rounded-2xl border border-border shadow-elevated p-6 animate-scale-in" onClick={e => e.stopPropagation()}>
       <div className="flex items-center justify-between mb-5">
         <span className="text-xs font-medium text-muted-foreground uppercase tracking-wider">Account</span>
         <button onClick={onClose} className="w-7 h-7 rounded-full border border-border flex items-center justify-center text-muted-foreground hover:text-foreground transition-colors">
@@ -66,10 +68,12 @@ const ProfileDropdown = ({ onClose, onNavigate }: { onClose: () => void; onNavig
         </button>
       </div>
       <div className="flex items-center gap-3 mb-6">
-        <div className="w-11 h-11 rounded-full bg-foreground flex items-center justify-center text-background font-semibold text-sm">K</div>
-        <div>
-          <p className="font-semibold text-foreground text-sm">Kusi Boateng Mills</p>
-          <p className="text-xs text-muted-foreground">kusi@nested.com</p>
+        <div className="w-11 h-11 rounded-full bg-foreground flex items-center justify-center text-background font-semibold text-sm">
+          {(userName || userEmail).charAt(0).toUpperCase()}
+        </div>
+        <div className="min-w-0">
+          <p className="font-semibold text-foreground text-sm truncate">{userName || userEmail.split("@")[0]}</p>
+          <p className="text-xs text-muted-foreground truncate">{userEmail}</p>
         </div>
       </div>
       <div className="space-y-4 mb-5">
@@ -101,7 +105,7 @@ const ProfileDropdown = ({ onClose, onNavigate }: { onClose: () => void; onNavig
           { icon: LogOut, label: "Log out", path: "/signin", isLogout: true },
         ].map(item => (
           <button key={item.label} className="w-full flex items-center gap-3 px-3 py-2 rounded-lg text-sm text-muted-foreground hover:text-foreground hover:bg-muted transition-colors"
-            onClick={() => { if ((item as any).isLogout) { sessionStorage.removeItem("nested_auth_user"); } onNavigate(item.path); onClose(); }}>
+            onClick={() => { if ((item as any).isLogout) { onSignOut(); } onNavigate(item.path); onClose(); }}>
             <item.icon className="w-4 h-4" />
             {item.label}
           </button>
@@ -276,36 +280,78 @@ const DashboardHome = () => {
   );
 };
 
+const useRouteTitle = () => {
+  const path = window.location.pathname;
+  if (path === "/dashboard") return "Analytics";
+  const seg = path.split("/").filter(Boolean).pop() || "";
+  if (seg === "vendor-onboarding") return "Vendor Onboarding";
+  if (seg === "ai") return "AI Assistant";
+  return seg.charAt(0).toUpperCase() + seg.slice(1);
+};
+
 const Dashboard = () => {
   const navigate = useNavigate();
   const { theme, toggleTheme } = useTheme();
+  const { user, signOut } = useAuth();
   const [showProfile, setShowProfile] = useState(false);
+  const [mobileNavOpen, setMobileNavOpen] = useState(false);
+
+  const initials = (user?.name || user?.email || "U").charAt(0).toUpperCase();
+  const title = useRouteTitle();
+
+  const handleSignOut = () => {
+    signOut();
+    navigate("/signin");
+  };
 
   return (
     <div className="flex min-h-screen bg-background relative z-[1]">
-      <DashboardSidebar />
-      <div className="flex-1 overflow-auto">
-        <header className="h-14 bg-card border-b border-border flex items-center justify-between px-6 sticky top-0 z-10">
-          <h1 className="text-sm font-semibold text-foreground">Dashboard</h1>
-          <div className="flex items-center gap-2.5">
-            <div className="relative hidden sm:block">
+      <DashboardSidebar open={mobileNavOpen} onClose={() => setMobileNavOpen(false)} />
+      <div className="flex-1 overflow-auto min-w-0">
+        <header className="h-14 bg-card border-b border-border flex items-center justify-between px-4 md:px-6 sticky top-0 z-10 gap-3">
+          <div className="flex items-center gap-2 min-w-0">
+            {/* Mobile menu button */}
+            <button
+              onClick={() => setMobileNavOpen(true)}
+              className="md:hidden p-2 -ml-2 rounded-lg text-foreground hover:bg-muted"
+              aria-label="Open menu"
+            >
+              <Menu className="h-4 w-4" />
+            </button>
+            <h1 className="text-sm font-semibold text-foreground truncate">{title}</h1>
+            {user?.role === "vendor" && (
+              <span className="hidden sm:inline-flex items-center gap-1 text-[10px] px-2 py-0.5 rounded-full bg-primary/10 text-primary font-medium ml-2">
+                Vendor
+              </span>
+            )}
+          </div>
+          <div className="flex items-center gap-2 md:gap-2.5">
+            <div className="relative hidden lg:block">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-muted-foreground" />
               <input placeholder="Search for anything..." className="pl-9 w-56 h-8 rounded-lg bg-muted text-xs text-foreground placeholder:text-muted-foreground outline-none border border-border focus:ring-1 focus:ring-primary/20" />
               <span className="absolute right-3 top-1/2 -translate-y-1/2 text-[10px] text-muted-foreground border border-border rounded px-1.5 py-0.5">⌘K</span>
             </div>
-            <button onClick={toggleTheme} className="p-2 rounded-lg text-muted-foreground hover:bg-muted transition-colors">
+            <button onClick={toggleTheme} className="p-2 rounded-lg text-muted-foreground hover:bg-muted transition-colors" aria-label="Toggle theme">
               {theme === 'dark' ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
             </button>
             <button className="w-8 h-8 rounded-full bg-foreground flex items-center justify-center hover:opacity-90 transition-opacity"
-              onClick={() => setShowProfile(true)}>
-              <span className="text-background text-xs font-semibold">JD</span>
+              onClick={() => setShowProfile(true)} aria-label="Account">
+              <span className="text-background text-xs font-semibold">{initials}</span>
             </button>
           </div>
         </header>
 
-        {showProfile && <ProfileDropdown onClose={() => setShowProfile(false)} onNavigate={navigate} />}
+        {showProfile && (
+          <ProfileDropdown
+            onClose={() => setShowProfile(false)}
+            onNavigate={navigate}
+            onSignOut={handleSignOut}
+            userEmail={user?.email || ""}
+            userName={user?.name}
+          />
+        )}
 
-        <main className="p-6">
+        <main className="p-4 md:p-6">
           <Routes>
             <Route index element={<DashboardHome />} />
             <Route path="events" element={<EventsPage />} />
@@ -313,6 +359,7 @@ const Dashboard = () => {
             <Route path="events/:eventId" element={<EventDetailPage />} />
             <Route path="vendors" element={<VendorsPage />} />
             <Route path="vendors/:vendorId" element={<VendorProfilePage />} />
+            <Route path="vendor-onboarding" element={<VendorOnboardingPage />} />
             <Route path="team" element={<TeamPage />} />
             <Route path="messages" element={<MessagesPage />} />
             <Route path="ai" element={<AIAssistantPage />} />
