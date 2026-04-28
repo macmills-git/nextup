@@ -32,7 +32,7 @@ const SignUp = () => {
     setError("");
     authSignUp(email, name, role);
     // Vendors go through onboarding first
-    navigate(role === "vendor" ? "/dashboard/vendor-onboarding" : "/dashboard");
+    navigate(role === "vendor" ? "/vendor/business/onboarding" : "/dashboard");
   };
 
   return (
