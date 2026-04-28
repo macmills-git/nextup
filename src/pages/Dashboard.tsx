@@ -136,54 +136,7 @@ const DashboardHome = () => {
   const activeBudgetData = budgetTab === "category" ? budgetCategories : budgetByEmployee;
   const totalBudget = activeBudgetData.reduce((sum, item) => sum + item.amount, 0);
 
-  if (user?.role === "vendor") {
-    const publishedEvents = (() => {
-      try {
-        return JSON.parse(sessionStorage.getItem("nested_published_events") || "[]");
-      } catch {
-        return [];
-      }
-    })();
-
-    return (
-      <div className="space-y-6">
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-          {[
-            { label: "Active bookings", value: "12" },
-            { label: "New contacts", value: "28" },
-            { label: "Upcoming events", value: "6" },
-          ].map((card) => (
-            <div key={card.label} className="bg-card rounded-xl border border-border p-5">
-              <p className="text-xs text-muted-foreground">{card.label}</p>
-              <p className="text-2xl font-bold text-foreground mt-1">{card.value}</p>
-            </div>
-          ))}
-        </div>
-        <div className="bg-card rounded-xl border border-border p-5">
-          <div className="flex items-center justify-between mb-4">
-            <h2 className="font-semibold text-foreground">Published events you can pitch to</h2>
-            <Button variant="outline" size="sm" onClick={() => navigate("/dashboard/messages")}>Open messages</Button>
-          </div>
-          <div className="space-y-2">
-            {publishedEvents.length === 0 && (
-              <p className="text-sm text-muted-foreground">No published events yet. Planners will appear here once they publish.</p>
-            )}
-            {publishedEvents.slice(0, 6).map((event: any) => (
-              <div key={event.id} className="border border-border rounded-lg p-3 flex items-center justify-between gap-3">
-                <div>
-                  <p className="text-sm font-medium text-foreground">{event.title}</p>
-                  <p className="text-xs text-muted-foreground">{event.date} • {event.city || event.location}</p>
-                </div>
-                <Button size="sm" className="rounded-lg" onClick={() => navigate("/dashboard/messages")}>
-                  Contact organiser
-                </Button>
-              </div>
-            ))}
-          </div>
-        </div>
-      </div>
-    );
-  }
+  // Vendors are routed to /vendor — planner-only dashboard from here
 
   return (
     <div className="space-y-6">
