@@ -1,7 +1,7 @@
 import DashboardSidebar from "@/components/DashboardSidebar";
 import { Routes, Route, useNavigate } from "react-router-dom";
 import {
-  Calendar, DollarSign, Users, TrendingUp, Bell, Search, Sparkles, CheckCircle, Clock, ArrowRight, Sun, Moon,
+  Calendar, Users, TrendingUp, Bell, Search, Sparkles, CheckCircle, Clock, ArrowRight, Sun, Moon,
   User, Settings, LogOut, X, Menu,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
