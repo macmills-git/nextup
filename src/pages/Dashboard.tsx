@@ -338,10 +338,10 @@ const DashboardHome = () => {
 const useRouteTitle = () => {
   const path = window.location.pathname;
   if (path === "/dashboard") return "Analytics";
+  if (path.startsWith("/dashboard/events/publish")) return "Publish event";
+  if (path.startsWith("/dashboard/events/new")) return "New project";
+  if (path.startsWith("/dashboard/events")) return "Projects";
   const seg = path.split("/").filter(Boolean).pop() || "";
-  if (seg === "vendor-onboarding") return "Vendor Onboarding";
-  if (seg === "vendor-dashboard") return "Vendor Dashboard";
-  if (seg === "nearby") return "Nearby Events";
   if (seg === "ai") return "AI Assistant";
   return seg.split("-").map((part) => part.charAt(0).toUpperCase() + part.slice(1)).join(" ");
 };
