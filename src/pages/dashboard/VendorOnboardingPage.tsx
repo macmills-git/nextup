@@ -114,7 +114,7 @@ const VendorOnboardingPage = () => {
           : "Planners can now discover your business.",
       });
       setSubmitting(false);
-      navigate("/dashboard");
+      navigate("/vendor");
     }, 800);
   };
 
