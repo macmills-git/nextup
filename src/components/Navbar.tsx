@@ -9,7 +9,7 @@ const navItems = [
   { label: "Home", to: "/" },
   { label: "Features", to: "/features" },
   { label: "Pricing", to: "/pricing" },
-  { label: "Templates", to: "/templates" },
+  { label: "Events Near Me", to: "/events-near-me" },
   { label: "Help/Support", to: "/help" },
   { label: "Docs", to: "/docs" },
 ];
