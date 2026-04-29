@@ -1,7 +1,9 @@
 import Navbar from "@/components/Navbar";
 import SaasFooter from "@/components/landing/saas/SaasFooter";
-import { Search, MapPin, Calendar, Heart, Share2 } from "lucide-react";
-import { useMemo, useState } from "react";
+import { Search, MapPin, Calendar, Heart, Share2, Locate, ChevronDown, Check } from "lucide-react";
+import { useMemo, useState, useRef, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import { toast } from "sonner";
 
 const categories = ["All", "Music", "Business", "Food & Drink", "Community", "Arts", "Tech", "Wellness", "Free"];
 
