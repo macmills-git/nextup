@@ -4,7 +4,7 @@ import { Input } from "@/components/ui/input";
 import { Switch } from "@/components/ui/switch";
 import { useToast } from "@/hooks/use-toast";
 
-const tabs = ["My details", "Profile", "Password", "Team", "Billings", "Plan", "Email", "Notifications"];
+const tabs = ["Profile", "Password", "Billings", "Plan", "Email", "Notifications"];
 
 const billingHistory = [
   { invoice: "Account Sale", date: "Apr 14, 2026", amount: "$3,050", status: "Pending", statusColor: "bg-amber-50 text-amber-600 dark:bg-amber-500/10 dark:text-amber-400", tracking: "TR-20264142" },
@@ -14,7 +14,7 @@ const billingHistory = [
 ];
 
 const SettingsPage = () => {
-  const [activeTab, setActiveTab] = useState("My details");
+  const [activeTab, setActiveTab] = useState("Profile");
   const { toast } = useToast();
   const [saving, setSaving] = useState(false);
 
@@ -90,7 +90,7 @@ const SettingsPage = () => {
         ))}
       </div>
 
-      {(activeTab === "My details" || activeTab === "Profile") && (
+      {activeTab === "Profile" && (
         <div className="bg-card rounded-xl border border-border p-6 space-y-6">
           <div className="flex items-center gap-4">
             <div className="w-14 h-14 rounded-full bg-primary/10 flex items-center justify-center">
