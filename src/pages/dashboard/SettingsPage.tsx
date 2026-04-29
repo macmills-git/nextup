@@ -290,38 +290,6 @@ const SettingsPage = () => {
         </div>
       )}
 
-      {activeTab === "Team" && (
-        <div className="bg-card rounded-xl border border-border p-6 space-y-5">
-          <div className="flex items-center justify-between">
-            <h3 className="font-semibold text-foreground text-sm">Team Members</h3>
-            <span className="text-xs text-muted-foreground">{teamMembers.length} members</span>
-          </div>
-          <div className="flex gap-2">
-            <Input placeholder="Enter email to invite..." value={inviteEmail} onChange={e => setInviteEmail(e.target.value)} className="flex-1" />
-            <button onClick={() => { if (inviteEmail.trim()) { toast({ title: "Invitation sent", description: `Invite sent to ${inviteEmail}` }); setInviteEmail(""); } }}
-              className="px-4 py-2 rounded-lg text-xs font-medium bg-primary text-white hover:bg-primary/90">Invite</button>
-          </div>
-          <div className="space-y-2">
-            {teamMembers.map((m, i) => (
-              <div key={i} className="flex items-center justify-between p-3 rounded-lg hover:bg-muted/50 transition-colors">
-                <div className="flex items-center gap-3">
-                  <div className="w-9 h-9 rounded-full bg-primary/10 flex items-center justify-center">
-                    <span className="text-xs font-semibold text-primary">{m.name.split(' ').map(n => n[0]).join('')}</span>
-                  </div>
-                  <div>
-                    <p className="text-sm font-medium text-foreground">{m.name}</p>
-                    <p className="text-xs text-muted-foreground">{m.email}</p>
-                  </div>
-                </div>
-                <div className="flex items-center gap-3">
-                  <span className="text-xs px-2 py-1 rounded-md bg-muted text-muted-foreground">{m.role}</span>
-                  <span className="w-2 h-2 rounded-full bg-emerald-500" title={m.status} />
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      )}
 
       {activeTab === "Email" && (
         <div className="bg-card rounded-xl border border-border p-6 space-y-5">
