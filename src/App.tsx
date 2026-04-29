@@ -17,6 +17,7 @@ import HelpPage from "./pages/HelpPage";
 import DocsPage from "./pages/DocsPage";
 import TemplatesPage from "./pages/TemplatesPage";
 import EventsNearMePage from "./pages/EventsNearMePage";
+import PublicEventDetailPage from "./pages/PublicEventDetailPage";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -46,6 +47,7 @@ const App = () => (
             <Route path="/docs" element={<DocsPage />} />
             <Route path="/templates" element={<TemplatesPage />} />
             <Route path="/events-near-me" element={<EventsNearMePage />} />
+            <Route path="/events/:id" element={<PublicEventDetailPage />} />
             <Route path="/dashboard" element={<ProtectedRoute><RoleHome><Dashboard /></RoleHome></ProtectedRoute>} />
             <Route path="/dashboard/*" element={<ProtectedRoute><RoleHome><Dashboard /></RoleHome></ProtectedRoute>} />
             <Route path="/vendor" element={<ProtectedRoute><VendorDashboard /></ProtectedRoute>} />

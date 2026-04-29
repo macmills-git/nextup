@@ -1,7 +1,9 @@
 import Navbar from "@/components/Navbar";
 import SaasFooter from "@/components/landing/saas/SaasFooter";
-import { Search, MapPin, Calendar, Heart, Share2 } from "lucide-react";
-import { useMemo, useState } from "react";
+import { Search, MapPin, Calendar, Heart, Share2, Locate, ChevronDown, Check } from "lucide-react";
+import { useMemo, useState, useRef, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import { toast } from "sonner";
 
 const categories = ["All", "Music", "Business", "Food & Drink", "Community", "Arts", "Tech", "Wellness", "Free"];
 
@@ -20,22 +22,83 @@ const events = [
   { id: 12, title: "Open Mic Comedy Night", date: "Wed, Jun 11 • 8:00 PM", venue: "Basement Bar", city: "Auckland", category: "Arts", price: "Free", organizer: "Laugh Lab", image: "https://images.unsplash.com/photo-1527224857830-43a7acc85260?w=600&h=400&fit=crop" },
 ];
 
+const sortOptions = [
+  { id: "soonest", label: "Soonest first" },
+  { id: "latest", label: "Latest first" },
+  { id: "az", label: "Name (A–Z)" },
+  { id: "free", label: "Free events first" },
+] as const;
+type SortId = typeof sortOptions[number]["id"];
+
+// crude date parser for our display strings ("Fri, May 8 • 7:00 PM")
+const parseEventDate = (s: string) => {
+  const cleaned = s.replace("•", "").replace(/^\w+,\s*/, "") + " 2026";
+  const d = new Date(cleaned);
+  return isNaN(d.getTime()) ? new Date() : d;
+};
+
 const EventsNearMePage = () => {
+  const navigate = useNavigate();
   const [city, setCity] = useState("Auckland");
   const [query, setQuery] = useState("");
   const [activeCat, setActiveCat] = useState("All");
   const [liked, setLiked] = useState<Record<number, boolean>>({});
+  const [sort, setSort] = useState<SortId>("soonest");
+  const [sortOpen, setSortOpen] = useState(false);
+  const [locating, setLocating] = useState(false);
+  const sortRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const onClick = (e: MouseEvent) => {
+      if (sortRef.current && !sortRef.current.contains(e.target as Node)) setSortOpen(false);
+    };
+    document.addEventListener("mousedown", onClick);
+    return () => document.removeEventListener("mousedown", onClick);
+  }, []);
+
+  const useMyLocation = () => {
+    if (!navigator.geolocation) {
+      toast.error("Geolocation isn't available in this browser");
+      return;
+    }
+    setLocating(true);
+    navigator.geolocation.getCurrentPosition(
+      () => { setLocating(false); toast.success("Showing events near your current location"); /* keep city as text hint */ },
+      () => { setLocating(false); toast.error("Couldn't get your location. Please enter your city."); },
+      { timeout: 7000 }
+    );
+  };
 
   const filtered = useMemo(
     () =>
       events.filter(
         (e) =>
           (activeCat === "All" || (activeCat === "Free" ? e.price === "Free" : e.category === activeCat)) &&
-          (query === "" || e.title.toLowerCase().includes(query.toLowerCase())) &&
+          (query === "" ||
+            e.title.toLowerCase().includes(query.toLowerCase()) ||
+            e.organizer.toLowerCase().includes(query.toLowerCase()) ||
+            e.venue.toLowerCase().includes(query.toLowerCase())) &&
           e.city.toLowerCase().includes(city.toLowerCase())
       ),
     [city, query, activeCat]
   );
+
+  const sorted = useMemo(() => {
+    const list = [...filtered];
+    if (sort === "soonest") list.sort((a, b) => parseEventDate(a.date).getTime() - parseEventDate(b.date).getTime());
+    if (sort === "latest") list.sort((a, b) => parseEventDate(b.date).getTime() - parseEventDate(a.date).getTime());
+    if (sort === "az") list.sort((a, b) => a.title.localeCompare(b.title));
+    if (sort === "free") list.sort((a, b) => (a.price === "Free" ? -1 : 1) - (b.price === "Free" ? -1 : 1));
+    return list;
+  }, [filtered, sort]);
+
+  const shareEvent = async (e: typeof events[number]) => {
+    const url = `${window.location.origin}/events/${e.id}`;
+    try {
+      if (navigator.share) await navigator.share({ title: e.title, url });
+      else { await navigator.clipboard.writeText(url); toast.success("Link copied"); }
+    } catch { /* user cancelled */ }
+  };
 
   return (
     <div className="min-h-screen bg-background">
@@ -65,8 +128,16 @@ const EventsNearMePage = () => {
               value={city}
               onChange={(e) => setCity(e.target.value)}
               placeholder="Your city"
-              className="w-full h-11 rounded-full bg-card pl-11 pr-4 text-sm text-foreground placeholder:text-muted-foreground outline-none border border-border focus:ring-2 focus:ring-primary/20 transition-shadow"
+              className="w-full h-11 rounded-full bg-card pl-11 pr-12 text-sm text-foreground placeholder:text-muted-foreground outline-none border border-border focus:ring-2 focus:ring-primary/20 transition-shadow"
             />
+            <button
+              onClick={useMyLocation}
+              disabled={locating}
+              aria-label="Use my location"
+              className="absolute right-2 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full hover:bg-secondary flex items-center justify-center transition disabled:opacity-50"
+            >
+              <Locate className={`w-4 h-4 text-muted-foreground ${locating ? "animate-pulse" : ""}`} />
+            </button>
           </div>
         </div>
 
@@ -88,27 +159,59 @@ const EventsNearMePage = () => {
 
         <div className="flex items-center justify-between mb-5">
           <h2 className="text-lg font-semibold text-foreground">
-            {filtered.length} events in <span className="text-primary">{city || "your area"}</span>
+            {sorted.length} events in <span className="text-primary">{city || "your area"}</span>
           </h2>
-          <button className="text-xs text-muted-foreground hover:text-foreground">Sort: Soonest first</button>
+          <div ref={sortRef} className="relative">
+            <button
+              onClick={() => setSortOpen((o) => !o)}
+              className="text-xs text-muted-foreground hover:text-foreground inline-flex items-center gap-1 px-2 py-1 rounded-md hover:bg-secondary"
+            >
+              Sort: {sortOptions.find((s) => s.id === sort)?.label}
+              <ChevronDown className="w-3 h-3" />
+            </button>
+            {sortOpen && (
+              <div className="absolute right-0 top-full mt-1 w-48 rounded-lg border border-border bg-card shadow-elevated z-10 py-1 animate-fade-in">
+                {sortOptions.map((opt) => (
+                  <button
+                    key={opt.id}
+                    onClick={() => { setSort(opt.id); setSortOpen(false); }}
+                    className="w-full flex items-center justify-between px-3 py-2 text-xs text-foreground hover:bg-secondary"
+                  >
+                    {opt.label}
+                    {sort === opt.id && <Check className="w-3 h-3 text-primary" />}
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
-          {filtered.map((e, i) => (
+          {sorted.map((e, i) => (
             <article
               key={e.id}
+              onClick={() => navigate(`/events/${e.id}`)}
               className="rounded-2xl border border-border overflow-hidden bg-card hover:shadow-elevated transition-all duration-300 group cursor-pointer animate-fade-in"
               style={{ animationDelay: `${Math.min(i, 8) * 40}ms` }}
             >
               <div className="relative h-44 overflow-hidden bg-secondary">
                 <img src={e.image} alt={e.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" loading="lazy" />
-                <button
-                  onClick={(ev) => { ev.stopPropagation(); setLiked((prev) => ({ ...prev, [e.id]: !prev[e.id] })); }}
-                  className="absolute top-3 right-3 w-8 h-8 rounded-full bg-card/90 backdrop-blur flex items-center justify-center hover:bg-card transition-colors"
-                  aria-label="Save event"
-                >
-                  <Heart className={`w-4 h-4 ${liked[e.id] ? "fill-primary text-primary" : "text-foreground"}`} />
-                </button>
+                <div className="absolute top-3 right-3 flex gap-1.5">
+                  <button
+                    onClick={(ev) => { ev.stopPropagation(); shareEvent(e); }}
+                    className="w-8 h-8 rounded-full bg-card/90 backdrop-blur flex items-center justify-center hover:bg-card transition-colors"
+                    aria-label="Share event"
+                  >
+                    <Share2 className="w-3.5 h-3.5 text-foreground" />
+                  </button>
+                  <button
+                    onClick={(ev) => { ev.stopPropagation(); setLiked((prev) => ({ ...prev, [e.id]: !prev[e.id] })); }}
+                    className="w-8 h-8 rounded-full bg-card/90 backdrop-blur flex items-center justify-center hover:bg-card transition-colors"
+                    aria-label="Save event"
+                  >
+                    <Heart className={`w-4 h-4 ${liked[e.id] ? "fill-primary text-primary" : "text-foreground"}`} />
+                  </button>
+                </div>
                 {e.price === "Free" && (
                   <span className="absolute top-3 left-3 text-[10px] font-semibold uppercase tracking-wider px-2 py-1 rounded-full bg-emerald-500/90 text-white">
                     Free
@@ -132,7 +235,7 @@ const EventsNearMePage = () => {
           ))}
         </div>
 
-        {filtered.length === 0 && (
+        {sorted.length === 0 && (
           <div className="text-center py-20 rounded-2xl border border-border bg-card">
             <p className="text-sm text-muted-foreground">No events match your filters yet. Try a different city or category.</p>
           </div>
