@@ -1,13 +1,13 @@
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { useNavigate, useParams } from "react-router-dom";
+import { useEventStore } from "@/contexts/EventStore";
 import {
   ArrowLeft, Calendar, Clock, MapPin, Users, DollarSign, Save, Plus, Trash2, CheckCircle,
-  AlertCircle, ChevronRight, UserPlus, Send, Bell, Activity, FileText, Sparkles
+  AlertCircle, ChevronRight, UserPlus, Send, Bell, Activity, FileText
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
-import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { cn } from "@/lib/utils";
 
 type Task = { id: number; title: string; done: boolean; priority: "high" | "medium" | "low" };
@@ -28,6 +28,8 @@ const EventWorkspacePage = () => {
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState("overview");
   const [step, setStep] = useState(0);
+  const params = useParams();
+  const creating = !params.eventId && !params.id;
 
   // Overview
   const [eventName, setEventName] = useState("");
@@ -107,6 +109,106 @@ const EventWorkspacePage = () => {
   const totalBudget = budgetItems.reduce((s, b) => s + b.allocated, 0);
   const totalSpent = budgetItems.reduce((s, b) => s + b.spent, 0);
 
+  const store = useEventStore();
+  // Load existing event when editing (from EventStore)
+  useEffect(() => {
+    const id = params.eventId || params.id;
+    if (!id) return;
+    const found = store.getEvent(id);
+    if (found) {
+      setEventName(found.title || "");
+      setEventDate(found.date || "");
+      setEventTime(found.time || "");
+      setEventVenue(found.location || found.venue || "");
+      setEventCity(found.city || "");
+      setGuestCount(String(found.guests || ""));
+      setEventDetails(found.details || "");
+      if (found.milestones) setMilestones(found.milestones);
+      if (found.tasks) setTasks(found.tasks);
+      if (found.vendors) setVendors(found.vendors);
+      if (found.budgetItems) setBudgetItems(found.budgetItems);
+      if (found.guestsList) setGuests(found.guestsList);
+      if (found.team) setTeam(found.team);
+    }
+  }, [params, store]);
+
+  // Autosave edits back to store (debounced)
+  const [saving, setSaving] = useState(false);
+  const [savedAt, setSavedAt] = useState<number | null>(null);
+  useEffect(() => {
+    const id = params.eventId || params.id;
+    if (!id) return;
+    setSaving(true);
+    const t = setTimeout(() => {
+      store.updateEvent(id, {
+        title: eventName,
+        date: eventDate,
+        time: eventTime,
+        venue: eventVenue,
+        city: eventCity,
+        guests: Number(guestCount || 0),
+        details: eventDetails,
+        milestones,
+        tasks,
+        vendors,
+        budgetItems,
+        guestsList: guests,
+        team,
+      });
+      setSaving(false);
+      setSavedAt(Date.now());
+    }, 800);
+    return () => clearTimeout(t);
+  }, [eventName, eventDate, eventTime, eventVenue, eventCity, guestCount, eventDetails, milestones, tasks, vendors, budgetItems, guests, team, params, store]);
+
+  const daysUntil = () => {
+    if (!eventDate) return "TBD";
+    const diff = Math.ceil((new Date(eventDate).getTime() - Date.now()) / (1000 * 60 * 60 * 24));
+    if (diff > 1) return `${diff} days`;
+    if (diff === 1) return `1 day`;
+    if (diff === 0) return `Today`;
+    return `Passed`;
+  };
+
+  const tasksCompletion = () => {
+    if (!tasks.length) return 0;
+    return Math.round((tasks.filter(t => t.done).length / tasks.length) * 100);
+  };
+
+  const vendorConfirmedPct = () => {
+    if (!vendors.length) return 0;
+    return Math.round((vendors.filter(v => v.status === 'confirmed').length / vendors.length) * 100);
+  };
+
+  const rsvpCounts = () => ({
+    total: guests.length,
+    accepted: guests.filter(g => g.rsvp === 'accepted').length,
+    pending: guests.filter(g => g.rsvp === 'pending').length,
+    declined: guests.filter(g => g.rsvp === 'declined').length,
+  });
+
+  // Creation wizard state (user-driven only)
+  const [createStep, setCreateStep] = useState(0);
+  const [eventType, setEventType] = useState("General");
+  const [visibility, setVisibility] = useState<"public" | "private">("public");
+  const [modality, setModality] = useState<"physical" | "virtual" | "hybrid">("physical");
+  const [theme, setTheme] = useState("");
+  const [goal, setGoal] = useState("");
+  const [budgetMin, setBudgetMin] = useState("");
+  const [budgetMax, setBudgetMax] = useState("");
+  const [structureSelections, setStructureSelections] = useState<Record<string, boolean>>({
+    Catering: false, Stage: false, Security: false, Accommodation: false, Transportation: false, Photography: false, MC: false, Livestream: false,
+  });
+  const [planningMode, setPlanningMode] = useState<"diy" | "team" | "hire">("diy");
+
+  // Inline editing ids for quick edits
+  const [editingTaskId, setEditingTaskId] = useState<number | null>(null);
+  const [editingMilestoneId, setEditingMilestoneId] = useState<number | null>(null);
+  const [editingVendorId, setEditingVendorId] = useState<number | null>(null);
+  const [editingBudgetId, setEditingBudgetId] = useState<number | null>(null);
+  const [editingGuestId, setEditingGuestId] = useState<number | null>(null);
+  const [editingTeamId, setEditingTeamId] = useState<number | null>(null);
+
   const tabs = [
     { id: "overview", label: "Overview", icon: FileText },
     { id: "timeline", label: "Timeline", icon: Calendar },
@@ -132,22 +234,153 @@ const EventWorkspacePage = () => {
     if (!eventName.trim()) return;
     try {
       const existing = JSON.parse(sessionStorage.getItem("nested_published_events") || "[]");
-      existing.unshift({
-        id: Date.now(),
+      const id = params.eventId || params.id;
+      const payload = {
+        id: id ? id : Date.now(),
         title: eventName,
         date: eventDate || "TBD",
         time: eventTime || "TBD",
+        venue: eventVenue || "TBD",
         location: eventVenue || "TBD",
         city: eventCity || "Unknown",
         guests: Number(guestCount || 0),
         details: eventDetails,
-      });
+        milestones,
+        tasks,
+        vendors,
+        budgetItems,
+        metadata: {
+          eventType,
+          visibility,
+          modality,
+          theme,
+          goal,
+          budgetMin,
+          budgetMax,
+          structureSelections,
+          planningMode,
+        },
+        guests,
+        team,
+      };
+
+      if (id) {
+        const idx = existing.findIndex((e: any) => String(e.id) === String(id));
+        if (idx >= 0) existing[idx] = payload; else existing.unshift(payload);
+      } else {
+        existing.unshift(payload);
+      }
       sessionStorage.setItem("nested_published_events", JSON.stringify(existing));
-    } catch {
+    } catch (err) {
       // no-op local persistence fallback
     }
-    navigate('/dashboard/events');
+    // stay on workspace if editing, otherwise open the created event workspace
+    if (params.eventId || params.id) {
+      // update state only
+    } else {
+      const newId = payload.id;
+      navigate(`/events/${newId}/workspace`);
+    }
   };
+
+  // Minimal Wizard component — user-driven only
+  function Wizard() {
+    const structureOptions = Object.keys(structureSelections);
+    const onToggleStructure = (key: string) => {
+      setStructureSelections(prev => ({ ...prev, [key]: !prev[key] }));
+    };
+
+    return (
+      <div>
+        {createStep === 0 && (
+          <div className="space-y-3">
+            <div>
+              <label className="text-sm font-medium text-foreground">Event name</label>
+              <Input className="mt-1" value={eventName} onChange={e => setEventName(e.target.value)} placeholder="e.g. Company Retreat" />
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+              <div>
+                <label className="text-sm font-medium text-foreground">Event type</label>
+                <select value={eventType} onChange={e => setEventType(e.target.value)} className="mt-1 w-full h-9 rounded-lg border border-border bg-secondary px-3">
+                  <option>General</option>
+                  <option>Conference</option>
+                  <option>Wedding</option>
+                  <option>Workshop</option>
+                  <option>Concert</option>
+                </select>
+              </div>
+              <div>
+                <label className="text-sm font-medium text-foreground">Visibility</label>
+                <select value={visibility} onChange={e => setVisibility(e.target.value as any)} className="mt-1 w-full h-9 rounded-lg border border-border bg-secondary px-3">
+                  <option value="public">Public</option>
+                  <option value="private">Private</option>
+                </select>
+              </div>
+              <div>
+                <label className="text-sm font-medium text-foreground">Modality</label>
+                <select value={modality} onChange={e => setModality(e.target.value as any)} className="mt-1 w-full h-9 rounded-lg border border-border bg-secondary px-3">
+                  <option value="physical">Physical</option>
+                  <option value="virtual">Virtual</option>
+                  <option value="hybrid">Hybrid</option>
+                </select>
+              </div>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+              <div>
+                <label className="text-sm font-medium text-foreground">Estimated guests</label>
+                <Input className="mt-1" type="number" value={guestCount} onChange={e => setGuestCount(e.target.value)} />
+              </div>
+              <div>
+                <label className="text-sm font-medium text-foreground">Preferred date</label>
+                <Input className="mt-1" type="date" value={eventDate} onChange={e => setEventDate(e.target.value)} />
+              </div>
+            </div>
+            <div>
+              <label className="text-sm font-medium text-foreground">Location / Venue</label>
+              <Input className="mt-1" value={eventVenue} onChange={e => setEventVenue(e.target.value)} />
+            </div>
+            <div className="flex justify-end gap-2">
+              <Button variant="ghost" onClick={() => setCreateStep(s => Math.max(0, s - 1))}>Back</Button>
+              <Button onClick={() => setCreateStep(1)}>Next</Button>
+            </div>
+          </div>
+        )}
+
+        {createStep === 1 && (
+          <div className="space-y-3">
+            <p className="text-sm text-muted-foreground">Select services and structure you want to manage in this event. Nothing will be auto-created — these are just categories you want to track.</p>
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
+              {structureOptions.map(key => (
+                <label key={key} className="flex items-center gap-2 p-2 border rounded-lg">
+                  <input type="checkbox" checked={structureSelections[key]} onChange={() => onToggleStructure(key)} />
+                  <span className="text-sm">{key}</span>
+                </label>
+              ))}
+            </div>
+            <div className="flex justify-end gap-2">
+              <Button variant="ghost" onClick={() => setCreateStep(0)}>Back</Button>
+              <Button onClick={() => setCreateStep(2)}>Next</Button>
+            </div>
+          </div>
+        )}
+
+        {createStep === 2 && (
+          <div className="space-y-3">
+            <p className="text-sm text-muted-foreground">Choose how you'll plan this event. (No automatic planning will occur.)</p>
+            <div className="space-y-2">
+              <label className="flex items-center gap-2"><input type="radio" name="planmode" checked={planningMode === 'diy'} onChange={() => setPlanningMode('diy')} /> <span>DIY Planning</span></label>
+              <label className="flex items-center gap-2"><input type="radio" name="planmode" checked={planningMode === 'team'} onChange={() => setPlanningMode('team')} /> <span>Team Planning</span></label>
+              <label className="flex items-center gap-2"><input type="radio" name="planmode" checked={planningMode === 'hire'} onChange={() => setPlanningMode('hire')} /> <span>Hire Professional Planner</span></label>
+            </div>
+            <div className="flex justify-end gap-2">
+              <Button variant="ghost" onClick={() => setCreateStep(1)}>Back</Button>
+              <Button onClick={() => { setCreateStep(0); handleSaveEvent(); }}>Finish</Button>
+            </div>
+          </div>
+        )}
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-4 max-w-6xl">
@@ -162,10 +395,56 @@ const EventWorkspacePage = () => {
         <Button className="gradient-primary text-white gap-2" onClick={handleSaveEvent}>
           <Save className="h-4 w-4" /> Save Event
         </Button>
-        <Button variant="outline" className="gap-2" onClick={() => navigate("/dashboard/ai")}>
-          <Sparkles className="h-4 w-4" /> Create with AI
-        </Button>
+        <div className="ml-3 text-sm text-muted-foreground">
+          {saving ? 'Saving...' : savedAt ? `Saved ${new Date(savedAt).toLocaleTimeString()}` : ''}
+        </div>
+        {/* AI creation removed per user request — creation is user-driven only */}
       </div>
+
+      {/* Overview widgets (Event Command Center) */}
+        {creating && !eventName ? (
+          <div className="bg-card rounded-xl border border-border p-6 space-y-4">
+            <h2 className="text-lg font-semibold text-foreground">Create a new event</h2>
+            <p className="text-sm text-muted-foreground">We'll guide you through three simple steps. You provide the choices — nothing will be autogenerated.</p>
+            <Wizard />
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+        <div className="bg-card rounded-xl border border-border p-4">
+          <p className="text-xs text-muted-foreground">Countdown</p>
+          <p className="text-lg font-semibold text-foreground mt-2">{daysUntil()}</p>
+          <p className="text-xs text-muted-foreground mt-1">{eventDate ? new Date(eventDate).toLocaleDateString() : 'Date TBD'}</p>
+        </div>
+
+        <div className="bg-card rounded-xl border border-border p-4">
+          <p className="text-xs text-muted-foreground">Budget Health</p>
+          <p className="text-lg font-semibold text-foreground mt-2">${totalSpent.toLocaleString()} / ${totalBudget.toLocaleString()}</p>
+          <div className="w-full h-2.5 bg-secondary rounded-full mt-3 overflow-hidden">
+            <div className="h-full gradient-primary" style={{ width: `${Math.min(100, totalBudget ? (totalSpent / totalBudget) * 100 : 0)}%` }} />
+          </div>
+        </div>
+
+        <div className="bg-card rounded-xl border border-border p-4">
+          <p className="text-xs text-muted-foreground">Tasks Completion</p>
+          <p className="text-lg font-semibold text-foreground mt-2">{tasksCompletion()}%</p>
+          <p className="text-xs text-muted-foreground mt-1">{tasks.filter(t => t.done).length} of {tasks.length} tasks done</p>
+        </div>
+
+        <div className="bg-card rounded-xl border border-border p-4">
+          <p className="text-xs text-muted-foreground">Vendors & Guests</p>
+          <div className="flex items-center gap-3 mt-2">
+            <div>
+              <p className="text-sm font-semibold text-foreground">Vendors</p>
+              <p className="text-lg">{vendorConfirmedPct()}% confirmed</p>
+            </div>
+            <div>
+              <p className="text-sm font-semibold text-foreground">RSVP</p>
+              <p className="text-lg">{rsvpCounts().accepted}/{rsvpCounts().total}</p>
+            </div>
+          </div>
+        </div>
+        </div>
+      )}
 
       {/* Guide banner */}
       {step < guideSteps.length && (
@@ -244,8 +523,17 @@ const EventWorkspacePage = () => {
                 </div>
                 <div className="flex-1 flex items-center justify-between">
                   <div>
-                    <p className={cn("text-sm", m.status === "completed" ? "text-muted-foreground line-through" : "text-foreground font-medium")}>{m.title}</p>
-                    <p className="text-xs text-muted-foreground">{m.date}</p>
+                    {editingMilestoneId === m.id ? (
+                      <div className="space-y-1">
+                        <Input autoFocus value={m.title} onChange={e => setMilestones(prev => prev.map(x => x.id === m.id ? { ...x, title: e.target.value } : x))} onBlur={() => setEditingMilestoneId(null)} onKeyDown={e => { if (e.key === 'Enter') setEditingMilestoneId(null); }} />
+                        <Input type="date" value={m.date} onChange={e => setMilestones(prev => prev.map(x => x.id === m.id ? { ...x, date: e.target.value } : x))} />
+                      </div>
+                    ) : (
+                      <div>
+                        <p onDoubleClick={() => setEditingMilestoneId(m.id)} className={cn("text-sm", m.status === "completed" ? "text-muted-foreground line-through" : "text-foreground font-medium")}>{m.title}</p>
+                        <p className="text-xs text-muted-foreground">{m.date}</p>
+                      </div>
+                    )}
                   </div>
                   <div className="flex items-center gap-2">
                     <Badge className={statusColors[m.status]}>{m.status}</Badge>
@@ -271,7 +559,18 @@ const EventWorkspacePage = () => {
                 <button onClick={() => setTasks(prev => prev.map(t => t.id === task.id ? { ...t, done: !t.done } : t))}>
                   <CheckCircle className={cn("h-5 w-5", task.done ? "text-success" : "text-muted-foreground")} />
                 </button>
-                <span className={cn("flex-1 text-sm", task.done ? "text-muted-foreground line-through" : "text-foreground")}>{task.title}</span>
+                {editingTaskId === task.id ? (
+                  <Input
+                    autoFocus
+                    value={task.title}
+                    onChange={e => setTasks(prev => prev.map(t => t.id === task.id ? { ...t, title: e.target.value } : t))}
+                    onBlur={() => setEditingTaskId(null)}
+                    onKeyDown={e => { if (e.key === 'Enter') setEditingTaskId(null); }}
+                    className={cn("flex-1 text-sm")}
+                  />
+                ) : (
+                  <span onDoubleClick={() => setEditingTaskId(task.id)} className={cn("flex-1 text-sm", task.done ? "text-muted-foreground line-through" : "text-foreground")}>{task.title}</span>
+                )}
                 <Badge className={priorityColors[task.priority]} onClick={() => setTasks(prev => prev.map(t => t.id === task.id ? { ...t, priority: t.priority === "high" ? "medium" : t.priority === "medium" ? "low" : "high" } : t))}>{task.priority}</Badge>
                 <button onClick={() => setTasks(prev => prev.filter(t => t.id !== task.id))} className="opacity-0 group-hover:opacity-100 text-destructive"><Trash2 className="h-4 w-4" /></button>
               </div>
@@ -296,8 +595,19 @@ const EventWorkspacePage = () => {
                 <div className="flex items-center gap-3">
                   <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center"><Users className="h-4 w-4 text-primary" /></div>
                   <div>
-                    <p className="text-sm font-medium text-foreground">{v.name}</p>
-                    <p className="text-xs text-muted-foreground">{v.category}</p>
+                    {editingVendorId === v.id ? (
+                      <div className="space-y-1">
+                        <Input autoFocus value={v.name} onChange={e => setVendors(prev => prev.map(x => x.id === v.id ? { ...x, name: e.target.value } : x))} onBlur={() => setEditingVendorId(null)} onKeyDown={e => { if (e.key === 'Enter') setEditingVendorId(null); }} />
+                        <select value={v.category} onChange={e => setVendors(prev => prev.map(x => x.id === v.id ? { ...x, category: e.target.value } : x))} className="h-9 rounded-lg border border-border bg-secondary px-3 text-sm">
+                          {vendorCategories.map(c => <option key={c} value={c}>{c}</option>)}
+                        </select>
+                      </div>
+                    ) : (
+                      <div>
+                        <p onDoubleClick={() => setEditingVendorId(v.id)} className="text-sm font-medium text-foreground">{v.name}</p>
+                        <p className="text-xs text-muted-foreground">{v.category}</p>
+                      </div>
+                    )}
                   </div>
                 </div>
                 <div className="flex items-center gap-2">
@@ -333,11 +643,23 @@ const EventWorkspacePage = () => {
                 <div key={item.id}>
                   <div className="flex justify-between text-sm mb-1">
                     <span className="text-foreground font-medium">{item.category}</span>
-                    <span className="text-muted-foreground">${item.spent.toLocaleString()} / ${item.allocated.toLocaleString()}</span>
+                    <span className="text-muted-foreground">
+                      {editingBudgetId === item.id ? (
+                        <div className="flex items-center gap-2">
+                          <Input type="number" value={String(item.spent)} onChange={e => setBudgetItems(prev => prev.map(x => x.id === item.id ? { ...x, spent: Number(e.target.value || 0) } : x))} className="w-28" />
+                          <span>/</span>
+                          <Input type="number" value={String(item.allocated)} onChange={e => setBudgetItems(prev => prev.map(x => x.id === item.id ? { ...x, allocated: Number(e.target.value || 0) } : x))} className="w-28" />
+                          <Button size="sm" variant="ghost" onClick={() => setEditingBudgetId(null)}>Done</Button>
+                        </div>
+                      ) : (
+                        `$${item.spent.toLocaleString()} / $${item.allocated.toLocaleString()}`
+                      )}
+                    </span>
                   </div>
                   <div className="w-full h-2.5 bg-secondary dark:bg-accent rounded-full overflow-hidden">
-                    <div className="h-full gradient-primary rounded-full transition-all" style={{ width: `${Math.min(100, (item.spent / item.allocated) * 100)}%` }} />
+                    <div className="h-full gradient-primary rounded-full transition-all" style={{ width: `${Math.min(100, (item.spent / (item.allocated || 1)) * 100)}%` }} />
                   </div>
+                  {editingBudgetId !== item.id && <div className="text-right mt-2"><Button size="sm" variant="outline" onClick={() => setEditingBudgetId(item.id)}>Edit</Button></div>}
                 </div>
               ))}
             </div>
@@ -363,8 +685,17 @@ const EventWorkspacePage = () => {
             {guests.map(g => (
               <div key={g.id} className="flex items-center justify-between p-3 rounded-lg hover:bg-secondary/50 transition-colors">
                 <div>
-                  <p className="text-sm font-medium text-foreground">{g.name}</p>
-                  <p className="text-xs text-muted-foreground">{g.email}</p>
+                  {editingGuestId === g.id ? (
+                    <div className="space-y-1">
+                      <Input autoFocus value={g.name} onChange={e => setGuests(prev => prev.map(x => x.id === g.id ? { ...x, name: e.target.value } : x))} onBlur={() => setEditingGuestId(null)} onKeyDown={e => { if (e.key === 'Enter') setEditingGuestId(null); }} />
+                      <Input value={g.email} onChange={e => setGuests(prev => prev.map(x => x.id === g.id ? { ...x, email: e.target.value } : x))} />
+                    </div>
+                  ) : (
+                    <div>
+                      <p onDoubleClick={() => setEditingGuestId(g.id)} className="text-sm font-medium text-foreground">{g.name}</p>
+                      <p className="text-xs text-muted-foreground">{g.email}</p>
+                    </div>
+                  )}
                 </div>
                 <div className="flex items-center gap-2">
                   <Badge className={rsvpColors[g.rsvp]} onClick={() => setGuests(prev => prev.map(x => x.id === g.id ? { ...x, rsvp: x.rsvp === "accepted" ? "pending" : x.rsvp === "pending" ? "declined" : "accepted" } : x))}>{g.rsvp}</Badge>
@@ -393,8 +724,17 @@ const EventWorkspacePage = () => {
                     <span className="text-white text-xs font-bold">{m.name.split(' ').map(n => n[0]).join('')}</span>
                   </div>
                   <div>
-                    <p className="text-sm font-medium text-foreground">{m.name}</p>
-                    <p className="text-xs text-muted-foreground">{m.role}</p>
+                    {editingTeamId === m.id ? (
+                      <div className="space-y-1">
+                        <Input autoFocus value={m.name} onChange={e => setTeam(prev => prev.map(x => x.id === m.id ? { ...x, name: e.target.value } : x))} onBlur={() => setEditingTeamId(null)} onKeyDown={e => { if (e.key === 'Enter') setEditingTeamId(null); }} />
+                        <Input value={m.role} onChange={e => setTeam(prev => prev.map(x => x.id === m.id ? { ...x, role: e.target.value } : x))} />
+                      </div>
+                    ) : (
+                      <div>
+                        <p onDoubleClick={() => setEditingTeamId(m.id)} className="text-sm font-medium text-foreground">{m.name}</p>
+                        <p className="text-xs text-muted-foreground">{m.role}</p>
+                      </div>
+                    )}
                   </div>
                 </div>
                 <button onClick={() => setTeam(prev => prev.filter(x => x.id !== m.id))} className="text-destructive/50 hover:text-destructive"><Trash2 className="h-3.5 w-3.5" /></button>

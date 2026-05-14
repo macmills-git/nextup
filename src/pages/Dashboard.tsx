@@ -12,6 +12,7 @@ import { useState } from "react";
 import EventsPage from "./dashboard/EventsPage";
 import EventDetailPage from "./dashboard/EventDetailPage";
 import EventWorkspacePage from "./dashboard/EventWorkspacePage";
+import NewEventWorkspace from "./dashboard/NewEventWorkspace";
 import VendorsPage from "./dashboard/VendorsPage";
 import VendorProfilePage from "./dashboard/VendorProfilePage";
 import TeamPage from "./dashboard/TeamPage";
@@ -365,10 +366,10 @@ const Dashboard = () => {
           <Routes>
             <Route index element={<DashboardHome />} />
             <Route path="events" element={<EventsPage />} />
-            <Route path="events/new" element={<EventWorkspacePage />} />
+            <Route path="events/new" element={<NewEventWorkspace />} />
             <Route path="events/publish" element={<PublishEventPage />} />
             <Route path="events/nearby" element={<NearbyEventsPage />} />
-            <Route path="events/:eventId" element={<EventDetailPage />} />
+            <Route path="events/:eventId" element={<EventWorkspacePage />} />
             <Route path="templates" element={<DashboardTemplatesPage />} />
             <Route path="vendors" element={<VendorsPage />} />
             <Route path="vendors/:vendorId" element={<VendorProfilePage />} />

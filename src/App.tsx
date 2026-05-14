@@ -6,6 +6,7 @@ import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import ScrollToTop from "./components/ScrollToTop";
 import { AuthProvider, useAuth } from "./contexts/AuthContext";
 import ProtectedRoute from "./components/ProtectedRoute";
+import { EventStoreProvider } from "@/contexts/EventStore";
 import Index from "./pages/Index";
 import SignIn from "./pages/SignIn";
 import SignUp from "./pages/SignUp";
@@ -18,6 +19,7 @@ import DocsPage from "./pages/DocsPage";
 import TemplatesPage from "./pages/TemplatesPage";
 import EventsNearMePage from "./pages/EventsNearMePage";
 import PublicEventDetailPage from "./pages/PublicEventDetailPage";
+import EventWorkspacePage from "./pages/dashboard/EventWorkspacePage";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -32,6 +34,7 @@ const RoleHome = ({ children }: { children: React.ReactNode }) => {
 const App = () => (
   <QueryClientProvider client={queryClient}>
     <AuthProvider>
+      <EventStoreProvider>
       <TooltipProvider>
         <Toaster />
         <Sonner />
@@ -48,6 +51,7 @@ const App = () => (
             <Route path="/templates" element={<TemplatesPage />} />
             <Route path="/events-near-me" element={<EventsNearMePage />} />
             <Route path="/events/:id" element={<PublicEventDetailPage />} />
+            <Route path="/events/:id/workspace" element={<ProtectedRoute><EventWorkspacePage /></ProtectedRoute>} />
             <Route path="/dashboard" element={<ProtectedRoute><RoleHome><Dashboard /></RoleHome></ProtectedRoute>} />
             <Route path="/dashboard/*" element={<ProtectedRoute><RoleHome><Dashboard /></RoleHome></ProtectedRoute>} />
             <Route path="/vendor" element={<ProtectedRoute><VendorDashboard /></ProtectedRoute>} />
@@ -56,6 +60,7 @@ const App = () => (
           </Routes>
         </BrowserRouter>
       </TooltipProvider>
+      </EventStoreProvider>
     </AuthProvider>
   </QueryClientProvider>
 );
