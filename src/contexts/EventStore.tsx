@@ -237,10 +237,10 @@ export const EventStoreProvider: React.FC<{ children: React.ReactNode }> = ({ ch
     return model;
   };
 
-  const publishEvent = (e: Partial<EventModel>) => {
+  const publishEvent = (e: Partial<EventModel>): EventModel => {
     const m = saveDraft(e);
-    patchEvent(m.id, (x) => ({ ...x, status: 'launched', updatedAt: Date.now() }));
-    return { ...m, status: 'launched' };
+    patchEvent(m.id, (x) => ({ ...x, status: 'launched' as const, updatedAt: Date.now() }));
+    return { ...m, status: 'launched' as const };
   };
 
   const getEvent = (id: string | number) => events.find(x => String(x.id) === String(id));
