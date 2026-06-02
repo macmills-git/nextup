@@ -11,8 +11,8 @@ import { useAuth } from "@/contexts/AuthContext";
 import { useState } from "react";
 import EventsPage from "./dashboard/EventsPage";
 import EventDetailPage from "./dashboard/EventDetailPage";
-import EventWorkspacePage from "./dashboard/EventWorkspacePage";
-import NewEventWorkspace from "./dashboard/NewEventWorkspace";
+import EventWorkspace from "./dashboard/EventWorkspace";
+import CreateEventWizard from "./dashboard/CreateEventWizard";
 import VendorsPage from "./dashboard/VendorsPage";
 import VendorProfilePage from "./dashboard/VendorProfilePage";
 import TeamPage from "./dashboard/TeamPage";
@@ -366,10 +366,10 @@ const Dashboard = () => {
           <Routes>
             <Route index element={<DashboardHome />} />
             <Route path="events" element={<EventsPage />} />
-            <Route path="events/new" element={<NewEventWorkspace />} />
+            <Route path="events/new" element={<CreateEventWizard />} />
             <Route path="events/publish" element={<PublishEventPage />} />
             <Route path="events/nearby" element={<NearbyEventsPage />} />
-            <Route path="events/:eventId" element={<EventWorkspacePage />} />
+            <Route path="events/:eventId/*" element={<EventWorkspace />} />
             <Route path="templates" element={<DashboardTemplatesPage />} />
             <Route path="vendors" element={<VendorsPage />} />
             <Route path="vendors/:vendorId" element={<VendorProfilePage />} />
