@@ -4,7 +4,7 @@ import {
   faGears, faCircleCheck, faLayerGroup, faCode, faWifi, faPhone, faDesktop,
   faCalendarDays, faDollarSign, faUsers, faWandMagicSparkles, faComments,
   faClock, faStore, faTicket, faChevronDown, faRobot, faHeart, faAt,
-  faBookOpen, faGear, faPlay, faImage, faSparkles, faArrowRight,
+  faBookOpen, faGear, faPlay, faImage, faStar, faArrowRight,
   faCircleQuestion, faFileLines, faChartLine, faEnvelopeOpenText,
   faPalette, faLifeRing, faKey, faBell, faCreditCard, faPlug,
   faMapLocationDot, faMagnifyingGlass, faPaperPlane,
@@ -43,7 +43,7 @@ export const BookOpen = wrap(faBookOpen);
 export const Settings = wrap(faGear);
 export const Play = wrap(faPlay);
 export const ImageIcon = wrap(faImage);
-export const SparklesAlt = wrap(faSparkles);
+export const SparklesAlt = wrap(faStar);
 export const ArrowRight = wrap(faArrowRight);
 export const HelpCircle = wrap(faCircleQuestion);
 export const FileText = wrap(faFileLines);
