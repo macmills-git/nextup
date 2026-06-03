@@ -1,6 +1,6 @@
 import Navbar from "@/components/Navbar";
 import SaasFooter from "@/components/landing/saas/SaasFooter";
-import { BookOpen, Calendar, Store, Users, MessageSquare, Sparkles, DollarSign, Settings, Play, Code, Image as ImageIcon, AtSign, CheckCircle, Zap, Shield, BarChart3, Ticket, ArrowRight, Layers, Globe } from "lucide-react";
+import { BookOpen, Calendar, Store, Users, MessageSquare, Sparkles, DollarSign, Settings, Play, Code2 as Code, ImageIcon, AtSign, CheckCircle, Zap, Shield, BarChart3, Ticket, ArrowRight, Layers, Globe, Rocket, Map, Bell, CreditCard, FileText, LineChart, Plug } from "@/lib/fa-icons";
 import { useState } from "react";
 
 const sections = [
