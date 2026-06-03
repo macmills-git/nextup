@@ -1,6 +1,6 @@
 import Navbar from "@/components/Navbar";
 import SaasFooter from "@/components/landing/saas/SaasFooter";
-import { Calendar, DollarSign, Users, Sparkles, MessageSquare, Clock, Store, CheckCircle, Zap, Shield, ArrowRight, Bot, Heart, Layers, BarChart3, Ticket, ChevronDown } from "lucide-react";
+import { Calendar, DollarSign, Users, Sparkles, MessageSquare, Clock, Store, CheckCircle, Zap, Shield, ArrowRight, Bot, Heart, Layers, BarChart3, Ticket, ChevronDown } from "@/lib/fa-icons";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 import { useEffect, useRef, useState } from "react";
@@ -202,7 +202,7 @@ const FeaturesPage = () => {
                 <Link to="/docs">Read Docs</Link>
               </Button>
               <Button variant="outline" asChild className="rounded-full px-6 h-10 text-sm font-medium border border-border/40 bg-background hover:bg-muted/50">
-                <Link to="/help">Contact Us</Link>
+                <Link to="/pricing">View Pricing</Link>
               </Button>
             </div>
           </div>

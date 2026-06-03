@@ -10,7 +10,6 @@ const navItems = [
   { label: "Events Near Me", to: "/events-near-me" },
   { label: "Features", to: "/features" },
   { label: "Pricing", to: "/pricing" },
-  { label: "Help/Support", to: "/help" },
   { label: "Docs", to: "/docs" },
 ];
 
