@@ -1,5 +1,5 @@
 import { useEffect, useRef } from "react";
-import { Zap, Shield, Globe, BarChart3, Rocket, RefreshCw, Settings2, CheckCircle, Layers, Code2, Wifi, Phone, Monitor } from "lucide-react";
+import { Zap, Shield, Globe, BarChart3, Rocket, RefreshCw, Settings2, CheckCircle, Layers, Code2, Wifi, Phone, Monitor } from "@/lib/fa-icons";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 
