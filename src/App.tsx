@@ -14,7 +14,6 @@ import Dashboard from "./pages/Dashboard";
 import VendorDashboard from "./pages/VendorDashboard";
 import FeaturesPage from "./pages/FeaturesPage";
 import PricingPage from "./pages/PricingPage";
-import HelpPage from "./pages/HelpPage";
 import DocsPage from "./pages/DocsPage";
 import TemplatesPage from "./pages/TemplatesPage";
 import EventsNearMePage from "./pages/EventsNearMePage";
@@ -46,7 +45,7 @@ const App = () => (
             <Route path="/signup" element={<SignUp />} />
             <Route path="/features" element={<FeaturesPage />} />
             <Route path="/pricing" element={<PricingPage />} />
-            <Route path="/help" element={<HelpPage />} />
+            
             <Route path="/docs" element={<DocsPage />} />
             <Route path="/templates" element={<TemplatesPage />} />
             <Route path="/events-near-me" element={<EventsNearMePage />} />

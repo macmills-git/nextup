@@ -202,7 +202,7 @@ const FeaturesPage = () => {
                 <Link to="/docs">Read Docs</Link>
               </Button>
               <Button variant="outline" asChild className="rounded-full px-6 h-10 text-sm font-medium border border-border/40 bg-background hover:bg-muted/50">
-                <Link to="/help">Contact Us</Link>
+                <Link to="/pricing">View Pricing</Link>
               </Button>
             </div>
           </div>
