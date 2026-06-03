@@ -136,6 +136,101 @@ const sections = [
       "Team — Invite members, assign roles, and manage team access.",
     ] },
   ]},
+  { group: "EVENT LIFECYCLE", icon: Rocket, title: "Event Workspace", content: [
+    { type: "text", value: "Every event in Nested lives inside a dedicated Event Workspace — a command center that follows the lifecycle from idea → planning → execution → post-event analysis. All sub-systems (timeline, tasks, budget, vendors, guests, team, docs) are linked: booking a vendor automatically creates a budget line, a task, and a timeline entry." },
+    { type: "callout", tone: "info", title: "Lifecycle phases", value: "Initiation → Planning → Execution → Event Day → Wrap-up. Each workspace knows what phase you're in and surfaces the right tools." },
+    { type: "diagram", items: ["Overview", "Timeline", "Tasks", "Budget", "Vendors", "Guests", "Team", "Documents", "Communications", "Event Day", "Reports"] },
+    { type: "features", items: [
+      { icon: Layers, title: "Linked sub-systems", desc: "Vendors, budget lines, tasks and timeline entries are cross-referenced — change one, the others update." },
+      { icon: Bell, title: "Mission Control alerts", desc: "Heuristic detection for budget overruns, schedule overlaps, and stalled vendor responses." },
+      { icon: Sparkles, title: "AI seeding", desc: "Pick your event structure and the workspace pre-populates tasks, vendor pipeline, and budget categories." },
+    ]},
+  ]},
+  { group: "EVENT LIFECYCLE", icon: Sparkles, title: "Create an Event (Wizard)", content: [
+    { type: "text", value: "The 3-step Create Event Wizard turns a rough idea into a fully scaffolded workspace in under 2 minutes." },
+    { type: "steps", items: [
+      { title: "Basics", desc: "Name, type, modality, theme, guest count, goal, budget, date and location." },
+      { title: "Structure", desc: "Pick the components you need (catering, stage, security, ticketing). Each one seeds vendors, budget lines, tasks and timeline blocks." },
+      { title: "Planning Mode", desc: "DIY, with team, hire a planner, or let AI co-plan. Sets defaults for collaboration and automation." },
+    ]},
+    { type: "callout", tone: "tip", title: "Templates", value: "Start from a template to skip the wizard with curated structure presets (Corporate Gala, Wedding, Launch, Conference, Birthday)." },
+  ]},
+  { group: "EVENT LIFECYCLE", icon: Calendar, title: "Timeline & Tasks", content: [
+    { type: "text", value: "Timeline is built in 4 layers: Planning, Run Sheet, Vendor commitments, and Team milestones. Tasks live in a hierarchical tree with dependencies and assignees." },
+    { type: "comparison", left: { title: "Planning timeline", items: ["Weeks/months view", "Vendor deadlines", "Payment milestones", "Marketing pushes"] }, right: { title: "Run sheet", items: ["Minute-by-minute", "Speaker slots", "Vendor arrivals", "Live ops"] } },
+    { type: "features", items: [
+      { icon: CheckCircle, title: "Dependency badges", desc: "Tasks flag when prerequisites aren't met. Heuristic overlap detection warns of double-booked windows." },
+      { icon: Zap, title: "Quick actions", desc: "Convert any task into a vendor request, calendar event, or document with one click." },
+    ]},
+  ]},
+  { group: "EVENT LIFECYCLE", icon: DollarSign, title: "Budget Engine", content: [
+    { type: "text", value: "Budgets are a matrix of categories (venue, F&B, AV, decor…) × layers (estimated, committed, paid, actual). Booking a vendor fills committed; uploading an invoice fills actual." },
+    { type: "callout", tone: "warning", title: "Overrun alerts", value: "When any category exceeds 80% you'll get a soft warning. 100% triggers a hard alert in Mission Control." },
+    { type: "code", lang: "formula", value: "Variance = Actual − Estimated\nHealth = 1 − max(Variance, 0) / Estimated" },
+  ]},
+  { group: "EVENT LIFECYCLE", icon: Store, title: "Vendor Pipeline", content: [
+    { type: "text", value: "Vendors flow through a kanban: Shortlist → Requested → Quoted → Negotiating → Booked → Delivered. Every move triggers downstream updates." },
+    { type: "diagram", items: ["Shortlist", "Requested", "Quoted", "Negotiating", "Booked", "Delivered"] },
+    { type: "features", items: [
+      { icon: Plug, title: "Auto-linking", desc: "Booking creates a budget line, a task with due date, and a timeline entry tied to the vendor." },
+      { icon: MessageSquare, title: "Inline messaging", desc: "All vendor threads roll up to Communications, scoped to the event." },
+    ]},
+  ]},
+  { group: "EVENT LIFECYCLE", icon: Users, title: "Guests", content: [
+    { type: "text", value: "Manage guests end-to-end: import, segment, send invitations, track RSVPs, build seating maps, and check guests in on event day." },
+    { type: "features", items: [
+      { icon: Users, title: "Segments", desc: "Group guests by VIP, plus-one status, dietary needs, or table assignment." },
+      { icon: Ticket, title: "QR check-in", desc: "Each confirmed guest gets a QR pass. Scan at the door for live attendance stats." },
+    ]},
+  ]},
+  { group: "EVENT LIFECYCLE", icon: FileText, title: "Documents", content: [
+    { type: "text", value: "Upload contracts, permits, invoices, moodboards, floorplans, runsheets and quotes. AI extracts key fields (amount, date, terms) from contracts and invoices automatically." },
+    { type: "callout", tone: "info", title: "AI extraction", value: "Heuristic field extraction is on for contracts and invoices. Extracted values feed the Budget engine when you confirm." },
+  ]},
+  { group: "EVENT LIFECYCLE", icon: Zap, title: "Event Day Mode", content: [
+    { type: "text", value: "On the day, switch to Event Day Mode for a live operations dashboard: pulsing run sheet, vendor check-ins, real-time issue board, and AI nudges." },
+    { type: "features", items: [
+      { icon: Bell, title: "Live issues", desc: "Anyone on the team can log an issue with severity. Auto-routes to the right owner." },
+      { icon: Sparkles, title: "AI suggestions", desc: "Surfaces likely next steps based on the run sheet position and outstanding tasks." },
+    ]},
+  ]},
+  { group: "EVENT LIFECYCLE", icon: LineChart, title: "Reports", content: [
+    { type: "text", value: "Post-event analytics covering financial variance, attendance, vendor performance, and team contribution. Export to CSV/PDF for stakeholders." },
+    { type: "features", items: [
+      { icon: BarChart3, title: "Financial variance", desc: "Estimated vs. actual broken down by category, with biggest drivers highlighted." },
+      { icon: Users, title: "Attendance", desc: "Invited, RSVP'd, checked-in, no-show — plus peak attendance windows." },
+      { icon: Store, title: "Vendor performance", desc: "Response time, on-time delivery, and post-event ratings feed the marketplace." },
+    ]},
+  ]},
+  { group: "FOR VENDORS", icon: Store, title: "Vendor Onboarding", content: [
+    { type: "text", value: "If you sell services, sign up as a vendor. The onboarding wizard captures your business, services, pricing tiers, portfolio and availability." },
+    { type: "steps", items: [
+      { title: "Business profile", desc: "Name, category, service area, team size." },
+      { title: "Packages", desc: "Define Basic / Premium / Luxury tiers with transparent pricing." },
+      { title: "Portfolio", desc: "Upload photos and past events to showcase your work." },
+      { title: "Go live", desc: "Once verified your profile appears in the Vendor Marketplace." },
+    ]},
+  ]},
+  { group: "FOR VENDORS", icon: Map, title: "Find Events", content: [
+    { type: "text", value: "Vendors can browse open events that match their category, location and budget — then submit proposals directly." },
+    { type: "features", items: [
+      { icon: Map, title: "Location matching", desc: "See only events in your service radius." },
+      { icon: CheckCircle, title: "Proposal tracking", desc: "Track which proposals are open, won, or lost from your Bookings tab." },
+    ]},
+  ]},
+  { group: "API & INTEGRATIONS", icon: Plug, title: "Integrations", content: [
+    { type: "text", value: "Connect Nested to the tools you already use — calendars, payments, messaging, and storage." },
+    { type: "features", items: [
+      { icon: Calendar, title: "Google Calendar", desc: "Two-way sync for event dates, milestones and run sheets." },
+      { icon: CreditCard, title: "Stripe", desc: "Sell tickets, accept vendor deposits, and reconcile payments." },
+      { icon: MessageSquare, title: "Slack", desc: "Push notifications, alerts and AI digests into your team channels." },
+    ]},
+  ]},
+  { group: "API & INTEGRATIONS", icon: Code, title: "API & Webhooks", content: [
+    { type: "text", value: "Programmatic access via REST. Use webhooks to react to events.created, vendor.booked, budget.overrun, guest.checked_in and more." },
+    { type: "code", lang: "bash", value: "curl -X POST https://api.nested.app/v1/events \\\n  -H 'Authorization: Bearer <token>' \\\n  -d '{ \"name\": \"Launch Gala\", \"date\": \"2026-09-12\" }'" },
+    { type: "callout", tone: "info", title: "Authentication", value: "All requests need a Bearer token. Generate keys in Settings → Developer." },
+  ]},
 ];
 
 const DocsPage = () => {
