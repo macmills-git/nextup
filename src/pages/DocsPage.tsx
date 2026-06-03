@@ -336,6 +336,56 @@ const DocsPage = () => {
                       ))}
                     </div>
                   );
+                  if (block.type === 'callout') {
+                    const tones: any = {
+                      info: 'border-info/30 bg-info/5 text-info',
+                      tip: 'border-success/30 bg-success/5 text-success',
+                      warning: 'border-warning/30 bg-warning/5 text-warning',
+                    };
+                    return (
+                      <div key={i} id={`block-${i}`} className={`rounded-xl border p-5 ${tones[block.tone || 'info']}`}>
+                        <p className="text-xs font-bold uppercase tracking-wider mb-2">{block.title}</p>
+                        <p className="text-sm text-foreground/90 leading-relaxed">{block.value}</p>
+                      </div>
+                    );
+                  }
+                  if (block.type === 'diagram') return (
+                    <div key={i} id={`block-${i}`} className="rounded-xl border border-border bg-secondary p-6">
+                      <div className="flex flex-wrap items-center gap-2">
+                        {block.items?.map((step: string, j: number) => (
+                          <div key={j} className="flex items-center gap-2">
+                            <span className="px-3 py-1.5 rounded-lg bg-card border border-border text-xs font-semibold text-foreground">{step}</span>
+                            {j < (block.items?.length ?? 0) - 1 && <span className="text-muted-foreground text-xs">→</span>}
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  );
+                  if (block.type === 'comparison') return (
+                    <div key={i} id={`block-${i}`} className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                      {[block.left, block.right].map((col: any, j: number) => (
+                        <div key={j} className={`rounded-xl border border-border p-5 ${j === 0 ? 'bg-secondary' : 'bg-card'}`}>
+                          <p className="text-xs font-semibold uppercase tracking-wider text-primary mb-3">{col.title}</p>
+                          <ul className="space-y-1.5">
+                            {col.items?.map((it: string, k: number) => (
+                              <li key={k} className="text-sm text-foreground flex items-start gap-2">
+                                <CheckCircle className="w-3 h-3 text-primary mt-1" />{it}
+                              </li>
+                            ))}
+                          </ul>
+                        </div>
+                      ))}
+                    </div>
+                  );
+                  if (block.type === 'code') return (
+                    <div key={i} id={`block-${i}`} className="rounded-xl border border-border bg-foreground text-background overflow-hidden">
+                      <div className="flex items-center justify-between px-4 py-2 border-b border-background/10">
+                        <span className="text-[10px] uppercase tracking-widest text-background/60">{block.lang}</span>
+                        <Code className="w-3.5 h-3.5 text-background/60" />
+                      </div>
+                      <pre className="px-4 py-4 text-xs leading-relaxed overflow-x-auto"><code>{block.value}</code></pre>
+                    </div>
+                  );
                   return null;
                 })}
               </div>
