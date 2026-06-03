@@ -3,8 +3,8 @@ import AnimatedLogo from "@/components/AnimatedLogo";
 
 const SaasFooter = () => {
   return (
-    <footer className="border-t border-border/10 bg-background">
-      <div className="container mx-auto px-4 lg:px-8">
+    <footer className="relative border-t border-border/10 bg-background overflow-hidden">
+      <div className="container mx-auto px-4 lg:px-8 relative z-10">
         <div className="py-12 grid grid-cols-2 md:grid-cols-5 gap-8">
           <div className="col-span-2 md:col-span-1">
             <Link to="/" className="flex items-center gap-2 mb-4">
@@ -18,7 +18,7 @@ const SaasFooter = () => {
           {[
             { title: "Product", links: ["Features", "Pricing", "Templates", "Changelog"] },
             { title: "Company", links: ["About", "Careers", "Blog", "Press"] },
-            { title: "Resources", links: ["Documentation", "Help Center", "Community", "API"] },
+            { title: "Resources", links: ["Documentation", "Community", "API", "Status"] },
             { title: "Legal", links: ["Privacy", "Terms", "Security", "GDPR"] },
           ].map((col) => (
             <div key={col.title}>
@@ -31,7 +31,7 @@ const SaasFooter = () => {
             </div>
           ))}
         </div>
-        <div className="py-6 border-t border-border/10 flex flex-col md:flex-row items-center justify-between gap-4">
+        <div className="py-6 border-t border-border/10 flex flex-col md:flex-row items-center justify-between gap-4 relative z-10">
           <p className="text-xs text-muted-foreground">© 2026 Nested. All rights reserved.</p>
           <div className="flex items-center gap-4">
             {["Twitter", "GitHub", "LinkedIn"].map(link => (
@@ -39,6 +39,26 @@ const SaasFooter = () => {
             ))}
           </div>
         </div>
+
+        {/* Spacer for oversized wordmark */}
+        <div aria-hidden className="h-[18vw] md:h-[22vw]" />
+      </div>
+
+      {/* Oversized cropped wordmark */}
+      <div
+        aria-hidden
+        className="pointer-events-none absolute left-0 right-0 -bottom-[8vw] md:-bottom-[10vw] flex justify-center z-0 select-none"
+      >
+        <span
+          className="block whitespace-nowrap font-black text-foreground leading-[0.8]"
+          style={{
+            fontSize: "42vw",
+            letterSpacing: "-0.08em",
+            fontFamily: "'Space Grotesk', 'Inter Tight', 'Helvetica Now Display', sans-serif",
+          }}
+        >
+          NESTED
+        </span>
       </div>
     </footer>
   );

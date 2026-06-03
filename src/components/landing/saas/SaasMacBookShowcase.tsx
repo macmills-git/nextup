@@ -9,156 +9,142 @@ const SaasMacBookShowcase = () => {
 
   useEffect(() => {
     if (!ref.current) return;
-    gsap.fromTo(ref.current.querySelector('.dashboard-frame'),
-      { y: 60, opacity: 0 },
-      { y: 0, opacity: 1, duration: 0.8, ease: 'power3.out',
+    const macbook = ref.current.querySelector('.macbook-wrap');
+    const screen = ref.current.querySelector('.macbook-screen-inner');
+    gsap.fromTo(macbook,
+      { y: 120, rotateX: -25, opacity: 0, transformPerspective: 1200 },
+      { y: 0, rotateX: 0, opacity: 1, duration: 1.4, ease: 'power3.out',
+        scrollTrigger: { trigger: ref.current, start: 'top 75%' }
+      }
+    );
+    gsap.fromTo(screen,
+      { scale: 0.92, opacity: 0 },
+      { scale: 1, opacity: 1, duration: 1, delay: 0.4, ease: 'power3.out',
+        scrollTrigger: { trigger: ref.current, start: 'top 75%' }
+      }
+    );
+    gsap.fromTo(ref.current.querySelectorAll('.fg-text'),
+      { y: 40, opacity: 0 },
+      { y: 0, opacity: 1, duration: 0.9, stagger: 0.12, ease: 'power3.out',
         scrollTrigger: { trigger: ref.current, start: 'top 80%' }
       }
     );
-    gsap.fromTo(ref.current.querySelectorAll('.dash-text'),
-      { y: 20, opacity: 0 },
-      { y: 0, opacity: 1, duration: 0.6, stagger: 0.08, ease: 'power3.out',
-        scrollTrigger: { trigger: ref.current, start: 'top 85%' }
-      }
-    );
+    // Subtle float
+    gsap.to(macbook, { y: -10, duration: 4, ease: 'sine.inOut', yoyo: true, repeat: -1 });
   }, []);
 
   return (
-    <section ref={ref} className="py-24 bg-background relative overflow-hidden">
-      <div className="container mx-auto px-4 lg:px-8">
-        {/* Dashboard mockup - clean Nodus-style */}
-        <div className="dashboard-frame max-w-5xl mx-auto rounded-2xl border border-border/20 bg-card shadow-xl shadow-foreground/5 overflow-hidden">
-          {/* Top bar */}
-          <div className="flex items-center justify-between px-5 py-3 border-b border-border/10">
-            <div className="flex items-center gap-3">
-              <div className="flex items-center gap-1.5">
-                <div className="w-3 h-3 rounded-full bg-destructive/50" />
-                <div className="w-3 h-3 rounded-full bg-warning/50" />
-                <div className="w-3 h-3 rounded-full bg-success/50" />
-              </div>
-              <span className="text-xs font-semibold text-foreground ml-2">Nested</span>
-            </div>
-            <div className="flex-1 max-w-sm mx-8">
-              <div className="flex items-center gap-2 bg-muted/40 rounded-lg px-3 py-1.5">
-                <span className="text-[10px] text-muted-foreground">🔍 Search for anything...</span>
-                <span className="ml-auto text-[9px] text-muted-foreground bg-background rounded px-1.5 py-0.5 border border-border/20">⌘K</span>
-              </div>
-            </div>
-            <div className="w-7 h-7 rounded-full bg-muted/60 border border-border/20" />
-          </div>
+    <section ref={ref} className="relative py-32 overflow-hidden bg-foreground text-background">
+      {/* Background grid */}
+      <div className="absolute inset-0 opacity-[0.06]" style={{
+        backgroundImage: 'linear-gradient(hsl(var(--background)/0.5) 1px, transparent 1px), linear-gradient(90deg, hsl(var(--background)/0.5) 1px, transparent 1px)',
+        backgroundSize: '60px 60px'
+      }} />
+      <div className="absolute inset-0 bg-gradient-to-b from-foreground via-foreground to-foreground/95" />
 
-          <div className="flex">
-            {/* Sidebar */}
-            <div className="w-48 border-r border-border/10 p-3 hidden md:block">
-              <div className="space-y-0.5">
-                {[
-                  { name: 'Dashboard', icon: '📊', active: true },
-                  { name: 'Events', icon: '📅' },
-                  { name: 'Vendors', icon: '🏪' },
-                  { name: 'Messages', icon: '💬' },
-                  { name: 'Team', icon: '👥' },
-                  { name: 'Analytics', icon: '📈' },
-                  { name: 'Settings', icon: '⚙️' },
-                  { name: 'Notifications', icon: '🔔' },
-                ].map((item) => (
-                  <div key={item.name} className={`flex items-center gap-2 px-2.5 py-1.5 rounded-lg text-[11px] font-medium cursor-default ${item.active ? 'bg-muted/60 text-foreground' : 'text-muted-foreground hover:bg-muted/30'}`}>
-                    <span className="text-xs">{item.icon}</span>
-                    {item.name}
+      <div className="container mx-auto px-4 lg:px-8 relative z-10">
+        {/* Foreground bold text */}
+        <div className="text-center mb-16 max-w-4xl mx-auto">
+          <p className="fg-text text-xs uppercase tracking-[0.3em] text-background/60 mb-6">Mission Control</p>
+          <h2 className="fg-text font-bold tracking-[-0.04em] leading-[0.95] text-background"
+              style={{ fontSize: "clamp(2.5rem, 6vw, 5.5rem)" }}>
+            One dashboard.<br/>
+            <span className="text-background/50">Every event detail.</span>
+          </h2>
+          <p className="fg-text mt-6 text-base md:text-lg text-background/70 max-w-xl mx-auto">
+            Track events, vendors, budgets, and teams in real time — built for fast-moving event organizations.
+          </p>
+        </div>
+
+        {/* MacBook frame */}
+        <div className="macbook-wrap max-w-5xl mx-auto relative" style={{ perspective: 1500 }}>
+          {/* Lid / screen */}
+          <div className="relative rounded-t-[18px] bg-neutral-800 p-[10px] pb-[14px] shadow-[0_30px_80px_-20px_rgba(0,0,0,0.7)]">
+            {/* Notch */}
+            <div className="absolute top-0 left-1/2 -translate-x-1/2 w-24 h-3 bg-neutral-900 rounded-b-lg z-10" />
+            <div className="macbook-screen-inner relative aspect-[16/10] rounded-[10px] overflow-hidden bg-card border border-neutral-700">
+              {/* Browser-like dashboard */}
+              <div className="h-full flex flex-col">
+                <div className="flex items-center justify-between px-4 py-2 border-b border-border/30 bg-background">
+                  <div className="flex items-center gap-1.5">
+                    <span className="w-2.5 h-2.5 rounded-full bg-destructive/60" />
+                    <span className="w-2.5 h-2.5 rounded-full bg-warning/60" />
+                    <span className="w-2.5 h-2.5 rounded-full bg-success/60" />
                   </div>
-                ))}
-              </div>
-            </div>
-
-            {/* Main content */}
-            <div className="flex-1 p-4 space-y-4">
-              <p className="text-sm font-semibold text-foreground">Dashboard</p>
-
-              {/* Stats row */}
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-                {[
-                  { icon: '📅', value: '128', label: 'Active events', change: '' },
-                  { icon: '📊', value: '96.7%', label: 'Task success rate', change: '4%', up: true },
-                  { icon: '⏱', value: '12.4s', label: 'Average response time', change: '27%', up: false },
-                  { icon: '🤖', value: 'GPT-4o', label: 'Most used model', change: '' },
-                ].map((stat, i) => (
-                  <div key={i} className="rounded-xl border border-border/15 p-3 bg-background">
-                    <div className="flex items-center gap-1.5 mb-1">
-                      <span className="text-xs">{stat.icon}</span>
-                      <span className="text-base font-bold text-foreground">{stat.value}</span>
-                      {stat.change && (
-                        <span className={`text-[9px] font-medium ${stat.up ? 'text-success' : 'text-primary'}`}>
-                          {stat.change} {stat.up ? '↗' : '↘'}
-                        </span>
-                      )}
-                    </div>
-                    <p className="text-[10px] text-muted-foreground">{stat.label}</p>
-                  </div>
-                ))}
-              </div>
-
-              {/* Table */}
-              <div className="rounded-xl border border-border/15 bg-background p-3">
-                <p className="text-xs font-semibold text-foreground mb-3">Event monitor</p>
-                <div className="overflow-hidden">
-                  <div className="grid grid-cols-5 gap-2 text-[9px] font-medium text-muted-foreground pb-2 border-b border-border/10 px-1">
-                    <span>Event name</span><span>Type</span><span>Status</span><span>Budget</span><span>Last updated</span>
-                  </div>
-                  {[
-                    { name: 'Corporate Gala 2026', type: 'Corporate', status: 'Active', statusColor: 'bg-success', budget: '$45K', time: '14 min ago' },
-                    { name: 'Product Launch', type: 'Marketing', status: 'Planning', statusColor: 'bg-warning', budget: '$28K', time: '32 min ago' },
-                    { name: 'Team Offsite', type: 'Internal', status: 'Active', statusColor: 'bg-success', budget: '$12K', time: '1 hr ago' },
-                  ].map((row, i) => (
-                    <div key={i} className="grid grid-cols-5 gap-2 text-[10px] text-foreground py-2 px-1 border-b border-border/5 last:border-0">
-                      <span className="font-medium">{row.name}</span>
-                      <span className="text-muted-foreground">{row.type}</span>
-                      <span className="flex items-center gap-1"><span className={`w-1.5 h-1.5 rounded-full ${row.statusColor}`} />{row.status}</span>
-                      <span>{row.budget}</span>
-                      <span className="text-muted-foreground">{row.time}</span>
-                    </div>
-                  ))}
+                  <span className="text-[10px] text-muted-foreground font-medium">nested.app/dashboard</span>
+                  <span className="w-5 h-5 rounded-full bg-muted" />
                 </div>
-              </div>
 
-              {/* Charts row */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                <div className="rounded-xl border border-border/15 bg-background p-3">
-                  <div className="flex items-center justify-between mb-3">
-                    <p className="text-xs font-semibold text-foreground">Events by status</p>
-                    <span className="text-[9px] text-muted-foreground bg-muted/40 rounded px-2 py-0.5">Past 7 days</span>
+                <div className="flex-1 flex">
+                  <div className="w-44 border-r border-border/30 p-3 hidden md:block bg-card">
+                    <div className="space-y-1">
+                      {[
+                        { name: 'Dashboard', active: true },
+                        { name: 'Projects' }, { name: 'Vendors' }, { name: 'Messages' },
+                        { name: 'Team' }, { name: 'Analytics' }, { name: 'Settings' },
+                      ].map((item) => (
+                        <div key={item.name}
+                          className={`flex items-center gap-2 px-2.5 py-1.5 rounded-lg text-[11px] font-medium ${item.active ? 'bg-primary/10 text-primary' : 'text-muted-foreground'}`}>
+                          <span className="w-1 h-1 rounded-full bg-current opacity-60" />
+                          {item.name}
+                        </div>
+                      ))}
+                    </div>
                   </div>
-                  <div className="flex items-center gap-4">
-                    <div className="relative w-20 h-20">
-                      <svg viewBox="0 0 36 36" className="w-full h-full -rotate-90">
-                        <circle cx="18" cy="18" r="15" fill="none" stroke="hsl(var(--muted))" strokeWidth="3" />
-                        <circle cx="18" cy="18" r="15" fill="none" stroke="hsl(var(--primary))" strokeWidth="3" strokeDasharray="65 35" />
-                        <circle cx="18" cy="18" r="15" fill="none" stroke="hsl(var(--primary)/0.3)" strokeWidth="3" strokeDasharray="20 80" strokeDashoffset="-65" />
-                      </svg>
-                      <div className="absolute inset-0 flex flex-col items-center justify-center">
-                        <span className="text-sm font-bold text-foreground">87</span>
-                        <span className="text-[7px] text-muted-foreground">Events</span>
+
+                  <div className="flex-1 p-4 md:p-5 space-y-4 bg-background overflow-hidden">
+                    <div className="flex items-center justify-between">
+                      <p className="text-sm font-semibold text-foreground">Event Operations</p>
+                      <span className="text-[10px] px-2 py-0.5 rounded-full bg-success/10 text-success border border-success/30">All systems go</span>
+                    </div>
+
+                    <div className="grid grid-cols-4 gap-3">
+                      {[
+                        { value: '128', label: 'Active', accent: 'bg-primary' },
+                        { value: '96%', label: 'On track', accent: 'bg-success' },
+                        { value: '$1.2M', label: 'Budget', accent: 'bg-warning' },
+                        { value: '24', label: 'Vendors', accent: 'bg-foreground' },
+                      ].map((stat, i) => (
+                        <div key={i} className="rounded-xl border border-border/40 p-3 bg-card">
+                          <div className={`w-2 h-2 rounded-full ${stat.accent} mb-2`} />
+                          <p className="text-base md:text-lg font-bold text-foreground leading-none">{stat.value}</p>
+                          <p className="text-[10px] text-muted-foreground mt-1">{stat.label}</p>
+                        </div>
+                      ))}
+                    </div>
+
+                    <div className="grid grid-cols-3 gap-3">
+                      <div className="col-span-2 rounded-xl border border-border/40 bg-card p-3">
+                        <div className="flex items-end gap-1 h-20">
+                          {[40, 55, 30, 70, 50, 80, 60, 90, 75, 65, 85, 95].map((h, i) => (
+                            <div key={i} className="flex-1 rounded-t bg-gradient-to-t from-primary/30 to-primary" style={{ height: `${h}%` }} />
+                          ))}
+                        </div>
+                        <p className="text-[10px] text-muted-foreground mt-2">Events booked · last 12 months</p>
+                      </div>
+                      <div className="rounded-xl border border-border/40 bg-card p-3 space-y-2">
+                        <p className="text-[10px] font-semibold text-foreground">Upcoming</p>
+                        {['Corp Gala', 'Launch Party', 'Team Offsite'].map((e, i) => (
+                          <div key={i} className="flex items-center gap-2 text-[10px]">
+                            <span className={`w-1.5 h-1.5 rounded-full ${i === 0 ? 'bg-success' : i === 1 ? 'bg-warning' : 'bg-primary'}`} />
+                            <span className="text-foreground truncate">{e}</span>
+                          </div>
+                        ))}
                       </div>
                     </div>
-                    <div className="space-y-1.5 text-[10px]">
-                      <div className="flex items-center gap-1.5"><span className="w-2 h-2 rounded-sm bg-primary" /> Active</div>
-                      <div className="flex items-center gap-1.5"><span className="w-2 h-2 rounded-sm bg-primary/30" /> Planning</div>
-                      <div className="flex items-center gap-1.5"><span className="w-2 h-2 rounded-sm bg-muted" /> Completed</div>
-                    </div>
-                  </div>
-                </div>
-                <div className="rounded-xl border border-border/15 bg-background p-3">
-                  <p className="text-xs font-semibold text-foreground mb-3">Tasks breakdown</p>
-                  <div className="flex items-end gap-[3px] h-16">
-                    {[12, 18, 8, 22, 15, 20, 10, 19, 14, 21, 11, 17].map((h, i) => (
-                      <div key={i} className="flex-1 flex flex-col gap-[2px]">
-                        <div className="bg-primary/20 rounded-t-sm" style={{ height: `${h * 1.5}px` }} />
-                        <div className="bg-primary/50 rounded-b-sm" style={{ height: `${h}px` }} />
-                      </div>
-                    ))}
                   </div>
                 </div>
               </div>
             </div>
           </div>
+
+          {/* Base / hinge */}
+          <div className="relative h-3 bg-gradient-to-b from-neutral-700 via-neutral-600 to-neutral-800 rounded-b-[20px] mx-auto"
+               style={{ width: '108%', marginLeft: '-4%' }}>
+            <div className="absolute top-0 left-1/2 -translate-x-1/2 w-24 h-1.5 rounded-b-md bg-neutral-900" />
+          </div>
+          {/* Reflection */}
+          <div className="absolute -bottom-12 left-1/4 right-1/4 h-12 bg-gradient-to-b from-background/10 to-transparent blur-2xl rounded-full" />
         </div>
       </div>
     </section>
