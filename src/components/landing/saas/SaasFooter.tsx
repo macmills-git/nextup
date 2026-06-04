@@ -41,25 +41,26 @@ const SaasFooter = () => {
         </div>
 
         {/* Spacer for oversized wordmark */}
-        <div aria-hidden className="h-[14vw] md:h-[16vw]" />
+        <div aria-hidden className="h-[22vw] md:h-[24vw]" />
       </div>
 
-      {/* Oversized cropped wordmark — sized to fit viewport */}
+      {/* Oversized wordmark — spans full viewport width */}
       <div
         aria-hidden
-        className="pointer-events-none absolute left-0 right-0 bottom-2 md:bottom-4 flex justify-center z-0 select-none px-2"
+        className="pointer-events-none absolute left-0 right-0 bottom-0 flex justify-center z-0 select-none overflow-hidden"
       >
         <span
-          className="block whitespace-nowrap font-black text-foreground leading-[0.8]"
+          className="block whitespace-nowrap font-black text-foreground leading-[0.78]"
           style={{
-            fontSize: "clamp(3rem, 22vw, 18rem)",
-            letterSpacing: "-0.06em",
+            fontSize: "30vw",
+            letterSpacing: "-0.08em",
             fontFamily: "'Space Grotesk', 'Inter Tight', 'Helvetica Now Display', sans-serif",
           }}
         >
           NESTED
         </span>
       </div>
+
     </footer>
   );
 };
