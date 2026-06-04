@@ -65,7 +65,7 @@ const SaasMacBookShowcase = () => {
         </div>
 
         {/* MacBook frame */}
-        <div className="macbook-wrap max-w-5xl mx-auto relative" style={{ perspective: 1500 }}>
+        <div className="macbook-wrap max-w-5xl mx-auto relative" style={{ perspective: 1500, transform: 'scale(0.8)', transformOrigin: 'top center' }}>
           {/* Lid / screen */}
           <div className="relative rounded-t-[18px] bg-neutral-800 p-[10px] pb-[14px] shadow-[0_30px_80px_-20px_rgba(0,0,0,0.7)]">
             {/* Notch */}
