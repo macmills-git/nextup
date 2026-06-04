@@ -120,6 +120,16 @@ const SaasBentoFeatures = () => {
             </div>
           </div>
         </div>
+      </div>
+      </div>
+
+      {/* ============ BLOCK 2: Making Planners 10x faster — Mint/sage canvas with diagonal pinstripe ============ */}
+      <div className="relative overflow-hidden py-24 border-b border-border/40"
+           style={{ background: 'linear-gradient(160deg, hsl(160 30% 96%) 0%, hsl(180 25% 94%) 100%)' }}>
+        <div className="pointer-events-none absolute inset-0 opacity-[0.05]"
+             style={{ backgroundImage: 'repeating-linear-gradient(45deg, hsl(var(--foreground)) 0 1px, transparent 1px 14px)' }} />
+        <div className="pointer-events-none absolute top-0 right-1/4 w-[420px] h-[420px] rounded-full bg-emerald-300/20 blur-[120px]" />
+      <div className="container mx-auto px-4 lg:px-8 relative z-10">
 
         {/* Section 2: "Making Planners 10x faster" - 3x2 grid with center mockup */}
         <div className="text-center mb-16">
