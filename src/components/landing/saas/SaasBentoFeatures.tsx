@@ -411,7 +411,9 @@ const SaasBentoFeatures = () => {
           </div>
         </div>
       </div>
+      </div>
     </section>
+
   );
 };
 
