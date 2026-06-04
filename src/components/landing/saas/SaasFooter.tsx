@@ -41,19 +41,19 @@ const SaasFooter = () => {
         </div>
 
         {/* Spacer for oversized wordmark */}
-        <div aria-hidden className="h-[18vw] md:h-[22vw]" />
+        <div aria-hidden className="h-[14vw] md:h-[16vw]" />
       </div>
 
-      {/* Oversized cropped wordmark */}
+      {/* Oversized cropped wordmark — sized to fit viewport */}
       <div
         aria-hidden
-        className="pointer-events-none absolute left-0 right-0 -bottom-[8vw] md:-bottom-[10vw] flex justify-center z-0 select-none"
+        className="pointer-events-none absolute left-0 right-0 bottom-2 md:bottom-4 flex justify-center z-0 select-none px-2"
       >
         <span
           className="block whitespace-nowrap font-black text-foreground leading-[0.8]"
           style={{
-            fontSize: "42vw",
-            letterSpacing: "-0.08em",
+            fontSize: "clamp(3rem, 22vw, 18rem)",
+            letterSpacing: "-0.06em",
             fontFamily: "'Space Grotesk', 'Inter Tight', 'Helvetica Now Display', sans-serif",
           }}
         >
