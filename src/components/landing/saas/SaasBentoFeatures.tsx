@@ -19,7 +19,14 @@ const SaasBentoFeatures = () => {
   }, []);
 
   return (
-    <section ref={ref} className="py-24 bg-background relative">
+    <section ref={ref} className="relative">
+      {/* ============ BLOCK 1: Built for Event Intelligence — Warm cream canvas with dotted grid + coral glow ============ */}
+      <div className="relative overflow-hidden py-24 border-y border-border/40"
+           style={{ background: 'linear-gradient(180deg, hsl(35 45% 97%) 0%, hsl(28 50% 95%) 100%)' }}>
+        <div className="pointer-events-none absolute inset-0 opacity-[0.06]"
+             style={{ backgroundImage: 'radial-gradient(circle, hsl(var(--foreground)) 1px, transparent 1px)', backgroundSize: '28px 28px' }} />
+        <div className="pointer-events-none absolute -top-40 -left-40 w-[520px] h-[520px] rounded-full bg-primary/15 blur-[120px]" />
+        <div className="pointer-events-none absolute -bottom-40 -right-40 w-[520px] h-[620px] rounded-full bg-primary/10 blur-[140px]" />
       <div className="container mx-auto px-4 lg:px-8 relative z-10">
 
         {/* Section 1: "Built for Event Intelligence" - two-column layout */}
@@ -32,6 +39,7 @@ const SaasBentoFeatures = () => {
             Build, test and deploy event workflows with a powerful visual interface designed for planning teams
           </p>
         </div>
+
 
         <div className="max-w-6xl mx-auto mb-24">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-px border border-border/15 rounded-2xl overflow-hidden bg-border/10">
@@ -112,6 +120,16 @@ const SaasBentoFeatures = () => {
             </div>
           </div>
         </div>
+      </div>
+      </div>
+
+      {/* ============ BLOCK 2: Making Planners 10x faster — Mint/sage canvas with diagonal pinstripe ============ */}
+      <div className="relative overflow-hidden py-24 border-b border-border/40"
+           style={{ background: 'linear-gradient(160deg, hsl(160 30% 96%) 0%, hsl(180 25% 94%) 100%)' }}>
+        <div className="pointer-events-none absolute inset-0 opacity-[0.05]"
+             style={{ backgroundImage: 'repeating-linear-gradient(45deg, hsl(var(--foreground)) 0 1px, transparent 1px 14px)' }} />
+        <div className="pointer-events-none absolute top-0 right-1/4 w-[420px] h-[420px] rounded-full bg-emerald-300/20 blur-[120px]" />
+      <div className="container mx-auto px-4 lg:px-8 relative z-10">
 
         {/* Section 2: "Making Planners 10x faster" - 3x2 grid with center mockup */}
         <div className="text-center mb-16">
@@ -203,9 +221,23 @@ const SaasBentoFeatures = () => {
             );
           })}
         </div>
+      </div>
+      </div>
+
+      {/* ============ BLOCK 3: Native Tools Integration — Blueprint indigo grid ============ */}
+      <div className="relative overflow-hidden py-24 border-b border-border/40"
+           style={{ background: 'linear-gradient(180deg, hsl(220 40% 97%) 0%, hsl(225 45% 95%) 100%)' }}>
+        <div className="pointer-events-none absolute inset-0 opacity-[0.07]"
+             style={{
+               backgroundImage: 'linear-gradient(hsl(220 50% 30%) 1px, transparent 1px), linear-gradient(90deg, hsl(220 50% 30%) 1px, transparent 1px)',
+               backgroundSize: '40px 40px'
+             }} />
+        <div className="pointer-events-none absolute -top-20 left-1/3 w-[480px] h-[480px] rounded-full bg-indigo-300/20 blur-[140px]" />
+      <div className="container mx-auto px-4 lg:px-8 relative z-10">
 
         {/* Section 3: Native Tools Integration */}
-        <div className="max-w-6xl mx-auto mb-24">
+        <div className="max-w-6xl mx-auto">
+
           <div className="border border-border/15 rounded-2xl overflow-hidden bg-card">
             <div className="p-8 md:p-10 border-b border-border/10">
               <div className="flex items-center gap-2.5 mb-3">
@@ -272,9 +304,21 @@ const SaasBentoFeatures = () => {
             </div>
           </div>
         </div>
+      </div>
+      </div>
+
+      {/* ============ BLOCK 4: AI & Workflow Builder — Peach→Lavender gradient mesh ============ */}
+      <div className="relative overflow-hidden py-24"
+           style={{ background: 'linear-gradient(135deg, hsl(20 80% 95%) 0%, hsl(280 50% 95%) 100%)' }}>
+        <div className="pointer-events-none absolute -top-32 -right-20 w-[600px] h-[600px] rounded-full bg-primary/15 blur-[140px]" />
+        <div className="pointer-events-none absolute -bottom-32 -left-20 w-[600px] h-[600px] rounded-full bg-purple-300/25 blur-[140px]" />
+        <div className="pointer-events-none absolute inset-0 opacity-[0.04]"
+             style={{ backgroundImage: 'radial-gradient(circle, hsl(var(--foreground)) 1px, transparent 1px)', backgroundSize: '22px 22px' }} />
+      <div className="container mx-auto px-4 lg:px-8 relative z-10">
 
         {/* Section 4: LLM Model Selector & Text to workflow builder */}
         <div className="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-px bg-border/10 border border-border/15 rounded-2xl overflow-hidden">
+
           {/* LLM Model Selector */}
           <div className="feat-anim bg-card p-8 md:p-10">
             <div className="flex items-center gap-2.5 mb-3">
@@ -367,7 +411,9 @@ const SaasBentoFeatures = () => {
           </div>
         </div>
       </div>
+      </div>
     </section>
+
   );
 };
 
