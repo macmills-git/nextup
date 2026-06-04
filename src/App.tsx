@@ -7,6 +7,7 @@ import ScrollToTop from "./components/ScrollToTop";
 import { AuthProvider, useAuth } from "./contexts/AuthContext";
 import ProtectedRoute from "./components/ProtectedRoute";
 import { EventStoreProvider } from "@/contexts/EventStore";
+import PageTransition from "./components/PageTransition";
 import Index from "./pages/Index";
 import SignIn from "./pages/SignIn";
 import SignUp from "./pages/SignUp";
@@ -39,6 +40,7 @@ const App = () => (
         <Sonner />
         <BrowserRouter>
           <ScrollToTop />
+          <PageTransition>
           <Routes>
             <Route path="/" element={<Index />} />
             <Route path="/signin" element={<SignIn />} />
@@ -57,6 +59,7 @@ const App = () => (
             <Route path="/vendor/*" element={<ProtectedRoute><VendorDashboard /></ProtectedRoute>} />
             <Route path="*" element={<NotFound />} />
           </Routes>
+          </PageTransition>
         </BrowserRouter>
       </TooltipProvider>
       </EventStoreProvider>

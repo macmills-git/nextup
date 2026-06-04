@@ -29,8 +29,16 @@ const SaasMacBookShowcase = () => {
         scrollTrigger: { trigger: ref.current, start: 'top 80%' }
       }
     );
-    // Subtle float
-    gsap.to(macbook, { y: -10, duration: 4, ease: 'sine.inOut', yoyo: true, repeat: -1 });
+    // Continuous tilt / swing — rotates side-to-side and gentle bob
+    gsap.to(macbook, {
+      rotateY: 6, rotateZ: 1.2, y: -14,
+      duration: 3.6, ease: 'sine.inOut', yoyo: true, repeat: -1,
+      transformOrigin: '50% 100%',
+    });
+    gsap.to(macbook, {
+      rotateY: -6, rotateZ: -1.2,
+      duration: 3.6, ease: 'sine.inOut', yoyo: true, repeat: -1, delay: 1.8,
+    });
   }, []);
 
   return (
@@ -57,6 +65,7 @@ const SaasMacBookShowcase = () => {
         </div>
 
         {/* MacBook frame */}
+        <div className="mx-auto" style={{ maxWidth: '80%' }}>
         <div className="macbook-wrap max-w-5xl mx-auto relative" style={{ perspective: 1500 }}>
           {/* Lid / screen */}
           <div className="relative rounded-t-[18px] bg-neutral-800 p-[10px] pb-[14px] shadow-[0_30px_80px_-20px_rgba(0,0,0,0.7)]">
@@ -145,6 +154,7 @@ const SaasMacBookShowcase = () => {
           </div>
           {/* Reflection */}
           <div className="absolute -bottom-12 left-1/4 right-1/4 h-12 bg-gradient-to-b from-background/10 to-transparent blur-2xl rounded-full" />
+        </div>
         </div>
       </div>
     </section>
