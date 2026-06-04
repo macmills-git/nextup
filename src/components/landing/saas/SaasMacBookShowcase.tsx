@@ -29,8 +29,16 @@ const SaasMacBookShowcase = () => {
         scrollTrigger: { trigger: ref.current, start: 'top 80%' }
       }
     );
-    // Subtle float
-    gsap.to(macbook, { y: -10, duration: 4, ease: 'sine.inOut', yoyo: true, repeat: -1 });
+    // Continuous tilt / swing — rotates side-to-side and gentle bob
+    gsap.to(macbook, {
+      rotateY: 6, rotateZ: 1.2, y: -14,
+      duration: 3.6, ease: 'sine.inOut', yoyo: true, repeat: -1,
+      transformOrigin: '50% 100%',
+    });
+    gsap.to(macbook, {
+      rotateY: -6, rotateZ: -1.2,
+      duration: 3.6, ease: 'sine.inOut', yoyo: true, repeat: -1, delay: 1.8,
+    });
   }, []);
 
   return (
