@@ -26,37 +26,23 @@ const Index = () => {
       {/* MacBook showcase — full dark inversion */}
       <SaasMacBookShowcase />
 
-      {/* Bento "Built for Event Intelligence" / "Making Planners 10x faster"
-          — warm cream tinted canvas with dotted grid + radial coral glow */}
-      <div className="relative overflow-hidden border-y border-border/40"
-           style={{ background: 'linear-gradient(180deg, hsl(var(--background)) 0%, hsl(35 40% 96%) 50%, hsl(var(--background)) 100%)' }}>
-        <div className="pointer-events-none absolute inset-0 opacity-[0.05]"
-             style={{
-               backgroundImage: 'radial-gradient(circle, hsl(var(--foreground)) 1px, transparent 1px)',
-               backgroundSize: '28px 28px',
-             }} />
-        <div className="pointer-events-none absolute -top-40 -left-40 w-[520px] h-[520px] rounded-full bg-primary/10 blur-[120px]" />
-        <div className="pointer-events-none absolute -bottom-40 -right-40 w-[520px] h-[620px] rounded-full bg-primary/10 blur-[140px]" />
-        <div className="relative">
-          <SaasBentoFeatures />
-        </div>
-      </div>
+      {/* Bento sections own their distinct backgrounds internally */}
+      <SaasBentoFeatures />
 
-      {/* Trusted worldwide — deep ink band with concentric rings + grid */}
-      <div className="relative overflow-hidden bg-foreground text-background">
-        <div className="pointer-events-none absolute inset-0 opacity-[0.08]"
+      {/* Trusted worldwide — Coral aurora band with concentric topography */}
+      <div className="relative overflow-hidden border-y border-border/40"
+           style={{ background: 'linear-gradient(180deg, hsl(12 80% 96%) 0%, hsl(20 70% 92%) 50%, hsl(35 60% 95%) 100%)' }}>
+        <div className="pointer-events-none absolute inset-0 opacity-[0.10]"
              style={{
-               backgroundImage: 'linear-gradient(hsl(var(--background)/0.6) 1px, transparent 1px), linear-gradient(90deg, hsl(var(--background)/0.6) 1px, transparent 1px)',
-               backgroundSize: '80px 80px',
+               backgroundImage: 'repeating-radial-gradient(circle at 50% 120%, hsl(var(--primary)) 0 1px, transparent 1px 60px)',
              }} />
-        <div className="pointer-events-none absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] rounded-full border border-background/10" />
-        <div className="pointer-events-none absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[560px] h-[560px] rounded-full border border-background/10" />
-        <div className="pointer-events-none absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[320px] h-[320px] rounded-full border border-background/10" />
-        <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-background/10" />
-        <div className="relative [&_*]:!text-background/90 [&_.text-foreground]:!text-background [&_.text-muted-foreground]:!text-background/60 [&_.bg-card]:!bg-background/[0.04] [&_.border-border\/15]:!border-background/10 [&_.bg-border\/10]:!bg-background/5">
+        <div className="pointer-events-none absolute -top-40 left-1/2 -translate-x-1/2 w-[900px] h-[500px] rounded-[50%] bg-primary/25 blur-[120px]" />
+        <div className="pointer-events-none absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-primary/40 to-transparent" />
+        <div className="relative">
           <SaasWorldMapSection />
         </div>
       </div>
+
 
       {/* Testimonials — clean surface */}
       <div className="bg-background border-t border-border/40">
