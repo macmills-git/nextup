@@ -304,9 +304,21 @@ const SaasBentoFeatures = () => {
             </div>
           </div>
         </div>
+      </div>
+      </div>
+
+      {/* ============ BLOCK 4: AI & Workflow Builder — Peach→Lavender gradient mesh ============ */}
+      <div className="relative overflow-hidden py-24"
+           style={{ background: 'linear-gradient(135deg, hsl(20 80% 95%) 0%, hsl(280 50% 95%) 100%)' }}>
+        <div className="pointer-events-none absolute -top-32 -right-20 w-[600px] h-[600px] rounded-full bg-primary/15 blur-[140px]" />
+        <div className="pointer-events-none absolute -bottom-32 -left-20 w-[600px] h-[600px] rounded-full bg-purple-300/25 blur-[140px]" />
+        <div className="pointer-events-none absolute inset-0 opacity-[0.04]"
+             style={{ backgroundImage: 'radial-gradient(circle, hsl(var(--foreground)) 1px, transparent 1px)', backgroundSize: '22px 22px' }} />
+      <div className="container mx-auto px-4 lg:px-8 relative z-10">
 
         {/* Section 4: LLM Model Selector & Text to workflow builder */}
         <div className="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-px bg-border/10 border border-border/15 rounded-2xl overflow-hidden">
+
           {/* LLM Model Selector */}
           <div className="feat-anim bg-card p-8 md:p-10">
             <div className="flex items-center gap-2.5 mb-3">
