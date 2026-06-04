@@ -59,6 +59,7 @@ const App = () => (
             <Route path="/vendor/*" element={<ProtectedRoute><VendorDashboard /></ProtectedRoute>} />
             <Route path="*" element={<NotFound />} />
           </Routes>
+          </PageTransition>
         </BrowserRouter>
       </TooltipProvider>
       </EventStoreProvider>
