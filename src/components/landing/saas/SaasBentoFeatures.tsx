@@ -221,9 +221,23 @@ const SaasBentoFeatures = () => {
             );
           })}
         </div>
+      </div>
+      </div>
+
+      {/* ============ BLOCK 3: Native Tools Integration — Blueprint indigo grid ============ */}
+      <div className="relative overflow-hidden py-24 border-b border-border/40"
+           style={{ background: 'linear-gradient(180deg, hsl(220 40% 97%) 0%, hsl(225 45% 95%) 100%)' }}>
+        <div className="pointer-events-none absolute inset-0 opacity-[0.07]"
+             style={{
+               backgroundImage: 'linear-gradient(hsl(220 50% 30%) 1px, transparent 1px), linear-gradient(90deg, hsl(220 50% 30%) 1px, transparent 1px)',
+               backgroundSize: '40px 40px'
+             }} />
+        <div className="pointer-events-none absolute -top-20 left-1/3 w-[480px] h-[480px] rounded-full bg-indigo-300/20 blur-[140px]" />
+      <div className="container mx-auto px-4 lg:px-8 relative z-10">
 
         {/* Section 3: Native Tools Integration */}
-        <div className="max-w-6xl mx-auto mb-24">
+        <div className="max-w-6xl mx-auto">
+
           <div className="border border-border/15 rounded-2xl overflow-hidden bg-card">
             <div className="p-8 md:p-10 border-b border-border/10">
               <div className="flex items-center gap-2.5 mb-3">
