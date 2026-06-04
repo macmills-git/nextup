@@ -19,7 +19,14 @@ const SaasBentoFeatures = () => {
   }, []);
 
   return (
-    <section ref={ref} className="py-24 bg-background relative">
+    <section ref={ref} className="relative">
+      {/* ============ BLOCK 1: Built for Event Intelligence — Warm cream canvas with dotted grid + coral glow ============ */}
+      <div className="relative overflow-hidden py-24 border-y border-border/40"
+           style={{ background: 'linear-gradient(180deg, hsl(35 45% 97%) 0%, hsl(28 50% 95%) 100%)' }}>
+        <div className="pointer-events-none absolute inset-0 opacity-[0.06]"
+             style={{ backgroundImage: 'radial-gradient(circle, hsl(var(--foreground)) 1px, transparent 1px)', backgroundSize: '28px 28px' }} />
+        <div className="pointer-events-none absolute -top-40 -left-40 w-[520px] h-[520px] rounded-full bg-primary/15 blur-[120px]" />
+        <div className="pointer-events-none absolute -bottom-40 -right-40 w-[520px] h-[620px] rounded-full bg-primary/10 blur-[140px]" />
       <div className="container mx-auto px-4 lg:px-8 relative z-10">
 
         {/* Section 1: "Built for Event Intelligence" - two-column layout */}
@@ -32,6 +39,7 @@ const SaasBentoFeatures = () => {
             Build, test and deploy event workflows with a powerful visual interface designed for planning teams
           </p>
         </div>
+
 
         <div className="max-w-6xl mx-auto mb-24">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-px border border-border/15 rounded-2xl overflow-hidden bg-border/10">
