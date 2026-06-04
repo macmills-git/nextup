@@ -155,6 +155,7 @@ const SaasMacBookShowcase = () => {
           {/* Reflection */}
           <div className="absolute -bottom-12 left-1/4 right-1/4 h-12 bg-gradient-to-b from-background/10 to-transparent blur-2xl rounded-full" />
         </div>
+        </div>
       </div>
     </section>
   );
