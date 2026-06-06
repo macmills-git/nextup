@@ -1,6 +1,7 @@
 import { useEffect, useRef } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { LayoutGrid, Workflow, Store, Layers, Brain, Ticket, Megaphone, MessageSquare, Bell, Settings, Calendar, TrendingUp, Clock, Sparkles } from "lucide-react";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -29,7 +30,6 @@ const SaasMacBookShowcase = () => {
         scrollTrigger: { trigger: ref.current, start: 'top 80%' }
       }
     );
-    // Continuous tilt / swing — rotates side-to-side and gentle bob
     gsap.to(macbook, {
       rotateY: 6, rotateZ: 1.2, y: -14,
       duration: 3.6, ease: 'sine.inOut', yoyo: true, repeat: -1,
@@ -41,9 +41,32 @@ const SaasMacBookShowcase = () => {
     });
   }, []);
 
+  const stats = [
+    { icon: Calendar, value: "52", delta: "+12%", deltaTone: "text-emerald-500", label: "Active Events" },
+    { icon: TrendingUp, value: "96.7%", delta: "4%", deltaTone: "text-emerald-500", label: "Task success rate" },
+    { icon: Clock, value: "12.4s", delta: "27%", deltaTone: "text-rose-500", label: "Average execution time" },
+    { icon: Sparkles, value: "GPT-4o", delta: "", deltaTone: "", label: "Most used model" },
+  ];
+
+  const workflows = [
+    { name: "Akolo Studio", cat: "Photography", catTone: "bg-rose-50 text-rose-600", status: "Running", dot: "bg-emerald-500", latency: "8.2s", last: "14 min ago" },
+    { name: "Bake It Right", cat: "Catering", catTone: "bg-stone-100 text-stone-700", status: "Paused", dot: "bg-amber-500", latency: "11.4s", last: "32 min ago", muted: true },
+    { name: "Prime Audio", cat: "Audio/Visual", catTone: "bg-sky-50 text-sky-600", status: "Running", dot: "bg-emerald-500", latency: "6.7s", last: "1h ago" },
+    { name: "Event Bloom", cat: "Decoration", catTone: "bg-violet-50 text-violet-600", status: "Running", dot: "bg-emerald-500", latency: "4.2s", last: "2h ago" },
+  ];
+
+  const agents = [
+    { label: "Venue & Space", pct: "32.1%", color: "bg-rose-400" },
+    { label: "Catering & Food", pct: "19.6%", color: "bg-orange-400" },
+    { label: "Decoration", pct: "18.6%", color: "bg-amber-300" },
+    { label: "Photography", pct: "15.3%", color: "bg-rose-300" },
+    { label: "Entertainment", pct: "14.3%", color: "bg-stone-300" },
+  ];
+
+  const bars = [40, 30, 50, 70, 60, 80, 40, 90, 60, 50, 70, 30];
+
   return (
     <section ref={ref} className="relative py-32 overflow-hidden bg-foreground text-background">
-      {/* Background grid */}
       <div className="absolute inset-0 opacity-[0.06]" style={{
         backgroundImage: 'linear-gradient(hsl(var(--background)/0.5) 1px, transparent 1px), linear-gradient(90deg, hsl(var(--background)/0.5) 1px, transparent 1px)',
         backgroundSize: '60px 60px'
@@ -51,7 +74,6 @@ const SaasMacBookShowcase = () => {
       <div className="absolute inset-0 bg-gradient-to-b from-foreground via-foreground to-foreground/95" />
 
       <div className="container mx-auto px-4 lg:px-8 relative z-10">
-        {/* Foreground bold text */}
         <div className="text-center mb-16 max-w-4xl mx-auto">
           <p className="fg-text text-xs uppercase tracking-[0.3em] text-background/60 mb-6">Mission Control</p>
           <h2 className="fg-text font-bold tracking-[-0.04em] leading-[0.95] text-background"
@@ -64,81 +86,96 @@ const SaasMacBookShowcase = () => {
           </p>
         </div>
 
-        {/* MacBook frame */}
-        <div className="mx-auto" style={{ maxWidth: '80%' }}>
+        {/* MacBook frame — shrunk by additional 15% (now 68% width) */}
+        <div className="mx-auto" style={{ maxWidth: '68%' }}>
         <div className="macbook-wrap max-w-5xl mx-auto relative" style={{ perspective: 1500 }}>
-          {/* Lid / screen */}
           <div className="relative rounded-t-[18px] bg-neutral-800 p-[10px] pb-[14px] shadow-[0_30px_80px_-20px_rgba(0,0,0,0.7)]">
-            {/* Notch */}
             <div className="absolute top-0 left-1/2 -translate-x-1/2 w-24 h-3 bg-neutral-900 rounded-b-lg z-10" />
-            <div className="macbook-screen-inner relative aspect-[16/10] rounded-[10px] overflow-hidden bg-card border border-neutral-700">
-              {/* Browser-like dashboard */}
-              <div className="h-full flex flex-col">
-                <div className="flex items-center justify-between px-4 py-2 border-b border-border/30 bg-background">
-                  <div className="flex items-center gap-1.5">
-                    <span className="w-2.5 h-2.5 rounded-full bg-destructive/60" />
-                    <span className="w-2.5 h-2.5 rounded-full bg-warning/60" />
-                    <span className="w-2.5 h-2.5 rounded-full bg-success/60" />
+            <div className="macbook-screen-inner relative aspect-[16/10] rounded-[10px] overflow-hidden bg-white border border-neutral-700">
+              <div className="h-full flex bg-stone-50 text-stone-900">
+                {/* Sidebar */}
+                <div className="w-10 border-r border-stone-200 bg-white flex flex-col items-center py-3 gap-3">
+                  <div className="w-6 h-6 rounded bg-stone-900 flex items-center justify-center">
+                    <LayoutGrid className="w-3 h-3 text-white" />
                   </div>
-                  <span className="text-[10px] text-muted-foreground font-medium">nested.app/dashboard</span>
-                  <span className="w-5 h-5 rounded-full bg-muted" />
+                  {[Workflow, Store, Layers, Brain, Ticket, Megaphone, MessageSquare, Bell, Settings].map((Icon, i) => (
+                    <Icon key={i} className="w-3 h-3 text-stone-400" />
+                  ))}
                 </div>
 
-                <div className="flex-1 flex">
-                  <div className="w-44 border-r border-border/30 p-3 hidden md:block bg-card">
-                    <div className="space-y-1">
-                      {[
-                        { name: 'Dashboard', active: true },
-                        { name: 'Projects' }, { name: 'Vendors' }, { name: 'Messages' },
-                        { name: 'Team' }, { name: 'Analytics' }, { name: 'Settings' },
-                      ].map((item) => (
-                        <div key={item.name}
-                          className={`flex items-center gap-2 px-2.5 py-1.5 rounded-lg text-[11px] font-medium ${item.active ? 'bg-primary/10 text-primary' : 'text-muted-foreground'}`}>
-                          <span className="w-1 h-1 rounded-full bg-current opacity-60" />
-                          {item.name}
+                {/* Main */}
+                <div className="flex-1 p-3 overflow-hidden space-y-3">
+                  {/* Stat cards */}
+                  <div className="grid grid-cols-4 gap-2">
+                    {stats.map((s, i) => (
+                      <div key={i} className="rounded-lg border border-stone-200 bg-white p-2.5">
+                        <s.icon className="w-3 h-3 text-stone-400 mb-1" />
+                        <div className="flex items-baseline gap-1">
+                          <p className="text-[13px] font-bold leading-none text-stone-900">{s.value}</p>
+                          {s.delta && <span className={`text-[8px] font-semibold ${s.deltaTone}`}>{s.delta}</span>}
                         </div>
-                      ))}
-                    </div>
+                        <p className="text-[8px] text-stone-500 mt-1">{s.label}</p>
+                      </div>
+                    ))}
                   </div>
 
-                  <div className="flex-1 p-4 md:p-5 space-y-4 bg-background overflow-hidden">
-                    <div className="flex items-center justify-between">
-                      <p className="text-sm font-semibold text-foreground">Event Operations</p>
-                      <span className="text-[10px] px-2 py-0.5 rounded-full bg-success/10 text-success border border-success/30">All systems go</span>
+                  {/* Workflow monitor */}
+                  <div className="rounded-lg border border-stone-200 bg-white p-3">
+                    <p className="text-[10px] font-semibold text-stone-900 mb-2">Workflow monitor</p>
+                    <div className="grid grid-cols-[1.4fr_1fr_1fr_0.7fr_0.9fr] gap-1 text-[8px] text-stone-400 pb-1.5 border-b border-stone-100">
+                      <span>Vendor name</span><span>Category</span><span>Status</span><span>Latency</span><span>Last run</span>
                     </div>
+                    {workflows.map((w, i) => (
+                      <div key={i} className={`grid grid-cols-[1.4fr_1fr_1fr_0.7fr_0.9fr] gap-1 text-[9px] py-1.5 items-center ${w.muted ? 'bg-stone-50 -mx-3 px-3' : ''}`}>
+                        <span className="font-semibold text-stone-900">{w.name}</span>
+                        <span><span className={`px-1.5 py-0.5 rounded-full text-[8px] ${w.catTone}`}>{w.cat}</span></span>
+                        <span className="flex items-center gap-1 text-stone-700"><span className={`w-1 h-1 rounded-full ${w.dot}`} />{w.status}</span>
+                        <span className="text-stone-500">{w.latency}</span>
+                        <span className="text-stone-400">{w.last}</span>
+                      </div>
+                    ))}
+                  </div>
 
-                    <div className="grid grid-cols-4 gap-3">
-                      {[
-                        { value: '128', label: 'Active', accent: 'bg-primary' },
-                        { value: '96%', label: 'On track', accent: 'bg-success' },
-                        { value: '$1.2M', label: 'Budget', accent: 'bg-warning' },
-                        { value: '24', label: 'Vendors', accent: 'bg-foreground' },
-                      ].map((stat, i) => (
-                        <div key={i} className="rounded-xl border border-border/40 p-3 bg-card">
-                          <div className={`w-2 h-2 rounded-full ${stat.accent} mb-2`} />
-                          <p className="text-base md:text-lg font-bold text-foreground leading-none">{stat.value}</p>
-                          <p className="text-[10px] text-muted-foreground mt-1">{stat.label}</p>
+                  {/* Bottom row */}
+                  <div className="grid grid-cols-2 gap-2">
+                    <div className="rounded-lg border border-stone-200 bg-white p-2.5">
+                      <div className="flex items-center justify-between mb-2">
+                        <p className="text-[9px] font-semibold text-stone-900">Agents by status</p>
+                        <div className="flex gap-px text-[7px] rounded-full bg-stone-100 p-0.5">
+                          <span className="px-1.5 py-0.5 rounded-full bg-white shadow-sm">By Category</span>
+                          <span className="px-1.5 py-0.5 text-stone-400">By Employee</span>
                         </div>
-                      ))}
-                    </div>
-
-                    <div className="grid grid-cols-3 gap-3">
-                      <div className="col-span-2 rounded-xl border border-border/40 bg-card p-3">
-                        <div className="flex items-end gap-1 h-20">
-                          {[40, 55, 30, 70, 50, 80, 60, 90, 75, 65, 85, 95].map((h, i) => (
-                            <div key={i} className="flex-1 rounded-t bg-gradient-to-t from-primary/30 to-primary" style={{ height: `${h}%` }} />
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <div className="relative w-12 h-12 rounded-full" style={{
+                          background: 'conic-gradient(#fb7185 0 32%, #fb923c 32% 52%, #fcd34d 52% 70%, #fda4af 70% 86%, #d6d3d1 86% 100%)'
+                        }}>
+                          <div className="absolute inset-1.5 rounded-full bg-white flex flex-col items-center justify-center">
+                            <span className="text-[9px] font-bold text-stone-900 leading-none">87</span>
+                            <span className="text-[6px] text-stone-400">Total</span>
+                          </div>
+                        </div>
+                        <div className="flex-1 space-y-0.5">
+                          {agents.map((a, i) => (
+                            <div key={i} className="flex items-center text-[7px]">
+                              <span className={`w-1 h-1 rounded-full ${a.color} mr-1`} />
+                              <span className="text-stone-700 flex-1 truncate">{a.label}</span>
+                              <span className="text-stone-500">{a.pct}</span>
+                            </div>
                           ))}
                         </div>
-                        <p className="text-[10px] text-muted-foreground mt-2">Events booked · last 12 months</p>
                       </div>
-                      <div className="rounded-xl border border-border/40 bg-card p-3 space-y-2">
-                        <p className="text-[10px] font-semibold text-foreground">Upcoming</p>
-                        {['Corp Gala', 'Launch Party', 'Team Offsite'].map((e, i) => (
-                          <div key={i} className="flex items-center gap-2 text-[10px]">
-                            <span className={`w-1.5 h-1.5 rounded-full ${i === 0 ? 'bg-success' : i === 1 ? 'bg-warning' : 'bg-primary'}`} />
-                            <span className="text-foreground truncate">{e}</span>
-                          </div>
+                    </div>
+
+                    <div className="rounded-lg border border-stone-200 bg-white p-2.5">
+                      <p className="text-[9px] font-semibold text-stone-900 mb-2">Tasks breakdown</p>
+                      <div className="flex items-end gap-0.5 h-12">
+                        {bars.map((h, i) => (
+                          <div key={i} className="flex-1 rounded-t bg-rose-300" style={{ height: `${h}%` }} />
                         ))}
+                      </div>
+                      <div className="flex justify-between text-[6px] text-stone-400 mt-1">
+                        {['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'].map(m => <span key={m}>{m}</span>)}
                       </div>
                     </div>
                   </div>
@@ -147,12 +184,10 @@ const SaasMacBookShowcase = () => {
             </div>
           </div>
 
-          {/* Base / hinge */}
           <div className="relative h-3 bg-gradient-to-b from-neutral-700 via-neutral-600 to-neutral-800 rounded-b-[20px] mx-auto"
                style={{ width: '108%', marginLeft: '-4%' }}>
             <div className="absolute top-0 left-1/2 -translate-x-1/2 w-24 h-1.5 rounded-b-md bg-neutral-900" />
           </div>
-          {/* Reflection */}
           <div className="absolute -bottom-12 left-1/4 right-1/4 h-12 bg-gradient-to-b from-background/10 to-transparent blur-2xl rounded-full" />
         </div>
         </div>
