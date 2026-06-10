@@ -1,5 +1,6 @@
 import Navbar from "@/components/Navbar";
 import SaasHeroSection from "@/components/landing/saas/SaasHeroSection";
+import SaasFoundationHero from "@/components/landing/saas/SaasFoundationHero";
 import SaasLeadersCarousel from "@/components/landing/saas/SaasLeadersCarousel";
 import SaasMacBookShowcase from "@/components/landing/saas/SaasMacBookShowcase";
 import SaasBentoFeatures from "@/components/landing/saas/SaasBentoFeatures";
@@ -13,10 +14,8 @@ const Index = () => {
     <div className="min-h-screen relative z-[1] bg-secondary/40">
       <Navbar />
 
-      {/* Hero — clean light surface */}
-      <div className="bg-background">
-        <SaasHeroSection />
-      </div>
+      {/* NEW hero — Convix-style video + dashboard */}
+      <SaasHeroSection />
 
       {/* Leaders — muted contrast band */}
       <div className="bg-secondary border-y border-border/40">
@@ -25,6 +24,11 @@ const Index = () => {
 
       {/* MacBook showcase — full dark inversion */}
       <SaasMacBookShowcase />
+
+      {/* Foundation hero (moved below Mission Control) */}
+      <div className="bg-background">
+        <SaasFoundationHero />
+      </div>
 
       {/* Bento sections own their distinct backgrounds internally */}
       <SaasBentoFeatures />

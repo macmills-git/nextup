@@ -117,147 +117,155 @@ const SaasBentoFeatures = () => {
         </div>
       </div>
 
-      {/* ============ BLOCK 3: Native Tools Integration — Payer-style bold (big hero + floating cards) ============ */}
-      <div className="relative overflow-hidden py-28 border-b border-border/40"
-           style={{ background: 'linear-gradient(135deg, hsl(45 90% 92%) 0%, hsl(220 80% 90%) 100%)' }}>
-        <div className="pointer-events-none absolute inset-0 opacity-30"
-             style={{ background: 'radial-gradient(circle at 20% 80%, hsl(35 95% 75%) 0%, transparent 40%), radial-gradient(circle at 80% 20%, hsl(220 90% 75%) 0%, transparent 40%)' }} />
+      {/* ============ BLOCK 3: Native Tools Integration — Core features 3 gradient cards ============ */}
+      <div className="relative overflow-hidden py-28 bg-white border-b border-border/40" style={{ fontFamily: "Inter, sans-serif" }}>
+        <div className="max-w-[1100px] mx-auto px-5 text-center">
+          <p
+            className="feat-anim text-[0.75rem] font-semibold uppercase tracking-[1px] mb-4"
+            style={{
+              background: "linear-gradient(90deg, #F5C344, #F28482, #B567C2)",
+              WebkitBackgroundClip: "text",
+              WebkitTextFillColor: "transparent",
+              backgroundClip: "text",
+            }}
+          >
+            Native Tools Integration
+          </p>
+          <h2 className="feat-anim text-[2.25rem] md:text-[2.75rem] font-medium text-[#0f172a] mb-3" style={{ letterSpacing: "-0.02em" }}>
+            Built for Speed & Quality
+          </h2>
+          <p className="feat-anim text-[1.125rem] text-[#64748b] mb-[50px]" style={{ lineHeight: 1.5 }}>
+            Everything you need to go<br />from idea to integration
+          </p>
 
-        <div className="container mx-auto px-4 lg:px-8 relative z-10">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center max-w-6xl mx-auto">
-            <div>
-              <h2 className="feat-anim text-5xl md:text-7xl font-bold text-stone-900 leading-[0.95] tracking-tight mb-6">
-                Native Tools<br/>Integration
-              </h2>
-              <p className="feat-anim text-base text-stone-600 mb-8 max-w-md">
-                Connect your favorite tools — calendars, payments, communications — and let Nested sync everything in real time.
-              </p>
-              <div className="flex flex-wrap gap-3">
-                <a className="px-6 py-3 rounded-full bg-primary text-white text-sm font-semibold shadow-lg hover:scale-105 transition" href="#">Connect now</a>
-                <a className="px-6 py-3 rounded-full bg-white text-stone-900 text-sm font-semibold shadow-sm hover:scale-105 transition" href="#">View integrations</a>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            {/* Card 1 — Smart Prompt */}
+            <div className="feat-anim relative rounded-[20px] h-[340px] flex flex-col justify-end overflow-hidden text-left shadow-[0_10px_30px_-10px_rgba(0,0,0,0.1)]"
+                 style={{ background: "radial-gradient(circle at 50% 0%, #FFB347 0%, #F9ED96 30%, #F4F8F9 60%, #F4F8F9 100%)" }}>
+              <div className="absolute top-[30px] left-6 right-6 bg-white rounded-xl p-4 shadow-[0_8px_20px_rgba(0,0,0,0.04)] text-[0.8rem] text-[#475569]" style={{ lineHeight: 1.6 }}>
+                A bright, high-resolution{" "}
+                <span className="font-semibold" style={{ background: "linear-gradient(90deg, #FFB347, #E5A1F5)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>cheerful workflow</span>{" "}
+                that connects{" "}
+                <span className="font-semibold" style={{ background: "linear-gradient(90deg, #FFB347, #E5A1F5)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>every vendor</span>{" "}
+                <span className="font-semibold" style={{ background: "linear-gradient(90deg, #FFB347, #E5A1F5)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>centred around</span>{" "}
+                your event timeline
               </div>
+              <button className="absolute top-[180px] left-10 bg-white border border-black rounded-[20px] px-[14px] py-[5px] text-[0.75rem] font-semibold text-[#1e293b] shadow-[0_4px_15px_rgba(0,0,0,0.08)] inline-flex items-center gap-1.5">
+                Add more details <span style={{ color: "#a855f7", fontSize: "1rem" }}>✦</span>
+              </button>
+              <svg viewBox="0 0 24 24" className="absolute top-[205px] left-[110px] z-10" width={24} height={24}
+                   style={{ filter: "drop-shadow(0 4px 6px rgba(0,0,0,0.2))" }}>
+                <path d="M4 2L20 11L11 13L9 22L4 2Z" fill="#0f172a" stroke="#fff" strokeWidth={1} />
+              </svg>
+              <h3 className="relative z-[2] text-[1.05rem] font-semibold text-[#1e293b] p-6">Smart Workflow Suggestions</h3>
             </div>
 
-            {/* Right: Floating mockup cards */}
-            <div className="feat-anim relative h-[460px]">
-              {/* Central phone-like card */}
-              <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-56 rounded-[2rem] bg-white shadow-2xl border border-stone-200 p-5">
-                <div className="flex items-center justify-between mb-3">
-                  <div className="w-8 h-8 rounded-full bg-primary/20" />
-                  <span className="text-[10px] text-stone-500">November</span>
-                </div>
-                <p className="text-[10px] text-stone-400">Active Events</p>
-                <p className="text-2xl font-bold text-stone-900">52</p>
-                <div className="mt-3 space-y-2">
-                  <div className="flex justify-between text-[10px]"><span className="text-stone-500">Vendors synced</span><span className="font-semibold">24</span></div>
-                  <div className="flex justify-between text-[10px]"><span className="text-stone-500">Tasks done</span><span className="font-semibold">187</span></div>
-                </div>
-                <button className="w-full mt-4 py-2 rounded-full bg-primary text-white text-[11px] font-semibold">Sync all</button>
+            {/* Card 2 — API Access */}
+            <div className="feat-anim relative rounded-[20px] h-[340px] flex flex-col justify-end overflow-hidden text-left shadow-[0_10px_30px_-10px_rgba(0,0,0,0.1)]"
+                 style={{ background: "radial-gradient(circle at 50% 0%, #E5A1F5 0%, #F8ACA0 30%, #F4F8F9 60%, #F4F8F9 100%)" }}>
+              <div className="absolute top-0 left-0 right-0 bottom-[70px] flex items-center justify-center px-6">
+                <img src="https://pub-f170a2592d2c4a1485466404c36807be.r2.dev/viktor/network.svg" alt="API network"
+                     className="w-full object-contain mt-5" style={{ height: 180 }} />
               </div>
-
-              {/* Floating chip cards */}
-              <div className="absolute top-4 right-0 bg-white rounded-full shadow-lg pl-2 pr-4 py-2 flex items-center gap-2">
-                <span className="w-6 h-6 rounded-full bg-emerald-100 flex items-center justify-center text-xs">✓</span>
-                <span className="text-xs font-semibold text-stone-900">Secure Sync</span>
-              </div>
-              <div className="absolute top-1/3 left-0 bg-white rounded-2xl shadow-lg px-3 py-2 flex items-center gap-2">
-                <div className="flex -space-x-1">
-                  <div className="w-5 h-5 rounded-full bg-amber-300 border-2 border-white" />
-                  <div className="w-5 h-5 rounded-full bg-rose-300 border-2 border-white" />
-                  <div className="w-5 h-5 rounded-full bg-violet-300 border-2 border-white" />
-                </div>
-                <span className="text-xs font-semibold text-stone-900">12K+</span>
-              </div>
-              <div className="absolute bottom-12 left-4 bg-white rounded-full shadow-lg pl-2 pr-4 py-2 flex items-center gap-2">
-                <span className="w-6 h-6 rounded-full bg-emerald-500 text-white flex items-center justify-center text-[10px]">✓</span>
-                <span className="text-xs font-semibold text-stone-900">Connected</span>
-              </div>
-              <div className="absolute bottom-4 right-4 bg-white rounded-full shadow-lg pl-2 pr-4 py-2 flex items-center gap-2">
-                <span className="w-6 h-6 rounded-full bg-primary text-white flex items-center justify-center text-[10px]">📱</span>
-                <span className="text-xs font-semibold text-stone-900">One App for All</span>
-              </div>
+              <h3 className="relative z-[2] text-[1.05rem] font-semibold text-[#1e293b] p-6">API Access</h3>
             </div>
-          </div>
 
-          {/* Bottom feature strip */}
-          <div className="max-w-6xl mx-auto mt-16 grid grid-cols-1 md:grid-cols-3 gap-4">
-            {[
-              { icon: Shield, title: "One-Click Auth", desc: "SSO and role-based access in seconds." },
-              { icon: RefreshCw, title: "Realtime Sync", desc: "Every change replicates across every tool." },
-              { icon: Code2, title: "Custom Integrations", desc: "Open API and webhooks for any stack." },
-            ].map((item, i) => (
-              <div key={i} className="feat-anim bg-white/80 backdrop-blur-sm rounded-2xl p-6 border border-white">
-                <item.icon className="w-5 h-5 text-primary mb-3" />
-                <h4 className="text-sm font-semibold text-stone-900 mb-1.5">{item.title}</h4>
-                <p className="text-[13px] text-stone-500 leading-relaxed">{item.desc}</p>
+            {/* Card 3 — Project Library */}
+            <div className="feat-anim relative rounded-[20px] h-[340px] flex flex-col justify-end overflow-hidden text-left shadow-[0_10px_30px_-10px_rgba(0,0,0,0.1)]"
+                 style={{ background: "radial-gradient(circle at 50% 0%, #F9ED96 0%, #E5A1F5 30%, #F4F8F9 60%, #F4F8F9 100%)" }}>
+              <div className="absolute inset-0"
+                   style={{
+                     backgroundImage:
+                       "linear-gradient(rgba(255,255,255,0.8) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.8) 1px, transparent 1px)",
+                     backgroundSize: "16px 16px",
+                     WebkitMaskImage: "radial-gradient(circle at center top, black 0%, transparent 80%)",
+                     maskImage: "radial-gradient(circle at center top, black 0%, transparent 80%)",
+                   }} />
+              <img src="https://pub-f170a2592d2c4a1485466404c36807be.r2.dev/viktor/library%20icon.svg" alt="Library"
+                   className="absolute" style={{ top: 50, left: "50%", transform: "translateX(-50%)", width: 170, filter: "drop-shadow(0 15px 25px rgba(0,0,0,0.08))" }} />
+              <div className="absolute" style={{ top: 220, left: "50%", transform: "translateX(-50%)" }}>
+                <div className="bg-white border border-black rounded-[20px] px-[18px] py-1.5 text-[0.75rem] font-medium text-[#1e293b] shadow-[0_8px_20px_rgba(0,0,0,0.06)] inline-flex items-center gap-2 whitespace-nowrap">
+                  <svg width={14} height={14} viewBox="0 0 24 24" fill="none" stroke="#64748b" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round">
+                    <circle cx={11} cy={11} r={8} />
+                    <line x1={21} y1={21} x2={16.65} y2={16.65} />
+                  </svg>
+                  Search in library
+                </div>
               </div>
-            ))}
+              <h3 className="relative z-[2] text-[1.05rem] font-semibold text-[#1e293b] p-6">Event Library</h3>
+            </div>
           </div>
         </div>
       </div>
 
-      {/* ============ BLOCK 4: Vendor Model Selector — Build trust style (coral score card + bullet list) ============ */}
-      <div className="relative overflow-hidden py-28 bg-white">
-        <div className="pointer-events-none absolute -top-20 -left-20 w-[600px] h-[600px] rounded-full"
-             style={{ background: 'radial-gradient(circle, hsl(12 95% 65% / 0.3) 0%, transparent 60%)', filter: 'blur(40px)' }} />
+      {/* ============ BLOCK 4: Vendor Model Selector — Dark inversion with neon vendor cards ============ */}
+      <div className="relative overflow-hidden py-32 bg-[#0a0a0f]">
+        <div className="pointer-events-none absolute inset-0 opacity-60">
+          <div className="absolute top-0 left-1/4 w-[600px] h-[600px] rounded-full"
+               style={{ background: "radial-gradient(circle, hsl(280 90% 60% / 0.3) 0%, transparent 60%)", filter: "blur(60px)" }} />
+          <div className="absolute bottom-0 right-1/4 w-[600px] h-[600px] rounded-full"
+               style={{ background: "radial-gradient(circle, hsl(12 95% 60% / 0.35) 0%, transparent 60%)", filter: "blur(60px)" }} />
+        </div>
+        <div className="absolute inset-0 opacity-[0.04]" style={{
+          backgroundImage: "linear-gradient(rgba(255,255,255,0.5) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.5) 1px, transparent 1px)",
+          backgroundSize: "60px 60px",
+        }} />
 
-        <div className="container mx-auto px-4 lg:px-8 relative z-10">
-          <div className="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-            {/* Left: Score chart card */}
-            <div className="feat-anim relative rounded-3xl bg-white border border-stone-100 shadow-xl p-8 overflow-hidden">
-              <div className="absolute inset-0 pointer-events-none"
-                   style={{ background: 'radial-gradient(circle at 100% 100%, hsl(12 95% 65% / 0.25) 0%, transparent 50%)' }} />
-              <div className="relative">
-                <p className="text-xs text-stone-400 mb-6">Vendor reliability score</p>
-                <svg viewBox="0 0 400 180" className="w-full h-44">
-                  <defs>
-                    <linearGradient id="line" x1="0" x2="1" y1="0" y2="0">
-                      <stop offset="0%" stopColor="hsl(12 80% 70%)" />
-                      <stop offset="100%" stopColor="hsl(12 95% 55%)" />
-                    </linearGradient>
-                    <linearGradient id="fill" x1="0" x2="0" y1="0" y2="1">
-                      <stop offset="0%" stopColor="hsl(12 95% 65% / 0.3)" />
-                      <stop offset="100%" stopColor="hsl(12 95% 65% / 0)" />
-                    </linearGradient>
-                  </defs>
-                  <path d="M0,160 C60,158 90,150 130,135 C170,120 200,80 240,55 C280,30 330,20 400,12 L400,180 L0,180 Z" fill="url(#fill)" />
-                  <path d="M0,160 C60,158 90,150 130,135 C170,120 200,80 240,55 C280,30 330,20 400,12" stroke="url(#line)" strokeWidth="3" fill="none" />
-                  {[{x:40,y:160,l:'0-20',s:'Low'},{x:130,y:135,l:'21-40',s:'Limited'},{x:230,y:60,l:'41-60',s:'Moderate'},{x:320,y:25,l:'61-80',s:'High'}].map((p,i)=>(
-                    <g key={i}>
-                      <line x1={p.x} y1={p.y} x2={p.x} y2={180} stroke="hsl(12 30% 90%)" strokeDasharray="2 3" />
-                      <text x={p.x} y={p.y-12} textAnchor="middle" fontSize="9" fill="hsl(0 0% 35%)" fontWeight="600">{p.l}</text>
-                      <text x={p.x} y={p.y-2} textAnchor="middle" fontSize="8" fill="hsl(0 0% 55%)">{p.s}</text>
-                    </g>
-                  ))}
-                </svg>
-                <div className="flex items-end justify-end gap-2 mt-2">
-                  <span className="text-xs text-stone-500">Score</span>
-                  <span className="text-5xl font-bold text-primary leading-none">87</span>
+        <div className="container mx-auto px-4 lg:px-8 relative z-10 max-w-6xl">
+          <div className="text-center mb-16">
+            <p className="feat-anim text-xs uppercase tracking-[0.3em] mb-5"
+               style={{ background: "linear-gradient(90deg, #F5C344, #F28482, #B567C2)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>
+              / Vendor Intelligence
+            </p>
+            <h2 className="feat-anim text-4xl md:text-6xl font-bold text-white leading-[1.05] tracking-tight mb-5">
+              Vendor Model<br />Selector
+            </h2>
+            <p className="feat-anim text-base text-white/60 max-w-xl mx-auto">
+              Score, compare and match the right vendor to every event — instantly, with live reliability data.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+            {[
+              { name: "Akolo Studio", cat: "Photography", score: 94, color: "from-rose-400 to-pink-500", recommended: true },
+              { name: "Bake It Right", cat: "Catering", score: 87, color: "from-amber-300 to-orange-500" },
+              { name: "Prime Audio", cat: "Audio / Visual", score: 91, color: "from-sky-300 to-violet-500" },
+            ].map((v, i) => (
+              <div key={i} className="feat-anim group relative rounded-3xl bg-white/[0.04] backdrop-blur-sm border border-white/10 p-6 hover:border-white/30 transition">
+                {v.recommended && (
+                  <span className="absolute -top-2.5 right-5 text-[10px] font-semibold tracking-wider uppercase rounded-full px-3 py-1 bg-primary text-primary-foreground shadow-lg">
+                    Score Match
+                  </span>
+                )}
+                <div className={`w-12 h-12 rounded-2xl bg-gradient-to-br ${v.color} mb-5`} />
+                <h3 className="text-white text-lg font-semibold mb-1">{v.name}</h3>
+                <p className="text-white/50 text-xs mb-6">{v.cat}</p>
+                <div className="flex items-end justify-between mb-3">
+                  <span className="text-white/60 text-xs">Reliability</span>
+                  <span className="text-white text-3xl font-bold leading-none">{v.score}</span>
+                </div>
+                <div className="h-1.5 rounded-full bg-white/10 overflow-hidden">
+                  <div className={`h-full bg-gradient-to-r ${v.color}`} style={{ width: `${v.score}%` }} />
+                </div>
+                <div className="mt-5 flex items-center justify-between text-[11px] text-white/40">
+                  <span>● Available · Nov 14</span>
+                  <span className="text-white/70 group-hover:text-white transition">View →</span>
                 </div>
               </div>
-            </div>
+            ))}
+          </div>
 
-            {/* Right: Copy */}
-            <div>
-              <h2 className="feat-anim text-4xl md:text-6xl font-bold text-stone-900 leading-[1.05] tracking-tight mb-5">
-                Vendor Model<br/>Selector
-              </h2>
-              <p className="feat-anim text-base text-stone-500 mb-8 max-w-md">
-                Compare verified vendors by reliability, availability and price — and let Nested score-match the right partner to every event.
-              </p>
-              <div className="space-y-5">
-                {[
-                  { i: "★", t: "Trusted vendor reliability scoring" },
-                  { i: "●", t: "Availability synced in real time" },
-                  { i: "✦", t: "Score-matched to your event profile" },
-                ].map((b, i) => (
-                  <div key={i} className="feat-anim flex items-center gap-3">
-                    <div className="w-7 h-7 rounded-md bg-primary/10 text-primary flex items-center justify-center text-sm">{b.i}</div>
-                    <span className="text-sm text-stone-700">{b.t}</span>
-                  </div>
-                ))}
+          <div className="mt-10 grid grid-cols-1 md:grid-cols-3 gap-4">
+            {[
+              { t: "Trusted reliability scoring", d: "Verified vendor history rolled into a single score." },
+              { t: "Live availability", d: "Real-time calendar sync prevents double-booking." },
+              { t: "Auto match-making", d: "Nested suggests the right partner for each event profile." },
+            ].map((it, i) => (
+              <div key={i} className="feat-anim rounded-2xl bg-white/[0.03] border border-white/5 p-5">
+                <h4 className="text-white text-sm font-semibold mb-1.5">{it.t}</h4>
+                <p className="text-white/50 text-[13px]">{it.d}</p>
               </div>
-            </div>
+            ))}
           </div>
         </div>
       </div>
