@@ -69,26 +69,6 @@ const SaasCTASection = () => {
       <div className="absolute inset-0 bg-black/30 pointer-events-none" />
 
       <div className="relative z-10 min-h-screen flex flex-col">
-        {/* Nav strip */}
-        <div className="relative z-20 pl-6 pr-6 py-6">
-          <div className="rounded-full px-6 py-3 flex items-center justify-between max-w-5xl mx-auto liquid-glass">
-            <div className="flex items-center gap-8">
-              <div className="flex items-center gap-2">
-                <Globe className="text-white" size={22} />
-                <span className="text-white font-semibold text-lg">Nested</span>
-              </div>
-              <div className="hidden md:flex items-center gap-6">
-                <Link to="/features" className="text-white/80 hover:text-white text-sm font-medium transition-colors">Features</Link>
-                <Link to="/pricing" className="text-white/80 hover:text-white text-sm font-medium transition-colors">Pricing</Link>
-                <Link to="/docs" className="text-white/80 hover:text-white text-sm font-medium transition-colors">About</Link>
-              </div>
-            </div>
-            <div className="flex items-center gap-4">
-              <Link to="/signup" className="text-white text-sm">Sign Up</Link>
-              <Link to="/signin" className="liquid-glass rounded-full px-6 py-2 text-white text-sm">Login</Link>
-            </div>
-          </div>
-        </div>
 
         {/* Hero content */}
         <div className="relative z-10 flex-1 flex flex-col items-center justify-center px-6 py-12 text-center -translate-y-[10%]">
