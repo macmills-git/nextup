@@ -1,79 +1,128 @@
 import { Link } from "react-router-dom";
-import { useRef, useEffect } from "react";
-import gsap from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { ArrowRight, Play } from "lucide-react";
-
-gsap.registerPlugin(ScrollTrigger);
+import { ArrowRight, Instagram, Twitter, Globe } from "lucide-react";
+import { useEffect, useRef } from "react";
 
 const SaasCTASection = () => {
-  const ctaRef = useRef<HTMLDivElement>(null);
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const rafRef = useRef<number | null>(null);
+  const fadingOutRef = useRef(false);
 
   useEffect(() => {
-    if (!ctaRef.current) return;
-    gsap.fromTo(ctaRef.current.querySelectorAll('.cta-el'),
-      { y: 30, opacity: 0 },
-      { y: 0, opacity: 1, duration: 0.7, stagger: 0.08, ease: 'power3.out',
-        scrollTrigger: { trigger: ctaRef.current, start: 'top 80%' },
+    const v = videoRef.current;
+    if (!v) return;
+    v.style.opacity = "0";
+
+    const cancelRAF = () => { if (rafRef.current) cancelAnimationFrame(rafRef.current); rafRef.current = null; };
+    const fade = (to: number, dur = 500) => {
+      cancelRAF();
+      const start = performance.now();
+      const from = parseFloat(v.style.opacity || "0");
+      const step = (t: number) => {
+        const p = Math.min(1, (t - start) / dur);
+        v.style.opacity = String(from + (to - from) * p);
+        if (p < 1) rafRef.current = requestAnimationFrame(step);
+      };
+      rafRef.current = requestAnimationFrame(step);
+    };
+
+    const onLoaded = () => fade(1);
+    const onTime = () => {
+      if (!v.duration) return;
+      if (!fadingOutRef.current && v.duration - v.currentTime <= 0.55) {
+        fadingOutRef.current = true;
+        fade(0);
       }
-    );
+    };
+    const onEnded = () => {
+      v.style.opacity = "0";
+      setTimeout(() => {
+        v.currentTime = 0;
+        v.play();
+        fadingOutRef.current = false;
+        fade(1);
+      }, 100);
+    };
+
+    v.addEventListener("loadeddata", onLoaded);
+    v.addEventListener("timeupdate", onTime);
+    v.addEventListener("ended", onEnded);
+    return () => {
+      v.removeEventListener("loadeddata", onLoaded);
+      v.removeEventListener("timeupdate", onTime);
+      v.removeEventListener("ended", onEnded);
+      cancelRAF();
+    };
   }, []);
 
   return (
-    <section className="relative overflow-hidden bg-[#0a0a0a] text-white">
-      {/* Starfield */}
-      <div className="absolute inset-0 opacity-30 pointer-events-none"
-           style={{ backgroundImage: 'radial-gradient(circle, rgba(255,255,255,0.5) 0.5px, transparent 1px)', backgroundSize: '50px 50px' }} />
-      <div className="absolute inset-0 opacity-[0.06] pointer-events-none"
-           style={{ backgroundImage: 'repeating-linear-gradient(90deg, rgba(255,255,255,0.6) 0 1px, transparent 1px 90px)' }} />
+    <section className="relative min-h-screen bg-black overflow-hidden">
+      <video
+        ref={videoRef}
+        autoPlay
+        loop
+        muted
+        playsInline
+        className="absolute inset-0 w-full h-full object-cover translate-y-[17%]"
+        src="https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260328_115001_bcdaa3b4-03de-47e7-ad63-ae3e392c32d4.mp4"
+        style={{ opacity: 0 }}
+      />
+      <div className="absolute inset-0 bg-black/30 pointer-events-none" />
 
-      {/* Coral horizon arch from the bottom */}
-      <div aria-hidden className="pointer-events-none absolute -bottom-[60%] left-1/2 -translate-x-1/2 w-[170%] aspect-square rounded-full"
-           style={{ background: 'radial-gradient(circle at center, hsl(12 95% 55%) 0%, hsl(15 90% 45%) 22%, hsl(20 70% 22%) 40%, transparent 48%)' }} />
-
-      <div ref={ctaRef} className="relative py-32">
-        <div className="container mx-auto px-4 lg:px-8 text-center relative z-10">
-          {/* Pill announcement */}
-          <Link to="/pricing" className="cta-el inline-flex items-center gap-2 rounded-full bg-white/5 border border-white/10 pl-4 pr-1.5 py-1.5 mb-10 backdrop-blur-sm hover:bg-white/10 transition">
-            <span className="text-xs text-white/80">New: A.R.C.H. workflow automation is live</span>
-            <span className="w-6 h-6 rounded-full bg-primary flex items-center justify-center"><ArrowRight className="w-3 h-3" /></span>
-          </Link>
-
-          <h2 className="cta-el text-4xl md:text-6xl lg:text-7xl font-bold leading-[1] tracking-tight mb-6">
-            <span className="text-white">Connect your Current Stack</span><br/>
-            <span className="text-white/40">and Start Automating</span>
-          </h2>
-
-          <p className="cta-el text-base md:text-lg text-white/60 max-w-xl mx-auto mb-10">
-            Slot Nested into your tools. Run automations, sync vendors, close events — effortlessly.
-          </p>
-
-          <div className="cta-el flex flex-wrap items-center justify-center gap-4 mb-16">
-            <button className="inline-flex items-center gap-2 rounded-full border border-white/20 px-6 py-3 text-sm font-semibold text-white bg-white/5 hover:bg-white/10 transition backdrop-blur-sm">
-              <span className="w-6 h-6 rounded-full bg-white text-black flex items-center justify-center"><Play className="w-3 h-3 fill-current" /></span>
-              Watch Demo
-            </button>
-            <Link to="/signup" className="inline-flex items-center rounded-full bg-primary px-7 py-3 text-sm font-semibold text-white shadow-[0_8px_30px_hsl(12_95%_55%/0.4)] hover:scale-105 transition">
-              Get started for free
-            </Link>
-          </div>
-
-          {/* Floating tool chips along the horizon */}
-          <div className="cta-el relative max-w-4xl mx-auto flex flex-wrap items-center justify-center gap-3 opacity-80">
-            {[
-              { e: "📅", n: "Google Calendar" },
-              { e: "💬", n: "Slack" },
-              { e: "💳", n: "Stripe" },
-              { e: "📊", n: "Notion" },
-              { e: "📧", n: "Gmail" },
-              { e: "🎟️", n: "Eventbrite" },
-            ].map((t, i) => (
-              <div key={i} className="flex items-center gap-2 rounded-full bg-white/5 border border-white/10 pl-2 pr-4 py-1.5 backdrop-blur-sm">
-                <span className="w-6 h-6 rounded-full bg-white/10 flex items-center justify-center text-xs">{t.e}</span>
-                <span className="text-xs text-white/80 font-medium">{t.n}</span>
+      <div className="relative z-10 min-h-screen flex flex-col">
+        {/* Nav strip */}
+        <div className="relative z-20 pl-6 pr-6 py-6">
+          <div className="rounded-full px-6 py-3 flex items-center justify-between max-w-5xl mx-auto liquid-glass">
+            <div className="flex items-center gap-8">
+              <div className="flex items-center gap-2">
+                <Globe className="text-white" size={22} />
+                <span className="text-white font-semibold text-lg">Nested</span>
               </div>
-            ))}
+              <div className="hidden md:flex items-center gap-6">
+                <Link to="/features" className="text-white/80 hover:text-white text-sm font-medium transition-colors">Features</Link>
+                <Link to="/pricing" className="text-white/80 hover:text-white text-sm font-medium transition-colors">Pricing</Link>
+                <Link to="/docs" className="text-white/80 hover:text-white text-sm font-medium transition-colors">About</Link>
+              </div>
+            </div>
+            <div className="flex items-center gap-4">
+              <Link to="/signup" className="text-white text-sm">Sign Up</Link>
+              <Link to="/signin" className="liquid-glass rounded-full px-6 py-2 text-white text-sm">Login</Link>
+            </div>
           </div>
+        </div>
+
+        {/* Hero content */}
+        <div className="relative z-10 flex-1 flex flex-col items-center justify-center px-6 py-12 text-center -translate-y-[10%]">
+          <h2
+            className="text-5xl md:text-6xl lg:text-7xl text-white mb-8 tracking-tight"
+            style={{ fontFamily: "'Instrument Serif', serif" }}
+          >
+            Built for the curious
+          </h2>
+          <div className="max-w-xl w-full space-y-4">
+            <div className="liquid-glass rounded-full pl-6 pr-2 py-2 flex items-center gap-3">
+              <input
+                type="email"
+                placeholder="Enter your email"
+                className="flex-1 bg-transparent outline-none text-white placeholder:text-white/40 text-base"
+              />
+              <Link to="/signup" className="bg-white rounded-full p-3 text-black inline-flex items-center justify-center">
+                <ArrowRight size={20} />
+              </Link>
+            </div>
+            <p className="text-white text-sm leading-relaxed px-4">
+              Stay updated with the latest news and insights. Subscribe to our newsletter today and never miss out on exciting product updates.
+            </p>
+          </div>
+          <Link to="/about" className="mt-8 liquid-glass rounded-full px-8 py-3 text-white text-sm font-medium hover:bg-white/5 transition-colors">
+            Read the Manifesto
+          </Link>
+        </div>
+
+        {/* Social icons footer */}
+        <div className="relative z-10 flex justify-center gap-4 pb-12">
+          <a aria-label="Instagram" href="#" className="liquid-glass rounded-full p-4 text-white/80 hover:text-white hover:bg-white/5 transition-all"><Instagram size={20} /></a>
+          <a aria-label="Twitter" href="#" className="liquid-glass rounded-full p-4 text-white/80 hover:text-white hover:bg-white/5 transition-all"><Twitter size={20} /></a>
+          <a aria-label="Website" href="#" className="liquid-glass rounded-full p-4 text-white/80 hover:text-white hover:bg-white/5 transition-all"><Globe size={20} /></a>
         </div>
       </div>
     </section>
