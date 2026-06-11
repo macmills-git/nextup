@@ -200,12 +200,6 @@ const SaasBentoFeatures = () => {
 
       {/* ============ BLOCK 4: Vendor Model Selector — Dark inversion with neon vendor cards ============ */}
       <div className="relative overflow-hidden py-32 bg-[#0a0a0f]">
-        <div className="pointer-events-none absolute inset-0 opacity-60">
-          <div className="absolute top-0 left-1/4 w-[600px] h-[600px] rounded-full"
-               style={{ background: "radial-gradient(circle, hsl(280 90% 60% / 0.3) 0%, transparent 60%)", filter: "blur(60px)" }} />
-          <div className="absolute bottom-0 right-1/4 w-[600px] h-[600px] rounded-full"
-               style={{ background: "radial-gradient(circle, hsl(12 95% 60% / 0.35) 0%, transparent 60%)", filter: "blur(60px)" }} />
-        </div>
         <div className="absolute inset-0 opacity-[0.04]" style={{
           backgroundImage: "linear-gradient(rgba(255,255,255,0.5) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.5) 1px, transparent 1px)",
           backgroundSize: "60px 60px",
