@@ -193,9 +193,7 @@ const SaasHeroSection = () => {
         <div className="absolute inset-0 bg-white/10" />
 
         <div className="relative z-10">
-          <Navbar />
-
-          <div className="flex flex-col items-center px-4 pt-10 sm:pt-16 pb-8 sm:pb-12 text-center">
+          <div className="flex flex-col items-center px-4 pt-24 sm:pt-32 pb-8 sm:pb-12 text-center">
             <div className="inline-flex items-center gap-2 bg-white rounded-full px-4 py-1.5 shadow-sm text-[13px]">
               <span className="w-2 h-2 rounded-full bg-[#ef4d23]" /> Nested Software
             </div>

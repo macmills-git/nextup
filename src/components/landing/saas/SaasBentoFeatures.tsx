@@ -200,12 +200,6 @@ const SaasBentoFeatures = () => {
 
       {/* ============ BLOCK 4: Vendor Model Selector — Dark inversion with neon vendor cards ============ */}
       <div className="relative overflow-hidden py-32 bg-[#0a0a0f]">
-        <div className="pointer-events-none absolute inset-0 opacity-60">
-          <div className="absolute top-0 left-1/4 w-[600px] h-[600px] rounded-full"
-               style={{ background: "radial-gradient(circle, hsl(280 90% 60% / 0.3) 0%, transparent 60%)", filter: "blur(60px)" }} />
-          <div className="absolute bottom-0 right-1/4 w-[600px] h-[600px] rounded-full"
-               style={{ background: "radial-gradient(circle, hsl(12 95% 60% / 0.35) 0%, transparent 60%)", filter: "blur(60px)" }} />
-        </div>
         <div className="absolute inset-0 opacity-[0.04]" style={{
           backgroundImage: "linear-gradient(rgba(255,255,255,0.5) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.5) 1px, transparent 1px)",
           backgroundSize: "60px 60px",
@@ -213,8 +207,7 @@ const SaasBentoFeatures = () => {
 
         <div className="container mx-auto px-4 lg:px-8 relative z-10 max-w-6xl">
           <div className="text-center mb-16">
-            <p className="feat-anim text-xs uppercase tracking-[0.3em] mb-5"
-               style={{ background: "linear-gradient(90deg, #F5C344, #F28482, #B567C2)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>
+            <p className="feat-anim text-xs uppercase tracking-[0.3em] mb-5 text-primary font-semibold">
               / Vendor Intelligence
             </p>
             <h2 className="feat-anim text-4xl md:text-6xl font-bold text-white leading-[1.05] tracking-tight mb-5">
@@ -227,17 +220,17 @@ const SaasBentoFeatures = () => {
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
             {[
-              { name: "Akolo Studio", cat: "Photography", score: 94, color: "from-rose-400 to-pink-500", recommended: true },
-              { name: "Bake It Right", cat: "Catering", score: 87, color: "from-amber-300 to-orange-500" },
-              { name: "Prime Audio", cat: "Audio / Visual", score: 91, color: "from-sky-300 to-violet-500" },
+              { name: "Akolo Studio", cat: "Photography", score: 94, recommended: true },
+              { name: "Bake It Right", cat: "Catering", score: 87 },
+              { name: "Prime Audio", cat: "Audio / Visual", score: 91 },
             ].map((v, i) => (
-              <div key={i} className="feat-anim group relative rounded-3xl bg-white/[0.04] backdrop-blur-sm border border-white/10 p-6 hover:border-white/30 transition">
+              <div key={i} className="feat-anim group relative rounded-3xl bg-white/[0.04] backdrop-blur-sm border border-white/10 p-6 hover:border-primary/40 transition">
                 {v.recommended && (
                   <span className="absolute -top-2.5 right-5 text-[10px] font-semibold tracking-wider uppercase rounded-full px-3 py-1 bg-primary text-primary-foreground shadow-lg">
                     Score Match
                   </span>
                 )}
-                <div className={`w-12 h-12 rounded-2xl bg-gradient-to-br ${v.color} mb-5`} />
+                <div className="w-12 h-12 rounded-2xl bg-primary mb-5" />
                 <h3 className="text-white text-lg font-semibold mb-1">{v.name}</h3>
                 <p className="text-white/50 text-xs mb-6">{v.cat}</p>
                 <div className="flex items-end justify-between mb-3">
@@ -245,7 +238,7 @@ const SaasBentoFeatures = () => {
                   <span className="text-white text-3xl font-bold leading-none">{v.score}</span>
                 </div>
                 <div className="h-1.5 rounded-full bg-white/10 overflow-hidden">
-                  <div className={`h-full bg-gradient-to-r ${v.color}`} style={{ width: `${v.score}%` }} />
+                  <div className="h-full bg-primary" style={{ width: `${v.score}%` }} />
                 </div>
                 <div className="mt-5 flex items-center justify-between text-[11px] text-white/40">
                   <span>● Available · Nov 14</span>

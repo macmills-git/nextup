@@ -66,22 +66,22 @@ const SaasMacBookShowcase = () => {
   const bars = [40, 30, 50, 70, 60, 80, 40, 90, 60, 50, 70, 30];
 
   return (
-    <section ref={ref} className="relative py-32 overflow-hidden bg-foreground text-background">
-      <div className="absolute inset-0 opacity-[0.06]" style={{
-        backgroundImage: 'linear-gradient(hsl(var(--background)/0.5) 1px, transparent 1px), linear-gradient(90deg, hsl(var(--background)/0.5) 1px, transparent 1px)',
+    <section ref={ref} className="relative py-32 overflow-hidden bg-stone-50 text-stone-900">
+      <div className="absolute inset-0 opacity-[0.5]" style={{
+        backgroundImage: 'linear-gradient(rgba(0,0,0,0.04) 1px, transparent 1px), linear-gradient(90deg, rgba(0,0,0,0.04) 1px, transparent 1px)',
         backgroundSize: '60px 60px'
       }} />
-      <div className="absolute inset-0 bg-gradient-to-b from-foreground via-foreground to-foreground/95" />
+      <div className="absolute inset-0 bg-gradient-to-b from-white via-stone-50 to-white" />
 
       <div className="container mx-auto px-4 lg:px-8 relative z-10">
         <div className="text-center mb-16 max-w-4xl mx-auto">
-          <p className="fg-text text-xs uppercase tracking-[0.3em] text-background/60 mb-6">Mission Control</p>
-          <h2 className="fg-text font-bold tracking-[-0.04em] leading-[0.95] text-background"
+          <p className="fg-text text-xs uppercase tracking-[0.3em] text-stone-500 mb-6">Mission Control</p>
+          <h2 className="fg-text font-bold tracking-[-0.04em] leading-[0.95] text-stone-900"
               style={{ fontSize: "clamp(2.5rem, 6vw, 5.5rem)" }}>
             One dashboard.<br/>
-            <span className="text-background/50">Every event detail.</span>
+            <span className="text-stone-400">Every event detail.</span>
           </h2>
-          <p className="fg-text mt-6 text-base md:text-lg text-background/70 max-w-xl mx-auto">
+          <p className="fg-text mt-6 text-base md:text-lg text-stone-600 max-w-xl mx-auto">
             Track events, vendors, budgets, and teams in real time — built for fast-moving event organizations.
           </p>
         </div>

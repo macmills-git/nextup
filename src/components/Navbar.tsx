@@ -1,9 +1,7 @@
 import { Link, useLocation } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { Menu, X, Sun, Moon } from "lucide-react";
+import { Menu, X } from "lucide-react";
 import { useState, useEffect } from "react";
-import { useTheme } from "@/contexts/ThemeContext";
-import AnimatedLogo from "@/components/AnimatedLogo";
 
 const navItems = [
   { label: "Home", to: "/" },
@@ -13,9 +11,21 @@ const navItems = [
   { label: "Docs", to: "/docs" },
 ];
 
+const Wordmark = ({ scrolled }: { scrolled: boolean }) => (
+  <span
+    className="font-black text-foreground leading-none transition-all duration-500"
+    style={{
+      fontFamily: "'Space Grotesk', 'Inter Tight', 'Helvetica Now Display', sans-serif",
+      letterSpacing: "-0.06em",
+      fontSize: scrolled ? "20px" : "24px",
+    }}
+  >
+    NESTED
+  </span>
+);
+
 const Navbar = () => {
   const [mobileOpen, setMobileOpen] = useState(false);
-  const { theme, toggleTheme } = useTheme();
   const location = useLocation();
   const [scrolled, setScrolled] = useState(false);
 
@@ -31,37 +41,32 @@ const Navbar = () => {
       style={{ padding: scrolled ? "12px 16px 0" : "0px" }}
     >
       <nav
-        className="w-full backdrop-blur-lg backdrop-saturate-150 border transition-all duration-500 ease-[cubic-bezier(0.4,0,0.2,1)] dark:bg-white/[0.06] bg-white/30 border-white/20 dark:border-white/10 shadow-lg"
+        className="w-full backdrop-blur-xl backdrop-saturate-150 border border-white/60 transition-all duration-500 ease-[cubic-bezier(0.4,0,0.2,1)]"
         style={{
-          maxWidth: scrolled ? "860px" : "100%",
-          borderRadius: scrolled ? "24px" : "0px",
+          maxWidth: scrolled ? "920px" : "100%",
+          borderRadius: scrolled ? "9999px" : "0px",
+          background: "rgba(255,255,255,0.85)",
           boxShadow: scrolled
-            ? "0 8px 32px -8px rgba(0,0,0,0.15), inset 0 0.5px 0 0 rgba(255,255,255,0.1)"
-            : "0 4px 24px -4px rgba(0,0,0,0.08), inset 0 0.5px 0 0 rgba(255,255,255,0.1)",
+            ? "0 12px 40px -10px rgba(0,0,0,0.18), inset 0 1px 0 0 rgba(255,255,255,0.6)"
+            : "0 4px 24px -8px rgba(0,0,0,0.08), inset 0 1px 0 0 rgba(255,255,255,0.5)",
         }}
       >
-        <div className="flex items-center justify-between h-14 px-4 lg:px-6">
-          <Link to="/" className="flex items-center gap-2">
-            <AnimatedLogo size={32} />
-            <span
-              className="font-semibold text-sm text-foreground transition-all duration-500"
-              style={{ opacity: scrolled ? 0 : 1, width: scrolled ? 0 : "auto", overflow: "hidden" }}
-            >
-              Nested
-            </span>
+        <div className="flex items-center justify-between h-16 px-5 lg:px-7">
+          <Link to="/" className="flex items-center">
+            <Wordmark scrolled={scrolled} />
           </Link>
 
-          <div className="hidden md:flex items-center gap-1 bg-muted/30 rounded-full px-1.5 py-1 border border-border/20">
+          <div className="hidden md:flex items-center gap-1 bg-stone-100/70 rounded-full px-2 py-1.5 border border-stone-200/60">
             {navItems.map((item) => {
               const isActive = location.pathname === item.to;
               return (
                 <Link
                   key={item.label}
                   to={item.to}
-                  className={`px-4 py-1.5 text-xs font-medium rounded-full transition-all duration-200 ${
+                  className={`px-4 py-1.5 text-[15px] font-medium rounded-full transition-all duration-200 ${
                     isActive
-                      ? "bg-primary text-primary-foreground shadow-sm"
-                      : "text-muted-foreground hover:text-foreground hover:bg-muted/50"
+                      ? "bg-foreground text-background shadow-sm"
+                      : "text-stone-700 hover:text-foreground hover:bg-white/70"
                   }`}
                 >
                   {item.label}
@@ -71,20 +76,10 @@ const Navbar = () => {
           </div>
 
           <div className="hidden md:flex items-center gap-2">
-            <button
-              onClick={toggleTheme}
-              className="w-8 h-8 rounded-full flex items-center justify-center border border-border/30 bg-muted/30 hover:bg-primary/10 hover:border-primary/30 transition-all duration-200"
-            >
-              {theme === "dark" ? (
-                <Sun className="w-3.5 h-3.5 text-muted-foreground" />
-              ) : (
-                <Moon className="w-3.5 h-3.5 text-muted-foreground" />
-              )}
-            </button>
             <Button
               size="sm"
               asChild
-              className="h-8 text-xs rounded-full border border-border/30 bg-transparent text-foreground font-medium hover:bg-muted/50"
+              className="h-9 text-[15px] px-4 rounded-full border border-stone-300 bg-transparent text-foreground font-medium hover:bg-stone-100"
               style={{ display: scrolled ? "none" : undefined }}
             >
               <Link to="/signin">Log in</Link>
@@ -92,7 +87,7 @@ const Navbar = () => {
             <Button
               size="sm"
               asChild
-              className="h-8 text-xs rounded-full bg-primary text-primary-foreground font-medium hover:brightness-110 shadow-sm"
+              className="h-9 text-[15px] px-4 rounded-full bg-primary text-primary-foreground font-medium hover:brightness-110 shadow-sm"
             >
               <Link to="/signup">Sign up</Link>
             </Button>
@@ -102,30 +97,27 @@ const Navbar = () => {
             className="md:hidden text-foreground"
             onClick={() => setMobileOpen(!mobileOpen)}
           >
-            {mobileOpen ? <X size={20} /> : <Menu size={20} />}
+            {mobileOpen ? <X size={22} /> : <Menu size={22} />}
           </button>
         </div>
 
         {mobileOpen && (
-          <div className="md:hidden bg-background/90 backdrop-blur-xl border-t border-border/20 px-5 pb-4 pt-2 space-y-2">
+          <div className="md:hidden bg-white/95 backdrop-blur-xl border-t border-stone-200 px-5 pb-4 pt-2 space-y-2">
             {navItems.map((item) => (
               <Link
                 key={item.label}
                 to={item.to}
-                className="block text-xs text-foreground py-2 hover:text-primary"
+                className="block text-[15px] text-foreground py-2 hover:text-primary"
                 onClick={() => setMobileOpen(false)}
               >
                 {item.label}
               </Link>
             ))}
             <div className="flex gap-2 pt-2 items-center">
-              <button onClick={toggleTheme} className="w-8 h-8 rounded-full flex items-center justify-center bg-muted/30 border border-border/20">
-                {theme === "dark" ? <Sun className="w-3.5 h-3.5" /> : <Moon className="w-3.5 h-3.5" />}
-              </button>
-              <Button size="sm" asChild className="h-8 text-xs rounded-full border border-border/30 bg-transparent text-foreground">
+              <Button size="sm" asChild className="h-9 text-[15px] rounded-full border border-stone-300 bg-transparent text-foreground">
                 <Link to="/signin">Log in</Link>
               </Button>
-              <Button size="sm" asChild className="h-8 text-xs rounded-full bg-primary text-primary-foreground">
+              <Button size="sm" asChild className="h-9 text-[15px] rounded-full bg-primary text-primary-foreground">
                 <Link to="/signup">Sign up</Link>
               </Button>
             </div>
