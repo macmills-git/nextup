@@ -1,5 +1,4 @@
 import { Link } from "react-router-dom";
-import AnimatedLogo from "@/components/AnimatedLogo";
 
 const SaasFooter = () => {
   return (
@@ -7,9 +6,17 @@ const SaasFooter = () => {
       <div className="container mx-auto px-4 lg:px-8 relative z-10">
         <div className="py-12 grid grid-cols-2 md:grid-cols-5 gap-8">
           <div className="col-span-2 md:col-span-1">
-            <Link to="/" className="flex items-center gap-2 mb-4">
-              <AnimatedLogo size={22} />
-              <span className="font-bold text-sm text-foreground">Nested</span>
+            <Link to="/" className="flex items-center mb-4">
+              <span
+                className="font-black text-foreground leading-none"
+                style={{
+                  fontFamily: "'Space Grotesk', 'Inter Tight', sans-serif",
+                  letterSpacing: "-0.06em",
+                  fontSize: "22px",
+                }}
+              >
+                NESTED
+              </span>
             </Link>
             <p className="text-sm text-muted-foreground leading-relaxed">
               Your intelligent event planning platform.
