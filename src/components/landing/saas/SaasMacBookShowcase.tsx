@@ -10,35 +10,18 @@ const SaasMacBookShowcase = () => {
 
   useEffect(() => {
     if (!ref.current) return;
-    const macbook = ref.current.querySelector('.macbook-wrap');
-    const screen = ref.current.querySelector('.macbook-screen-inner');
-    gsap.fromTo(macbook,
-      { y: 120, rotateX: -25, opacity: 0, transformPerspective: 1200 },
-      { y: 0, rotateX: 0, opacity: 1, duration: 1.4, ease: 'power3.out',
-        scrollTrigger: { trigger: ref.current, start: 'top 75%' }
-      }
-    );
-    gsap.fromTo(screen,
-      { scale: 0.92, opacity: 0 },
-      { scale: 1, opacity: 1, duration: 1, delay: 0.4, ease: 'power3.out',
-        scrollTrigger: { trigger: ref.current, start: 'top 75%' }
-      }
-    );
     gsap.fromTo(ref.current.querySelectorAll('.fg-text'),
       { y: 40, opacity: 0 },
       { y: 0, opacity: 1, duration: 0.9, stagger: 0.12, ease: 'power3.out',
         scrollTrigger: { trigger: ref.current, start: 'top 80%' }
       }
     );
-    gsap.to(macbook, {
-      rotateY: 6, rotateZ: 1.2, y: -14,
-      duration: 3.6, ease: 'sine.inOut', yoyo: true, repeat: -1,
-      transformOrigin: '50% 100%',
-    });
-    gsap.to(macbook, {
-      rotateY: -6, rotateZ: -1.2,
-      duration: 3.6, ease: 'sine.inOut', yoyo: true, repeat: -1, delay: 1.8,
-    });
+    gsap.fromTo(ref.current.querySelector('.macbook-wrap'),
+      { y: 60, opacity: 0 },
+      { y: 0, opacity: 1, duration: 1, ease: 'power3.out',
+        scrollTrigger: { trigger: ref.current, start: 'top 75%' }
+      }
+    );
   }, []);
 
   const stats = [
