@@ -10,35 +10,18 @@ const SaasMacBookShowcase = () => {
 
   useEffect(() => {
     if (!ref.current) return;
-    const macbook = ref.current.querySelector('.macbook-wrap');
-    const screen = ref.current.querySelector('.macbook-screen-inner');
-    gsap.fromTo(macbook,
-      { y: 120, rotateX: -25, opacity: 0, transformPerspective: 1200 },
-      { y: 0, rotateX: 0, opacity: 1, duration: 1.4, ease: 'power3.out',
-        scrollTrigger: { trigger: ref.current, start: 'top 75%' }
-      }
-    );
-    gsap.fromTo(screen,
-      { scale: 0.92, opacity: 0 },
-      { scale: 1, opacity: 1, duration: 1, delay: 0.4, ease: 'power3.out',
-        scrollTrigger: { trigger: ref.current, start: 'top 75%' }
-      }
-    );
     gsap.fromTo(ref.current.querySelectorAll('.fg-text'),
       { y: 40, opacity: 0 },
       { y: 0, opacity: 1, duration: 0.9, stagger: 0.12, ease: 'power3.out',
         scrollTrigger: { trigger: ref.current, start: 'top 80%' }
       }
     );
-    gsap.to(macbook, {
-      rotateY: 6, rotateZ: 1.2, y: -14,
-      duration: 3.6, ease: 'sine.inOut', yoyo: true, repeat: -1,
-      transformOrigin: '50% 100%',
-    });
-    gsap.to(macbook, {
-      rotateY: -6, rotateZ: -1.2,
-      duration: 3.6, ease: 'sine.inOut', yoyo: true, repeat: -1, delay: 1.8,
-    });
+    gsap.fromTo(ref.current.querySelector('.macbook-wrap'),
+      { y: 60, opacity: 0 },
+      { y: 0, opacity: 1, duration: 1, ease: 'power3.out',
+        scrollTrigger: { trigger: ref.current, start: 'top 75%' }
+      }
+    );
   }, []);
 
   const stats = [
@@ -76,19 +59,25 @@ const SaasMacBookShowcase = () => {
       <div className="container mx-auto px-4 lg:px-8 relative z-10">
         <div className="text-center mb-16 max-w-4xl mx-auto">
           <p className="fg-text text-xs uppercase tracking-[0.3em] text-stone-500 mb-6">Mission Control</p>
-          <h2 className="fg-text font-bold tracking-[-0.04em] leading-[0.95] text-stone-900"
-              style={{ fontSize: "clamp(2.5rem, 6vw, 5.5rem)" }}>
-            One dashboard.<br/>
-            <span className="text-stone-400">Every event detail.</span>
+          <h2
+            className="fg-text text-stone-900"
+            style={{ fontSize: "clamp(36px, 8vw, 84px)", lineHeight: 1.05, fontWeight: 500, letterSpacing: "-0.02em" }}
+          >
+            One{" "}
+            <span style={{ fontFamily: "'Instrument Serif', serif", fontStyle: "italic", fontWeight: 400 }}>dashboard</span>.<br/>
+            Every <span style={{ fontFamily: "'Instrument Serif', serif", fontStyle: "italic", fontWeight: 400 }}>event</span> detail.
           </h2>
           <p className="fg-text mt-6 text-base md:text-lg text-stone-600 max-w-xl mx-auto">
             Track events, vendors, budgets, and teams in real time — built for fast-moving event organizations.
           </p>
         </div>
 
-        {/* MacBook frame — shrunk by additional 15% (now 68% width) */}
+        {/* MacBook frame — static, tilts on hover */}
         <div className="mx-auto" style={{ maxWidth: '68%' }}>
-        <div className="macbook-wrap max-w-5xl mx-auto relative" style={{ perspective: 1500 }}>
+        <div
+          className="macbook-wrap max-w-5xl mx-auto relative group transition-transform duration-700 ease-out hover:[transform:perspective(1500px)_rotateX(-6deg)_rotateY(6deg)_rotateZ(-1deg)]"
+          style={{ perspective: 1500, transformStyle: "preserve-3d" }}
+        >
           <div className="relative rounded-t-[18px] bg-neutral-800 p-[10px] pb-[14px] shadow-[0_30px_80px_-20px_rgba(0,0,0,0.7)]">
             <div className="absolute top-0 left-1/2 -translate-x-1/2 w-24 h-3 bg-neutral-900 rounded-b-lg z-10" />
             <div className="macbook-screen-inner relative aspect-[16/10] rounded-[10px] overflow-hidden bg-white border border-neutral-700">
