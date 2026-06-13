@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
-import { ArrowLeft, ArrowRight, Layers, Globe, Monitor } from "@/lib/fa-icons";
+import { Layers, Globe, Monitor } from "@/lib/fa-icons";
+import { ArrowLeft, ArrowRight } from "lucide-react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 
