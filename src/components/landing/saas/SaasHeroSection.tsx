@@ -4,19 +4,18 @@ import { ChevronDown, ChevronRight, ShoppingCart, Menu, TrendingDown, TrendingUp
 
 const PRIMARY = "#ef4d23";
 
-const Logo = ({ className = "" }: { className?: string }) => {
-  const r = 10, cx = 16, cy = 16;
-  const petals = Array.from({ length: 8 }, (_, i) => {
-    const a = (i * Math.PI * 2) / 8;
-    return { cx: cx + Math.cos(a) * r, cy: cy + Math.sin(a) * r };
-  });
-  return (
-    <svg viewBox="0 0 32 32" className={className} fill={PRIMARY}>
-      {petals.map((p, i) => <circle key={i} cx={p.cx} cy={p.cy} r={3.5} />)}
-      <circle cx={cx} cy={cy} r={3.5} />
-    </svg>
-  );
-};
+const Logo = ({ className = "" }: { className?: string }) => (
+  <span
+    className={`font-black text-neutral-900 leading-none ${className}`}
+    style={{
+      fontFamily: "'Space Grotesk', 'Inter Tight', sans-serif",
+      letterSpacing: "-0.06em",
+      fontSize: "20px",
+    }}
+  >
+    NESTED
+  </span>
+);
 
 const Gauge = ({ value, color = PRIMARY, showLabels = false, min = 0, max = 100 }: { value: number; color?: string; showLabels?: boolean; min?: number | string; max?: number | string }) => {
   const total = 40;
