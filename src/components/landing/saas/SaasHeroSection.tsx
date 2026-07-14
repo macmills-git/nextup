@@ -125,9 +125,9 @@ const SaasHeroSection = () => {
     <div className="min-h-screen w-full bg-[#ededed] p-3 sm:p-4" style={{ fontFamily: "Inter, sans-serif" }}>
       <div className="relative w-full h-[calc(100vh-24px)] sm:h-[calc(100vh-32px)] overflow-hidden bg-[#d9d9d9] rounded-2xl sm:rounded-3xl">
         <video
-          autoPlay loop muted playsInline preload="auto"
+          autoPlay loop muted playsInline preload="metadata"
           disableRemotePlayback
-          {...({ "webkit-playsinline": "true", "x5-playsinline": "true" } as any)}
+          {...({ "webkit-playsinline": "true", "x5-playsinline": "true", fetchpriority: "low" } as any)}
           poster="https://images.unsplash.com/photo-1557683316-973673baf926?w=1600&q=60"
           className="absolute inset-0 w-full h-full object-cover pointer-events-none"
           src="https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260424_064411_9e9d7f84-9277-41f4-ab10-59172d89e6be.mp4"
