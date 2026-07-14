@@ -1,6 +1,5 @@
-import { useState } from "react";
 import { Link } from "react-router-dom";
-import { ChevronDown, ChevronRight, ShoppingCart, Menu, TrendingDown, TrendingUp, X } from "lucide-react";
+import { ChevronDown, ChevronRight, TrendingDown, TrendingUp, X } from "lucide-react";
 
 const PRIMARY = "#ef4d23";
 
@@ -45,50 +44,6 @@ const Gauge = ({ value, color = PRIMARY, showLabels = false, min = 0, max = 100 
           <span>{min}</span><span>{max}</span>
         </div>
       )}
-    </div>
-  );
-};
-
-const Navbar = () => {
-  const [open, setOpen] = useState(false);
-  const items = [
-    { label: "Home", dot: true },
-    { label: "Features" },
-    { label: "About" },
-    { label: "Pages", chevron: true, accent: true },
-  ];
-  return (
-    <div className="flex justify-center pt-4 sm:pt-6 px-3 sm:px-4">
-      <div className="bg-white rounded-full shadow-sm border border-neutral-200 pl-2 pr-2 py-2 w-full max-w-[760px] relative flex items-center">
-        <Logo className="w-7 h-7 sm:w-8 sm:h-8 shrink-0" />
-        <div className="hidden md:flex items-center gap-6 ml-6 text-[14px]">
-          {items.map((it) => (
-            <a key={it.label} href="#" className={`flex items-center gap-1.5 ${it.accent ? "text-[#ef4d23]" : "text-neutral-800"}`}>
-              {it.dot && <span className="w-[5px] h-[5px] rounded-full bg-black" />}
-              {it.label}
-              {it.chevron && <ChevronDown className="w-3.5 h-3.5" />}
-            </a>
-          ))}
-        </div>
-        <div className="ml-auto flex items-center gap-3">
-          <ShoppingCart className="hidden md:block w-4 h-4 text-neutral-700" />
-          <Link to="/signup" className="inline-flex items-center gap-2 bg-[#ef4d23] text-white rounded-full text-[13px] font-medium pl-4 pr-1.5 py-1.5">
-            <span className="hidden sm:inline">Get early access</span>
-            <span className="sm:hidden">Early access</span>
-            <span className="w-6 h-6 rounded-full bg-white/20 flex items-center justify-center"><ChevronRight className="w-3.5 h-3.5" /></span>
-          </Link>
-          <button className="md:hidden p-1.5 rounded-full text-neutral-700" onClick={() => setOpen((o) => !o)} aria-label="menu">
-            <Menu className="w-5 h-5" />
-          </button>
-        </div>
-        {open && (
-          <div className="absolute top-full left-2 right-2 mt-2 bg-white rounded-2xl shadow-lg border border-neutral-200 p-3 z-20 md:hidden">
-            {items.map((it) => (
-              <a key={it.label} href="#" className="block py-2 text-sm text-neutral-800">{it.label}</a>
-            ))}
-          </div>
-        )}
-      </div>
     </div>
   );
 };

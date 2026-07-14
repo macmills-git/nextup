@@ -335,68 +335,6 @@ const SaasBentoFeatures = () => {
         </div>
       </div>
 
-      {/* ============ BLOCK 4: Vendor Model Selector ============ */}
-      <div className="relative overflow-hidden py-32 bg-[#0a0a0f]">
-        <div className="absolute inset-0 opacity-[0.04]" style={{
-          backgroundImage: "linear-gradient(rgba(255,255,255,0.5) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.5) 1px, transparent 1px)",
-          backgroundSize: "60px 60px",
-        }} />
-
-        <div className="container mx-auto px-4 lg:px-8 relative z-10 max-w-6xl">
-          <div className="text-center mb-16">
-            <h2 className="feat-anim text-white" style={headingStyle}>
-              Vendor{" "}
-              <span style={italicAccent}>model</span><br />selector
-            </h2>
-            <p className="feat-anim mt-6 text-base text-white/60 max-w-xl mx-auto">
-              Score, compare and match the right vendor to every event — instantly, with live reliability data.
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
-            {[
-              { name: "Akolo Studio", cat: "Photography", score: 94, recommended: true },
-              { name: "Bake It Right", cat: "Catering", score: 87 },
-              { name: "Prime Audio", cat: "Audio / Visual", score: 91 },
-            ].map((v, i) => (
-              <div key={i} className="feat-anim group relative rounded-3xl bg-white/[0.04] backdrop-blur-sm border border-white/10 p-6 hover:border-primary/40 transition">
-                {v.recommended && (
-                  <span className="absolute -top-2.5 right-5 text-[10px] font-semibold tracking-wider uppercase rounded-full px-3 py-1 bg-primary text-primary-foreground shadow-lg">
-                    Score Match
-                  </span>
-                )}
-                <div className="w-12 h-12 rounded-2xl bg-primary mb-5" />
-                <h3 className="text-white text-lg font-semibold mb-1">{v.name}</h3>
-                <p className="text-white/50 text-xs mb-6">{v.cat}</p>
-                <div className="flex items-end justify-between mb-3">
-                  <span className="text-white/60 text-xs">Reliability</span>
-                  <span className="text-white text-3xl font-bold leading-none">{v.score}</span>
-                </div>
-                <div className="h-1.5 rounded-full bg-white/10 overflow-hidden">
-                  <div className="h-full bg-primary" style={{ width: `${v.score}%` }} />
-                </div>
-                <div className="mt-5 flex items-center justify-between text-[11px] text-white/40">
-                  <span>● Available · Nov 14</span>
-                  <span className="text-white/70 group-hover:text-white transition">View →</span>
-                </div>
-              </div>
-            ))}
-          </div>
-
-          <div className="mt-10 grid grid-cols-1 md:grid-cols-3 gap-4">
-            {[
-              { t: "Trusted reliability scoring", d: "Verified vendor history rolled into a single score." },
-              { t: "Live availability", d: "Real-time calendar sync prevents double-booking." },
-              { t: "Auto match-making", d: "Nested suggests the right partner for each event profile." },
-            ].map((it, i) => (
-              <div key={i} className="feat-anim rounded-2xl bg-white/[0.03] border border-white/5 p-5">
-                <h4 className="text-white text-sm font-semibold mb-1.5">{it.t}</h4>
-                <p className="text-white/50 text-[13px]">{it.d}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </div>
 
     </section>
   );
