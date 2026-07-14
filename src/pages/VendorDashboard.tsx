@@ -1,8 +1,7 @@
 import { Routes, Route, useNavigate, useLocation } from "react-router-dom";
 import { useState } from "react";
-import { Sun, Moon, Menu, Search, X, User, Settings, LogOut, Briefcase } from "lucide-react";
+import { Menu, Search, X, User, Settings, LogOut, Briefcase } from "lucide-react";
 import DashboardSidebar from "@/components/DashboardSidebar";
-import { useTheme } from "@/contexts/ThemeContext";
 import { useAuth } from "@/contexts/AuthContext";
 
 import VendorHomePage from "./vendor/VendorHomePage";
@@ -67,7 +66,7 @@ const ProfileDropdown = ({ onClose, onSignOut, userEmail, userName, onNavigate }
 const VendorDashboard = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const { theme, toggleTheme } = useTheme();
+  
   const { user, signOut } = useAuth();
   const [showProfile, setShowProfile] = useState(false);
   const [mobileNavOpen, setMobileNavOpen] = useState(false);
@@ -94,9 +93,6 @@ const VendorDashboard = () => {
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-muted-foreground" />
               <input placeholder="Search bookings, events..." className="pl-9 w-56 h-8 rounded-lg bg-muted text-xs text-foreground placeholder:text-muted-foreground outline-none border border-border focus:ring-1 focus:ring-primary/20" />
             </div>
-            <button onClick={toggleTheme} className="p-2 rounded-lg text-muted-foreground hover:bg-muted transition-colors" aria-label="Toggle theme">
-              {theme === "dark" ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
-            </button>
             <button className="w-8 h-8 rounded-full bg-foreground flex items-center justify-center hover:opacity-90" onClick={() => setShowProfile(true)}>
               <span className="text-background text-xs font-semibold">{initials}</span>
             </button>

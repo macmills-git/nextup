@@ -1,12 +1,11 @@
 import DashboardSidebar from "@/components/DashboardSidebar";
 import { Routes, Route, useNavigate } from "react-router-dom";
 import {
-  Calendar, Users, TrendingUp, Bell, Search, Sparkles, CheckCircle, Clock, ArrowRight, Sun, Moon,
+  Calendar, Users, TrendingUp, Bell, Search, Sparkles, CheckCircle, Clock, ArrowRight,
   User, Settings, LogOut, X, Menu,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
-import { useTheme } from "@/contexts/ThemeContext";
 import { useAuth } from "@/contexts/AuthContext";
 import { useState } from "react";
 import EventsPage from "./dashboard/EventsPage";
@@ -302,7 +301,6 @@ const useRouteTitle = () => {
 
 const Dashboard = () => {
   const navigate = useNavigate();
-  const { theme, toggleTheme } = useTheme();
   const { user, signOut } = useAuth();
   const [showProfile, setShowProfile] = useState(false);
   const [mobileNavOpen, setMobileNavOpen] = useState(false);
@@ -342,9 +340,6 @@ const Dashboard = () => {
               <input placeholder="Search for anything..." className="pl-9 w-56 h-8 rounded-lg bg-muted text-xs text-foreground placeholder:text-muted-foreground outline-none border border-border focus:ring-1 focus:ring-primary/20" />
               <span className="absolute right-3 top-1/2 -translate-y-1/2 text-[10px] text-muted-foreground border border-border rounded px-1.5 py-0.5">⌘K</span>
             </div>
-            <button onClick={toggleTheme} className="p-2 rounded-lg text-muted-foreground hover:bg-muted transition-colors" aria-label="Toggle theme">
-              {theme === 'dark' ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
-            </button>
             <button className="w-8 h-8 rounded-full bg-foreground flex items-center justify-center hover:opacity-90 transition-opacity"
               onClick={() => setShowProfile(true)} aria-label="Account">
               <span className="text-background text-xs font-semibold">{initials}</span>
