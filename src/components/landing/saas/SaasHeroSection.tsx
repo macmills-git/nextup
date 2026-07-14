@@ -3,18 +3,6 @@ import { ChevronDown, ChevronRight, TrendingDown, TrendingUp, X } from "lucide-r
 
 const PRIMARY = "#ef4d23";
 
-const Logo = ({ className = "" }: { className?: string }) => (
-  <span
-    className={`font-black text-neutral-900 leading-none ${className}`}
-    style={{
-      fontFamily: "'Space Grotesk', 'Inter Tight', sans-serif",
-      letterSpacing: "-0.06em",
-      fontSize: "20px",
-    }}
-  >
-    NESTED
-  </span>
-);
 
 const Gauge = ({ value, color = PRIMARY, showLabels = false, min = 0, max = 100 }: { value: number; color?: string; showLabels?: boolean; min?: number | string; max?: number | string }) => {
   const total = 40;
