@@ -1,12 +1,11 @@
 import DashboardSidebar from "@/components/DashboardSidebar";
 import { Routes, Route, useNavigate } from "react-router-dom";
 import {
-  Calendar, Users, TrendingUp, Bell, Search, Sparkles, CheckCircle, Clock, ArrowRight, Sun, Moon,
+  Calendar, Users, TrendingUp, Bell, Search, Sparkles, CheckCircle, Clock, ArrowRight,
   User, Settings, LogOut, X, Menu,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
-import { useTheme } from "@/contexts/ThemeContext";
 import { useAuth } from "@/contexts/AuthContext";
 import { useState } from "react";
 import EventsPage from "./dashboard/EventsPage";

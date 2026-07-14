@@ -1,6 +1,7 @@
 import { Routes, Route, useNavigate, useLocation } from "react-router-dom";
 import { useState } from "react";
 import { Menu, Search, X, User, Settings, LogOut, Briefcase } from "lucide-react";
+import DashboardSidebar from "@/components/DashboardSidebar";
 import { useAuth } from "@/contexts/AuthContext";
 
 import VendorHomePage from "./vendor/VendorHomePage";
