@@ -21,6 +21,7 @@ import EventsNearMePage from "./pages/EventsNearMePage";
 import PublicEventDetailPage from "./pages/PublicEventDetailPage";
 import EventWorkspacePage from "./pages/dashboard/EventWorkspacePage";
 import NotFound from "./pages/NotFound";
+import ResetPassword from "./pages/ResetPassword";
 
 const queryClient = new QueryClient();
 
@@ -45,6 +46,7 @@ const App = () => (
             <Route path="/" element={<Index />} />
             <Route path="/signin" element={<SignIn />} />
             <Route path="/signup" element={<SignUp />} />
+            <Route path="/reset-password" element={<ResetPassword />} />
             <Route path="/features" element={<FeaturesPage />} />
             <Route path="/pricing" element={<PricingPage />} />
             
