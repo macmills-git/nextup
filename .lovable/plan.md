@@ -1,113 +1,86 @@
-# Event Operations System — Architectural Redesign
 
-Shift from feature-pages to a **lifecycle-driven Event Workspace** where every event is a living command center. All modules (timeline, budget, vendors, tasks, guests, team, docs, comms) become **linked sub-systems of one event**, not isolated tools.
+## Goal
 
----
+Ship end-to-end auth, database, and AI for the app. Runtime split:
 
-## 1. New Information Architecture
+- **Lovable Cloud (Supabase)** → auth (email + managed Google) and Postgres/RLS for all app data.
+- **`backend/` (standalone Node)** → the AI runtime (OpenRouter, BullMQ queue, SSE streaming, vendor embeddings). Deployed by you; the frontend reaches it via `VITE_BACKEND_URL`.
+
+## 1. Enable Lovable Cloud
+
+Enable Cloud. Add managed Google as a sign-in provider. Configure Site URL + redirect URLs for the Lovable preview & published domain.
+
+## 2. Database schema (single migration)
 
 ```text
-/dashboard                  → Global multi-event overview
-/dashboard/events           → All events (list + create)
-/dashboard/events/:id       → EVENT WORKSPACE shell (nested tabs below)
-   ├── overview             → Mission control widgets
-   ├── timeline             → Multi-layer timeline (Planning / Run Sheet / Vendor / Team)
-   ├── tasks                → Phase → Milestone → Task → Subtask
-   ├── budget               → Estimated / Approved / Actual / Pending
-   ├── vendors              → Lifecycle: Discover → Shortlist → Negotiate → Book → Execute → Review
-   ├── guests               → Import, segment, RSVP, seating, check-in
-   ├── team                 → Roles, permissions, activity
-   ├── documents            → Files + AI extraction
-   ├── communications       → Unified feed (team / vendor / guest)
-   ├── event-day            → Live command center (run sheet, check-ins, alerts)
-   └── reports              → Post-event analytics + AI insights
+profiles              1:1 auth.users        id (pk=auth.users.id), full_name, avatar_url, phone, created_at
+app_role (enum)       'admin' | 'organizer' | 'vendor'
+user_roles            (user_id, role) unique; drives dashboard routing + RLS
+vendor_profiles       user_id (pk), business_name, category, description,
+                      service_areas text[], price_min, price_max, embedding vector(1536) nullable
+organizer_preferences user_id (pk), default_event_type, timezone,
+                      notify_email bool, notify_sms bool
+ai_conversations      id, user_id, title, created_at
+ai_messages           id, conversation_id, role, content, created_at
+ai_tasks              id, user_id, kind, status, input jsonb, result jsonb, error jsonb, created_at
+                      (mirrors the standalone backend's task registry so the UI can poll from Supabase too)
 ```
 
-Vendor side & public pages unchanged.
+- pgvector extension enabled for `vendor_profiles.embedding`.
+- `has_role(uuid, app_role)` security-definer function (per the user_roles rules).
+- Trigger `handle_new_user()` auto-creates `profiles` row on signup; role is set from `raw_user_meta_data.role` (defaults to `organizer`).
+- RLS on every table + explicit `GRANT` blocks.
 
----
+## 3. Auth UI
 
-## 2. Phase 1 — Event Initiation (Create Wizard)
+- Rebuild `SignIn.tsx` and `SignUp.tsx` on `@supabase/supabase-js`:
+  - email/password
+  - "Continue with Google" (managed provider)
+  - role picker on signup (Organizer / Vendor) stored in `raw_user_meta_data`
+  - `emailRedirectTo: window.location.origin`
+- `AuthContext` uses `onAuthStateChange` + `getUser()` for trust-critical checks; exposes `{ user, role, loading }`.
+- `ProtectedRoute` checks role; unauthenticated → `/signin`, wrong role → their own dashboard.
+- Add `/reset-password` public route (required by our auth guidance).
+- Sign out button in dashboard headers.
 
-Replace current single-screen create with **3-step guided wizard** (reusing existing `EventStore`):
+## 4. Frontend ↔ standalone backend bridge
 
-- **Step 1 Basics** — name, type, public/private, modality, theme, guest count, goal, budget range, date, location
-- **Step 2 Structure** — checklist (catering, stage, security, accommodation, transport, photography, MC, livestream). Selections **dynamically seed** vendor categories, budget categories, task groups, and timeline milestones.
-- **Step 3 Planning Mode** — DIY / Team / Hire Planner / AI Assisted
+- Add `VITE_BACKEND_URL` (defaults to `http://localhost:8080`).
+- New `src/lib/backend.ts` client: attaches the Supabase access token as `Authorization: Bearer …` so the Node service can identify the user.
+- Backend gets a small `authMiddleware` that verifies the Supabase JWT (`SUPABASE_JWKS_URL` env) and attaches `req.userId`.
+- CORS on the backend allows the Lovable preview + published origins.
 
-On finish → save to `EventStore` and route to `/dashboard/events/:id/overview`.
+## 5. AI wiring (all three features)
 
----
+**a) AI Assistant chat (streaming)** — `src/pages/dashboard/AIAssistantPage.tsx`
+- Threaded: sidebar of conversations from `ai_conversations`, dedicated route `/dashboard/ai/:conversationId`.
+- Streams via `GET {BACKEND}/v1/ai/stream?conversationId=…` (SSE). On each turn, frontend inserts the user message into `ai_messages`, opens the SSE, appends tokens live, and inserts the assistant message on `done`.
+- Full history sent on every turn (model is stateless).
+- Markdown rendering with `react-markdown`.
 
-## 3. Event Workspace Shell
+**b) Event brief generator** — inside the Event Workspace Overview tab
+- "Generate AI brief" button → `POST {BACKEND}/v1/events/:id/brief` → `202 { taskId }`.
+- UI polls `GET /v1/tasks/:id` every 1.5s; on `completed`, writes result into the event workspace and mirrors task to `ai_tasks`.
 
-New component `EventWorkspaceShell` with:
-- Sticky header: event name, countdown chip, status, share, settings
-- Horizontal tab nav for the 11 sub-areas above
-- `<Outlet />` style nested routing via internal state (keeps single-page feel)
-- Pulls live data from `EventStore` (`getEvent`, `updateEvent`)
+**c) Vendor semantic matching** — Vendors tab + Vendor onboarding
+- On vendor profile save: `POST /v1/vendors/embed` with concatenated business text; backend embeds via OpenRouter and upserts into `pgvector`.
+- "Find matching vendors" button on an event → `POST /v1/vendors/match` with the event brief → poll → render ranked vendor cards.
 
----
+## 6. Secrets
 
-## 4. Sub-System Modules (all wired to the same event record)
+- `LOVABLE_API_KEY` — already provisioned; not used here (we're on OpenRouter per your earlier choice).
+- `OPENROUTER_API_KEY` — already saved. Used only by the standalone backend.
+- Backend also needs `SUPABASE_URL`, `SUPABASE_JWKS_URL`, `SUPABASE_SERVICE_ROLE_KEY` in its own `.env` for JWT verification and privileged reads. I'll document these in `backend/.env.example`; you paste them from Cloud settings when deploying.
 
-| Module | Key Feature this round |
-|---|---|
-| Overview | Widgets: countdown, budget health bar, task %, vendor status, RSVP donut, deadlines, risks |
-| Timeline | 4 layers as tabs; dependency badges; AI overlap warnings (heuristic) |
-| Tasks | Hierarchical list, deps, assignee, vendor link, budget link |
-| Budget | Categories × layers matrix; auto-roll-up; vendor-linked line items |
-| Vendors | Lifecycle kanban (Discover → Shortlist → Negotiate → Booked → Executing → Reviewed) |
-| Guests | Import (CSV/manual), segments, RSVP, seating grid, check-in toggle |
-| Team | Role chips, permission matrix, activity log |
-| Documents | Upload list, type tags, mock AI extract panel |
-| Communications | Unified feed combining mock vendor/team/guest events |
-| Event Day | Live run sheet, check-in counters, issue log, AI suggestion banner |
-| Reports | Financial summary, vendor scores, AI insight cards |
+## 7. Verification before I hand off
 
-**Cross-linking** is the core value: hiring a vendor creates a budget line, a task, and a timeline entry automatically (helper `linkVendorToEvent`).
+- Sign up as organizer + as vendor → correct role assigned, correct dashboard opens.
+- Google sign-in round-trip lands back on the dashboard.
+- Refresh preserves session; sign-out clears it.
+- AI Assistant streams tokens against the local backend (falls back to Mock adapter when key missing).
+- Event brief job completes end-to-end; task row visible in `ai_tasks`.
+- Vendor match returns ranked results with cosine-similarity scores.
 
----
+## Out of scope for this pass
 
-## 5. Data Model Extensions (EventStore)
-
-Extend `EventModel` with: `phase`, `structure` (selected services), `planningMode`, `tasksTree`, `budgetCategories[]`, `vendorPipeline[]`, `guestsList[] (segment, rsvp, seat, checkedIn)`, `team[] (role)`, `documents[]`, `activity[]`, `runSheet[]`, `issues[]`. All in localStorage — no backend needed.
-
-Add helpers: `addTask`, `addBudgetLine`, `addVendorToPipeline`, `logActivity`, `addGuest`, `addDocument`.
-
----
-
-## 6. Files
-
-**Create**
-- `src/pages/dashboard/CreateEventWizard.tsx` (3-step wizard)
-- `src/pages/dashboard/EventWorkspace/index.tsx` (shell + tab router)
-- `src/pages/dashboard/EventWorkspace/tabs/Overview.tsx`
-- `.../tabs/Timeline.tsx`
-- `.../tabs/Tasks.tsx`
-- `.../tabs/Budget.tsx`
-- `.../tabs/Vendors.tsx`
-- `.../tabs/Guests.tsx`
-- `.../tabs/Team.tsx`
-- `.../tabs/Documents.tsx`
-- `.../tabs/Communications.tsx`
-- `.../tabs/EventDay.tsx`
-- `.../tabs/Reports.tsx`
-
-**Modify**
-- `src/contexts/EventStore.tsx` — extended schema + helpers
-- `src/App.tsx` — `/dashboard/events/new` and `/dashboard/events/:id/*` routes
-- `src/pages/Dashboard.tsx` / `DashboardSidebar.tsx` — point "Projects" CTA to new wizard / workspace
-- `src/pages/dashboard/EventsPage.tsx` — list cards link to workspace; "New" → wizard
-
----
-
-## 7. Design
-
-Stay within existing tokens — coral primary, Space Grotesk/DM Sans, dark sphere bg, floating glass cards. Tab nav as pill row; overview widgets as bento grid; timeline as horizontal swim-lanes; budget as table with progress bars; vendor pipeline as column kanban. Smooth framer-motion transitions between tabs.
-
----
-
-## 8. Scope for this iteration
-
-Ship the **full shell + wizard + all 11 tabs functional with cross-linked mock+real data from EventStore**. AI features are heuristic (no LLM calls). Polished UI, no backend.
+Payments, real-time messaging, ticket sales, email delivery. Say the word if you want any of those next.
