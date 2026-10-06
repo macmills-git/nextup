@@ -220,67 +220,8 @@ export const EventsPage = () => {
           </div>
         </div>
 
-        {/* Additional Filters: Date, Price, & Reset */}
-        <div className="flex flex-wrap items-center justify-between gap-3 mb-6 bg-card border border-border/80 p-3 rounded-2xl">
-          <div className="flex flex-wrap items-center gap-2 text-xs font-medium">
-            <span className="text-stone-500 font-semibold mr-1">Date:</span>
-            {(
-              [
-                { id: "any", label: "Any Time" },
-                { id: "today", label: "Today" },
-                { id: "weekend", label: "This Weekend" },
-                { id: "month", label: "Next 30 Days" },
-              ] as const
-            ).map((d) => (
-              <button
-                key={d.id}
-                onClick={() => setDateFilter(d.id)}
-                className={`px-3 py-1 rounded-xl transition-all ${
-                  dateFilter === d.id
-                    ? "bg-foreground text-background shadow-xs font-bold"
-                    : "bg-stone-100 text-stone-600 hover:bg-stone-200"
-                }`}
-              >
-                {d.label}
-              </button>
-            ))}
-
-            <div className="w-[1px] h-4 bg-stone-200 mx-1 hidden sm:block" />
-
-            <span className="text-stone-500 font-semibold mr-1">Price:</span>
-            {(
-              [
-                { id: "all", label: "All Prices" },
-                { id: "free", label: "Free Only" },
-                { id: "paid", label: "Paid Only" },
-              ] as const
-            ).map((p) => (
-              <button
-                key={p.id}
-                onClick={() => setPriceFilter(p.id)}
-                className={`px-3 py-1 rounded-xl transition-all ${
-                  priceFilter === p.id
-                    ? "bg-foreground text-background shadow-xs font-bold"
-                    : "bg-stone-100 text-stone-600 hover:bg-stone-200"
-                }`}
-              >
-                {p.label}
-              </button>
-            ))}
-          </div>
-
-          {isFiltered && (
-            <button
-              onClick={resetFilters}
-              className="text-xs font-semibold text-primary hover:underline px-2 py-1"
-            >
-              Reset All Filters &times;
-            </button>
-          )}
-        </div>
-
         {/* Categories Pills */}
-        <div className="flex flex-wrap items-center gap-2 mb-8">
+        <div className="flex flex-wrap items-center gap-2 mb-6">
           {categories.map((cat) => (
             <button
               key={cat}
@@ -296,12 +237,8 @@ export const EventsPage = () => {
           ))}
         </div>
 
-        {/* Results Info, View Toggle & Sort */}
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
-          <h2 className="text-base font-normal text-foreground">
-            {sorted.length} {sorted.length === 1 ? "Event" : "Events"} {cityFilter ? `near "${cityFilter}"` : "Available"}
-          </h2>
-
+        {/* View Toggle & Sort */}
+        <div className="flex flex-col sm:flex-row sm:items-center justify-end gap-4 mb-6">
           <div className="flex items-center gap-2">
             {/* View Mode Switcher */}
             <div className="flex items-center bg-stone-100 p-1 rounded-xl border border-stone-200">

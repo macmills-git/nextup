@@ -136,12 +136,6 @@ export const VendorsDirectoryPage = () => {
           ))}
         </div>
 
-        {/* Results Info */}
-        <div className="flex items-center justify-between mb-6">
-          <h2 className="text-base font-normal text-foreground">
-            {filtered.length} {filtered.length === 1 ? "Vendor" : "Vendors"} Available
-          </h2>
-        </div>
 
         {/* Vendor Cards Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
