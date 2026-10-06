@@ -138,7 +138,7 @@ export const AdminPage = () => {
     <div className="min-h-screen bg-background flex flex-col justify-between">
       <Navbar />
 
-      <div className="pt-28 pb-20 container mx-auto px-4 lg:px-8 max-w-7xl">
+      <div className="pt-8 pb-20 container mx-auto px-4 lg:px-8 max-w-7xl">
         
         {/* Top Header Bar */}
         <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 mb-8">

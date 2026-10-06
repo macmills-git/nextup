@@ -164,7 +164,7 @@ export const CreateVendorPage = () => {
     <div className="min-h-screen bg-background">
       <Navbar />
 
-      <div className="pt-28 pb-20 container mx-auto px-4 lg:px-8 max-w-3xl">
+      <div className="pt-8 pb-20 container mx-auto px-4 lg:px-8 max-w-3xl">
         <button
           onClick={() => navigate(-1)}
           className="inline-flex items-center gap-1.5 text-xs font-semibold text-muted-foreground hover:text-foreground mb-6"

@@ -55,7 +55,7 @@ export const PublicEventDetailPage = () => {
     return (
       <div className="min-h-screen bg-background flex flex-col justify-between">
         <Navbar />
-        <div className="pt-36 pb-20 container mx-auto px-4 text-center max-w-md">
+        <div className="pt-8 pb-20 container mx-auto px-4 text-center max-w-md">
           <div className="w-16 h-16 rounded-full bg-stone-100 flex items-center justify-center text-stone-400 mx-auto mb-4">
             <Calendar className="w-8 h-8" />
           </div>
@@ -139,7 +139,7 @@ export const PublicEventDetailPage = () => {
     <div className="min-h-screen bg-background">
       <Navbar />
 
-      <div className="pt-28 pb-20 container mx-auto px-4 lg:px-8 max-w-7xl">
+      <div className="pt-8 pb-20 container mx-auto px-4 lg:px-8 max-w-7xl">
         <button
           onClick={() => navigate("/events")}
           className="inline-flex items-center gap-1.5 text-xs font-semibold text-muted-foreground hover:text-foreground mb-6"

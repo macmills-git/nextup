@@ -167,7 +167,7 @@ export const EventsPage = () => {
     <div className="min-h-screen bg-background">
       <Navbar />
 
-      <div className="pt-32 pb-20 container mx-auto px-4 lg:px-8 max-w-7xl">
+      <div className="pt-8 pb-20 container mx-auto px-4 lg:px-8 max-w-7xl">
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-10">
           <div className="max-w-2xl">
             <span className="text-xs font-bold uppercase tracking-wider text-primary px-3 py-1 rounded-full bg-primary/10">

@@ -98,15 +98,15 @@ export const FeaturesSection = () => {
   };
 
   return (
-    <section id="features" className="relative px-5 md:px-10 lg:px-16 py-20 md:py-40 lg:py-48">
+    <section id="features" className="relative px-5 md:px-10 lg:px-16 py-20 md:py-40 lg:py-48 bg-stone-950 text-white">
       {/* Fixed background image behind content */}
       <div className="fixed inset-0 -z-10 pointer-events-none overflow-hidden">
         <img
           src="https://images.higgs.ai/?default=1&output=webp&url=https%3A%2F%2Fd8j0ntlcm91z4.cloudfront.net%2Fuser_38xzZboKViGWJOttwIXH07lWA1P%2Fhf_20260709_082449_46df5cc4-ad98-4541-9236-a2659c1478a4.png&w=1920&q=85"
           alt="Features Background"
-          className="w-full h-full object-cover"
+          className="w-full h-full object-cover opacity-60"
         />
-        <div className="absolute inset-0 bg-black/40" />
+        <div className="absolute inset-0 bg-stone-950/80" />
       </div>
 
       <div className="max-w-[1400px] mx-auto grid grid-cols-1 lg:grid-cols-[400px_1fr] xl:grid-cols-[460px_1fr] gap-12 lg:gap-24 xl:gap-48 items-start">

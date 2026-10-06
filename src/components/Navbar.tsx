@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
-import { User, LogOut, Activity, ChevronDown } from "lucide-react";
+import { User, LogOut, ChevronDown } from "lucide-react";
 import Logo from "@/components/Logo";
 
 export const Navbar = () => {
@@ -39,44 +39,45 @@ export const Navbar = () => {
   const navItems = [
     { label: "Events", to: "/events" },
     { label: "Vendors", to: "/vendors" },
+    { label: "Publish Event", to: "/create/event" },
     user?.role === "admin"
       ? { label: "Admin Console", to: "/admin" }
       : { label: "Activity", to: "/dashboard" },
   ];
 
   return (
-    <header className="absolute top-6 left-1/2 -translate-x-1/2 z-50 w-full max-w-6xl px-4">
-      {/* Expanded Floating Pill Navbar */}
-      <div className="bg-white/95 backdrop-blur-md rounded-full px-6 py-3 flex items-center justify-between border border-black/10 relative z-50">
+    <header className="sticky top-0 z-50 w-full bg-white/90 backdrop-blur-md border-b border-stone-200/80 transition-all">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3.5 flex items-center justify-between">
         {/* Brand Logo */}
         <Link 
           to="/" 
-          className="hover:opacity-80 transition-opacity flex items-center"
+          className="hover:opacity-85 transition-opacity flex items-center"
         >
           <Logo variant="dark" size="md" />
         </Link>
 
-        {/* Right Section: Desktop Navigation Items + Profile / User Actions */}
-        <div className="hidden md:flex items-center gap-3">
-          <nav className="flex items-center gap-1 bg-stone-100/80 rounded-full p-1 border border-stone-200/60">
-            {navItems.map((item) => {
-              const isActive = location.pathname === item.to || (item.to !== "/" && !item.to.startsWith("#") && location.pathname.startsWith(item.to));
-              return (
-                <button
-                  key={item.label}
-                  onClick={() => handleNavClick(item.to)}
-                  className={`px-4 py-1.5 text-xs font-semibold rounded-full transition-all duration-200 ${
-                    isActive
-                      ? "bg-black text-white"
-                      : "text-stone-700 hover:text-black hover:bg-white/90"
-                  }`}
-                >
-                  {item.label}
-                </button>
-              );
-            })}
-          </nav>
+        {/* Center Desktop Navigation Links */}
+        <nav className="hidden md:flex items-center gap-2">
+          {navItems.map((item) => {
+            const isActive = location.pathname === item.to || (item.to !== "/" && !item.to.startsWith("#") && location.pathname.startsWith(item.to));
+            return (
+              <button
+                key={item.label}
+                onClick={() => handleNavClick(item.to)}
+                className={`px-4 py-1.5 text-xs md:text-sm font-medium rounded-full transition-all duration-200 ${
+                  isActive
+                    ? "border border-stone-300 bg-stone-100/90 text-stone-950 font-semibold shadow-2xs"
+                    : "border border-transparent text-stone-600 hover:text-stone-900 hover:bg-stone-50"
+                }`}
+              >
+                {item.label}
+              </button>
+            );
+          })}
+        </nav>
 
+        {/* Right Action Button / User Menu */}
+        <div className="hidden md:flex items-center gap-3">
           {isAuthenticated ? (
             <div className="relative" ref={profileRef}>
               <button
@@ -115,18 +116,18 @@ export const Navbar = () => {
               )}
             </div>
           ) : (
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-3">
               <button
                 onClick={() => handleNavClick("/signin")}
-                className="px-4 py-2 text-xs font-semibold text-stone-800 hover:text-black hover:bg-stone-100 rounded-full transition-colors"
+                className="text-sm font-medium text-stone-600 hover:text-stone-900 px-3 py-2 transition-colors"
               >
                 Log in
               </button>
               <button
-                onClick={() => handleNavClick("/signup")}
-                className="px-4 py-2 text-xs font-semibold bg-black text-white hover:bg-black/90 rounded-full transition-colors shadow-sm"
+                onClick={() => handleNavClick("/signin")}
+                className="bg-black text-white text-sm font-semibold px-6 py-2.5 rounded-full hover:bg-stone-800 transition-all shadow-xs"
               >
-                Get Started
+                Sign In
               </button>
             </div>
           )}
@@ -156,18 +157,18 @@ export const Navbar = () => {
 
       {/* Mobile Dropdown Menu Container */}
       <div
-        className={`md:hidden absolute top-full left-4 right-4 mt-3 bg-white rounded-2xl p-5 shadow-2xl transition-all duration-300 ease-out origin-top border border-black/5 ${
+        className={`md:hidden absolute top-full left-0 right-0 bg-white/98 backdrop-blur-lg border-b border-stone-200/80 p-5 shadow-xl transition-all duration-300 ease-out origin-top ${
           mobileOpen
             ? "opacity-100 scale-100 translate-y-0 pointer-events-auto"
             : "opacity-0 scale-95 -translate-y-2 pointer-events-none"
         }`}
       >
-        <nav className="flex flex-col space-y-2.5">
+        <nav className="flex flex-col space-y-3">
           {navItems.map((item) => (
             <button
               key={item.label}
               onClick={() => handleNavClick(item.to)}
-              className="text-left px-3 py-2 text-sm font-semibold text-stone-800 hover:text-black hover:bg-stone-50 rounded-xl transition-colors"
+              className="text-left px-3 py-2 text-sm font-medium text-stone-700 hover:text-black hover:bg-stone-50 rounded-xl transition-colors"
             >
               {item.label}
             </button>
@@ -195,15 +196,15 @@ export const Navbar = () => {
             <div className="pt-2 flex items-center gap-2">
               <button
                 onClick={() => handleNavClick("/signin")}
-                className="flex-1 py-2.5 rounded-xl border border-stone-200 text-black text-xs font-semibold hover:bg-stone-50 transition-colors"
+                className="flex-1 py-2.5 rounded-full border border-stone-200 text-black text-xs font-semibold hover:bg-stone-50 transition-colors"
               >
                 Log in
               </button>
               <button
-                onClick={() => handleNavClick("/signup")}
-                className="flex-1 py-2.5 rounded-xl bg-black text-white text-xs font-semibold hover:bg-black/90 transition-colors"
+                onClick={() => handleNavClick("/signin")}
+                className="flex-1 py-2.5 rounded-full bg-black text-white text-xs font-semibold hover:bg-stone-800 transition-colors"
               >
-                Get Started
+                Sign In
               </button>
             </div>
           )}

@@ -321,7 +321,7 @@ export const Dashboard = () => {
     <div className="min-h-screen bg-background flex flex-col justify-between">
       <Navbar />
 
-      <main className="pt-28 pb-20 container mx-auto px-4 lg:px-8 max-w-7xl flex-1">
+      <main className="pt-8 pb-20 container mx-auto px-4 lg:px-8 max-w-7xl flex-1">
         {/* Page Top Header */}
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
           <div>

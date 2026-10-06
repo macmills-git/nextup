@@ -14,10 +14,13 @@ export const Index = () => {
   const videoRef1 = useRef<HTMLVideoElement>(null);
   const videoRef2 = useRef<HTMLVideoElement>(null);
 
+  const PLAYBACK_SPEED = 0.65; // Slow down playback to 65% speed for a smoother background atmosphere
+
   useEffect(() => {
     if (activeVideoIndex === 0) {
       if (videoRef1.current) {
         videoRef1.current.currentTime = 0;
+        videoRef1.current.playbackRate = PLAYBACK_SPEED;
         videoRef1.current.play().catch(() => {});
       }
       if (videoRef2.current) {
@@ -26,6 +29,7 @@ export const Index = () => {
     } else {
       if (videoRef2.current) {
         videoRef2.current.currentTime = 0;
+        videoRef2.current.playbackRate = PLAYBACK_SPEED;
         videoRef2.current.play().catch(() => {});
       }
       if (videoRef1.current) {
@@ -43,81 +47,87 @@ export const Index = () => {
   };
 
   return (
-    <div className="min-h-screen bg-black text-white relative font-sans overflow-x-clip">
-      {/* Floating Pill Navbar */}
+    <div className="min-h-screen bg-white text-stone-900 relative font-sans overflow-x-clip">
+      {/* Floating Top Navbar */}
       <Navbar />
 
-      {/* SECTION 1: HERO (full viewport height) */}
-      <section className="relative h-screen overflow-hidden mb-[-25px] flex flex-col justify-end pb-12 md:pb-16 z-0">
-        {/* Background Videos (Sequential Loop) */}
-        <video
-          ref={videoRef1}
-          src={heroBgVideo1}
-          autoPlay
-          muted
-          playsInline
-          preload="auto"
-          onEnded={handleEnded1}
-          className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-700 ${
-            activeVideoIndex === 0 ? "opacity-100 z-0" : "opacity-0 pointer-events-none"
-          }`}
-        />
-        <video
-          ref={videoRef2}
-          src={heroBgVideo2}
-          muted
-          playsInline
-          preload="auto"
-          onEnded={handleEnded2}
-          className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-700 ${
-            activeVideoIndex === 1 ? "opacity-100 z-0" : "opacity-0 pointer-events-none"
-          }`}
-        />
-
-        {/* Semi-transparent Overlay */}
-        <div className="absolute inset-0 bg-black/20 z-[1]" />
-
-        {/* Hero Content (Bottom Aligned) */}
-        <div className="relative z-10 max-w-5xl mx-auto px-4 text-center flex flex-col items-center">
-          {/* Main Heading */}
-          <h1 className="text-5xl sm:text-7xl md:text-8xl lg:text-[96px] font-normal text-white leading-[1.1] tracking-tight mb-4">
-            <div>Plan your events</div>
-            <div>
-              without{" "}
-              <em
-                className="not-italic"
-                style={{
-                  fontFamily: "'Instrument Serif', serif",
-                  fontStyle: "italic",
-                }}
-              >
-                the hassle
-              </em>
-            </div>
-          </h1>
-
-          {/* Subtitle */}
-          <p className="text-white/80 text-sm md:text-base font-medium max-w-[460px] mx-auto text-center mb-8">
-            NextUp is your central spot to discover local events, publish gatherings, and connect with trusted vendors
-          </p>
-
-          {/* CTA Bar */}
-          <div className="bg-black/25 backdrop-blur-md rounded-xl flex flex-row items-center pl-6 pr-1 py-1 gap-4 max-w-xl mx-auto border border-white/10">
-            {/* Desktop text */}
-            <span className="text-white text-sm font-medium hidden sm:inline">
-              No clutter. No complicated setups. Just your event, gently sorted.
-            </span>
-            {/* Mobile text */}
-            <span className="text-white text-sm font-medium sm:hidden">
-              No clutter. Just your event, gently sorted.
-            </span>
-
-            <button
-              onClick={() => navigate("/events")}
-              className="bg-white text-black text-sm font-medium px-5 py-2.5 rounded-xl hover:bg-white/90 transition-colors whitespace-nowrap flex-shrink-0"
+      {/* HERO SECTION */}
+      <section className="pt-10 pb-16 md:pt-16 md:pb-24 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto flex flex-col items-center text-center">
+        {/* Main Headline */}
+        <h1 className="text-5xl sm:text-6xl md:text-7xl lg:text-[84px] font-normal text-stone-900 leading-[1.08] tracking-tight max-w-4xl mx-auto mb-6">
+          Plan & discover events{" "}
+          <span className="block sm:inline">
+            without{" "}
+            <em
+              className="not-italic text-primary"
+              style={{
+                fontFamily: "'Instrument Serif', serif",
+                fontStyle: "italic",
+              }}
             >
-              Explore Events
-            </button>
+              the hassle
+            </em>
+            <span className="text-stone-900 font-bold">.</span>
+          </span>
+        </h1>
+
+        {/* Subtitle */}
+        <p className="text-stone-600 text-base md:text-lg font-normal max-w-2xl mx-auto leading-relaxed mb-8">
+          NextUp is your central spot to discover local events, publish gatherings, and connect with trusted event vendors and talent.
+        </p>
+
+        {/* Action Buttons */}
+        <div className="flex flex-wrap items-center justify-center gap-3 mb-14">
+          <button
+            onClick={() => navigate("/events")}
+            className="bg-black text-white text-sm font-semibold px-7 py-3.5 rounded-full hover:bg-stone-800 transition-all shadow-md hover:shadow-lg flex items-center gap-2"
+          >
+            Explore Events
+          </button>
+          <button
+            onClick={() => navigate("/create/event")}
+            className="bg-stone-100 text-stone-800 border border-stone-200 text-sm font-semibold px-7 py-3.5 rounded-full hover:bg-stone-200/80 transition-all"
+          >
+            Publish an Event
+          </button>
+        </div>
+
+        {/* Showcase Demo Video Container (Ad / Showcase Frame) */}
+        <div className="w-full max-w-6xl mx-auto relative rounded-[28px] sm:rounded-[36px] md:rounded-[44px] overflow-hidden border border-stone-200/90 shadow-2xl bg-stone-900 aspect-[16/9] md:aspect-[21/9] max-h-[580px] group">
+          {/* Background Videos (Sequential Loop) */}
+          <video
+            ref={videoRef1}
+            src={heroBgVideo1}
+            autoPlay
+            muted
+            playsInline
+            preload="auto"
+            onPlay={(e) => { e.currentTarget.playbackRate = PLAYBACK_SPEED; }}
+            onEnded={handleEnded1}
+            className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-700 ${
+              activeVideoIndex === 0 ? "opacity-100 z-0" : "opacity-0 pointer-events-none"
+            }`}
+          />
+          <video
+            ref={videoRef2}
+            src={heroBgVideo2}
+            muted
+            playsInline
+            preload="auto"
+            onPlay={(e) => { e.currentTarget.playbackRate = PLAYBACK_SPEED; }}
+            onEnded={handleEnded2}
+            className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-700 ${
+              activeVideoIndex === 1 ? "opacity-100 z-0" : "opacity-0 pointer-events-none"
+            }`}
+          />
+
+          {/* Elegant Dark Subtle Overlay */}
+          <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-black/10 z-[1] pointer-events-none" />
+
+          {/* Floating Showcase Badge */}
+          <div className="absolute top-4 left-4 sm:top-6 sm:left-6 z-10 flex items-center gap-2 bg-black/40 backdrop-blur-md px-3.5 py-1.5 rounded-full border border-white/15 text-white text-xs font-medium">
+            <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+            <span>NextUp Experience Preview</span>
           </div>
         </div>
       </section>
