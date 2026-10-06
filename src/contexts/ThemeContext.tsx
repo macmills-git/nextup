@@ -10,30 +10,20 @@ const ThemeContext = createContext<ThemeContextType>({ theme: 'light', toggleThe
 export const useTheme = () => useContext(ThemeContext);
 
 export const ThemeProvider = ({ children }: { children: ReactNode }) => {
-  const [theme, setTheme] = useState<'dark' | 'light'>(() => {
-    if (typeof window !== 'undefined') {
-      return (localStorage.getItem('theme') as 'dark' | 'light') || 'light';
-    }
-    return 'light';
-  });
+  const [theme, setTheme] = useState<'dark' | 'light'>('light');
 
   useEffect(() => {
-    document.documentElement.classList.toggle('dark', theme === 'dark');
-    localStorage.setItem('theme', theme);
+    // Ensure dark mode is completely disabled and light mode is active
+    document.documentElement.classList.remove('dark');
+    localStorage.setItem('theme', 'light');
   }, [theme]);
 
   const toggleTheme = useCallback(() => {
-    const next = theme === 'dark' ? 'light' : 'dark';
-
-    // Use View Transitions API for a smooth circular reveal
-    if (document.startViewTransition) {
-      document.startViewTransition(() => {
-        setTheme(next);
-      });
-    } else {
-      setTheme(next);
-    }
-  }, [theme]);
+    // Light mode enforcement
+    setTheme('light');
+    document.documentElement.classList.remove('dark');
+    localStorage.setItem('theme', 'light');
+  }, []);
 
   return (
     <ThemeContext.Provider value={{ theme, toggleTheme }}>
