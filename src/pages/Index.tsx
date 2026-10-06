@@ -1,14 +1,46 @@
-import React from "react";
+import React, { useState, useRef, useEffect } from "react";
 import Navbar from "@/components/Navbar";
 import AboutSection from "@/components/AboutSection";
 import FeaturesSection from "@/components/FeaturesSection";
 import CinematicPlatformSection from "@/components/CinematicPlatformSection";
 import Footer from "@/components/Footer";
 import { useNavigate } from "react-router-dom";
-import heroBgVideo from "@/gemini_generated_video_9df1ef94.mp4";
+import heroBgVideo1 from "@/gemini_generated_video_9df1ef94.mp4";
+import heroBgVideo2 from "@/gemini_generated_video_ae200837.mp4";
 
 export const Index = () => {
   const navigate = useNavigate();
+  const [activeVideoIndex, setActiveVideoIndex] = useState<0 | 1>(0);
+  const videoRef1 = useRef<HTMLVideoElement>(null);
+  const videoRef2 = useRef<HTMLVideoElement>(null);
+
+  useEffect(() => {
+    if (activeVideoIndex === 0) {
+      if (videoRef1.current) {
+        videoRef1.current.currentTime = 0;
+        videoRef1.current.play().catch(() => {});
+      }
+      if (videoRef2.current) {
+        videoRef2.current.pause();
+      }
+    } else {
+      if (videoRef2.current) {
+        videoRef2.current.currentTime = 0;
+        videoRef2.current.play().catch(() => {});
+      }
+      if (videoRef1.current) {
+        videoRef1.current.pause();
+      }
+    }
+  }, [activeVideoIndex]);
+
+  const handleEnded1 = () => {
+    setActiveVideoIndex(1);
+  };
+
+  const handleEnded2 = () => {
+    setActiveVideoIndex(0);
+  };
 
   return (
     <div className="min-h-screen bg-black text-white relative font-sans overflow-x-clip">
@@ -17,20 +49,33 @@ export const Index = () => {
 
       {/* SECTION 1: HERO (full viewport height) */}
       <section className="relative h-screen overflow-hidden mb-[-25px] flex flex-col justify-end pb-12 md:pb-16 z-0">
-        {/* Background Video */}
+        {/* Background Videos (Sequential Loop) */}
         <video
-          src={heroBgVideo}
+          ref={videoRef1}
+          src={heroBgVideo1}
           autoPlay
           muted
-          loop
           playsInline
           preload="auto"
-          onEnded={(e) => e.currentTarget.play()}
-          className="absolute inset-0 w-full h-full object-cover"
+          onEnded={handleEnded1}
+          className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-700 ${
+            activeVideoIndex === 0 ? "opacity-100 z-0" : "opacity-0 pointer-events-none"
+          }`}
+        />
+        <video
+          ref={videoRef2}
+          src={heroBgVideo2}
+          muted
+          playsInline
+          preload="auto"
+          onEnded={handleEnded2}
+          className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-700 ${
+            activeVideoIndex === 1 ? "opacity-100 z-0" : "opacity-0 pointer-events-none"
+          }`}
         />
 
         {/* Semi-transparent Overlay */}
-        <div className="absolute inset-0 bg-black/20" />
+        <div className="absolute inset-0 bg-black/20 z-[1]" />
 
         {/* Hero Content (Bottom Aligned) */}
         <div className="relative z-10 max-w-5xl mx-auto px-4 text-center flex flex-col items-center">
