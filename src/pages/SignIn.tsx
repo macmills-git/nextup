@@ -1,9 +1,9 @@
 import { useState } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { Eye, EyeOff, Loader2 } from "lucide-react";
-import AnimatedLogo from "@/components/AnimatedLogo";
 import { useAuth } from "@/contexts/AuthContext";
 import { toast } from "sonner";
+import Logo from "@/components/Logo";
 
 const SignIn = () => {
   const [email, setEmail] = useState("");
@@ -11,17 +11,9 @@ const SignIn = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [googleLoading, setGoogleLoading] = useState(false);
-  const [resetOpen, setResetOpen] = useState(false);
   const navigate = useNavigate();
   const location = useLocation() as { state?: { from?: string } };
   const { signInWithPassword, signInWithGoogle, sendPasswordReset } = useAuth();
-
-  const redirectByRole = (role: string | undefined) => {
-    const from = location.state?.from;
-    if (from && from !== "/signin" && from !== "/signup") return navigate(from, { replace: true });
-    if (role === "vendor") navigate("/vendor", { replace: true });
-    else navigate("/dashboard", { replace: true });
-  };
 
   const handleSignIn = async () => {
     if (!email || !password) {
@@ -35,14 +27,12 @@ const SignIn = () => {
       toast.error(error);
       return;
     }
-    // Small delay so AuthContext hydrates role
-    setTimeout(async () => {
-      const { supabase } = await import("@/integrations/supabase/client");
-      const { data } = await supabase.auth.getUser();
-      if (!data.user) return;
-      const { data: roles } = await supabase.from("user_roles").select("role").eq("user_id", data.user.id);
-      redirectByRole(roles?.[0]?.role);
-    }, 200);
+    const from = location.state?.from;
+    if (from && from !== "/signin" && from !== "/signup") {
+      navigate(from, { replace: true });
+    } else {
+      navigate("/dashboard", { replace: true });
+    }
   };
 
   const handleGoogle = async () => {
@@ -51,6 +41,8 @@ const SignIn = () => {
     if (error) {
       toast.error(error);
       setGoogleLoading(false);
+    } else {
+      navigate("/dashboard", { replace: true });
     }
   };
 
@@ -59,33 +51,31 @@ const SignIn = () => {
     const { error } = await sendPasswordReset(email);
     if (error) toast.error(error);
     else toast.success("Password reset email sent");
-    setResetOpen(false);
   };
 
   return (
     <div className="min-h-screen bg-background flex items-center justify-center p-4 relative z-[1]">
       <div className="w-full max-w-[420px]">
-        <div className="flex items-center gap-2 mb-10">
-          <AnimatedLogo size={24} />
-          <span className="text-sm font-semibold text-foreground tracking-tight">Nested</span>
-        </div>
-        <h1 className="text-2xl font-bold text-foreground mb-1">Welcome back</h1>
-        <p className="text-sm text-muted-foreground mb-6">Sign in to continue.</p>
+        <Link to="/" className="inline-block mb-8 hover:opacity-80 transition-opacity">
+          <Logo variant="dark" size="lg" />
+        </Link>
+        <h1 className="text-2xl font-normal text-foreground mb-1">Welcome back</h1>
+        <p className="text-sm text-muted-foreground mb-6">Sign in to publish events or manage your listings.</p>
 
-        <div className="space-y-5">
+        <div className="space-y-4">
           <div>
-            <label className="text-xs font-medium text-muted-foreground">Email</label>
+            <label className="text-xs font-semibold text-muted-foreground">Email</label>
             <input
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               placeholder="name@example.com"
-              className="w-full mt-1.5 h-10 px-3 bg-card border border-border rounded-lg text-sm text-foreground outline-none focus:ring-2 focus:ring-primary/20"
+              className="w-full mt-1.5 h-10 px-3 bg-card border border-border rounded-xl text-sm text-foreground outline-none focus:ring-2 focus:ring-primary/20"
             />
           </div>
           <div>
             <div className="flex items-center justify-between">
-              <label className="text-xs font-medium text-muted-foreground">Password</label>
+              <label className="text-xs font-semibold text-muted-foreground">Password</label>
               <button
                 type="button"
                 onClick={handleReset}
@@ -101,7 +91,7 @@ const SignIn = () => {
                 onChange={(e) => setPassword(e.target.value)}
                 onKeyDown={(e) => e.key === "Enter" && handleSignIn()}
                 placeholder="••••••••"
-                className="w-full mt-1.5 h-10 px-3 bg-card border border-border rounded-lg text-sm text-foreground outline-none focus:ring-2 focus:ring-primary/20 pr-10"
+                className="w-full mt-1.5 h-10 px-3 bg-card border border-border rounded-xl text-sm text-foreground outline-none focus:ring-2 focus:ring-primary/20 pr-10"
               />
               <button
                 type="button"
@@ -114,7 +104,7 @@ const SignIn = () => {
           </div>
           <button
             disabled={loading}
-            className="w-full h-10 rounded-lg text-sm font-medium bg-foreground text-background hover:bg-foreground/90 transition-colors flex items-center justify-center gap-2 disabled:opacity-70"
+            className="w-full h-10 rounded-xl text-sm font-semibold bg-foreground text-background hover:bg-foreground/90 transition-colors flex items-center justify-center gap-2 disabled:opacity-70"
             onClick={handleSignIn}
           >
             {loading ? (
@@ -134,7 +124,7 @@ const SignIn = () => {
           <button
             onClick={handleGoogle}
             disabled={googleLoading}
-            className="w-full h-10 rounded-lg border border-border text-sm font-medium text-foreground flex items-center justify-center gap-2 hover:bg-muted transition-colors disabled:opacity-70"
+            className="w-full h-10 rounded-xl border border-border text-sm font-semibold text-foreground flex items-center justify-center gap-2 hover:bg-muted transition-colors disabled:opacity-70"
           >
             {googleLoading ? <Loader2 className="w-4 h-4 animate-spin" /> : (
               <svg className="w-4 h-4" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 01-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
@@ -143,7 +133,7 @@ const SignIn = () => {
           </button>
         </div>
         <p className="text-xs text-muted-foreground text-center mt-8">
-          Don't have an account? <Link to="/signup" className="text-foreground hover:underline font-medium">Create an account</Link>
+          Don't have an account? <Link to="/signup" className="text-foreground hover:underline font-semibold">Create an account</Link>
         </p>
       </div>
     </div>

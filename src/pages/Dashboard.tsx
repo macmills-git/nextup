@@ -1,386 +1,381 @@
-import DashboardSidebar from "@/components/DashboardSidebar";
-import { Routes, Route, useNavigate } from "react-router-dom";
+import Navbar from "@/components/Navbar";
+import Footer from "@/components/Footer";
+import { Routes, Route, useNavigate, useLocation } from "react-router-dom";
 import {
-  Calendar, Users, TrendingUp, Bell, Search, Sparkles, CheckCircle, Clock, ArrowRight,
-  User, Settings, LogOut, X, Menu,
+  LayoutDashboard,
+  Calendar,
+  Store,
+  Plus,
+  Heart,
+  Settings,
+  ShieldAlert,
+  Edit3,
+  ExternalLink,
+  Trash2,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
+import { Badge } from "@/components/ui/badge";
 import { useAuth } from "@/contexts/AuthContext";
-import { useState } from "react";
-import EventsPage from "./dashboard/EventsPage";
-import EventDetailPage from "./dashboard/EventDetailPage";
-import EventWorkspace from "./dashboard/EventWorkspace";
-import CreateEventWizard from "./dashboard/CreateEventWizard";
-import VendorsPage from "./dashboard/VendorsPage";
-import VendorProfilePage from "./dashboard/VendorProfilePage";
-import TeamPage from "./dashboard/TeamPage";
-import MessagesPage from "./dashboard/MessagesPage";
-import AIAssistantPage from "./dashboard/AIAssistantPage";
+import { useEventStore } from "@/contexts/EventStore";
+import { useMemo } from "react";
 import SettingsPage from "./dashboard/SettingsPage";
-import NotificationsPage from "./dashboard/NotificationsPage";
-import ReportsPage from "./dashboard/ReportsPage";
-import TicketingPage from "./dashboard/TicketingPage";
-import VendorOnboardingPage from "./dashboard/VendorOnboardingPage";
-import MarketingPage from "./dashboard/MarketingPage";
-import NearbyEventsPage from "./dashboard/NearbyEventsPage";
-import VendorDashboardPage from "./dashboard/VendorDashboardPage";
-import DashboardTemplatesPage from "./dashboard/DashboardTemplatesPage";
-import PublishEventPage from "./dashboard/PublishEventPage";
 
-const chartData = [
-  { name: "Jan", events: 4 }, { name: "Feb", events: 3 }, { name: "Mar", events: 5 }, { name: "Apr", events: 7 },
-  { name: "May", events: 6 }, { name: "Jun", events: 8 }, { name: "Jul", events: 4 }, { name: "Aug", events: 9 },
-  { name: "Sep", events: 6 }, { name: "Oct", events: 5 }, { name: "Nov", events: 7 }, { name: "Dec", events: 3 },
-];
-
-const vendors = [
-  { name: "Akolo Studio", category: "Photography", status: "Running", latency: "8.2s", lastRun: "14 min ago" },
-  { name: "Bake It Right", category: "Catering", status: "Paused", latency: "11.4s", lastRun: "32 min ago" },
-  { name: "Prime Audio", category: "Audio/Visual", status: "Running", latency: "6.7s", lastRun: "1h ago" },
-  { name: "Event Bloom", category: "Decoration", status: "Running", latency: "4.2s", lastRun: "2h ago" },
-];
-
-const tasks = [
-  { title: "Finalize Venue Contract — Hotel Grand, Downtown", done: false },
-  { title: "Confirm Catering Menu Selection — Deadline this Friday", done: false },
-  { title: "Photography Briefing", done: true },
-  { title: "Send Invitations", done: false },
-];
-
-const statCards = [
-  { icon: Calendar, label: "Active Events", value: "52", change: "+12%", up: true },
-  { icon: TrendingUp, label: "Task success rate", value: "96.7%", change: "4%", up: true },
-  { icon: Clock, label: "Average execution time", value: "12.4s", change: "27%", up: false },
-  { icon: Sparkles, label: "Most used model", value: "GPT-4o", change: "", up: true },
-];
-
-const budgetCategories = [
-  { name: "Venue & Space", amount: 6730, share: "32.1%", color: "hsl(0, 70%, 65%)" },
-  { name: "Catering & Food", amount: 4120, share: "19.6%", color: "hsl(20, 80%, 70%)" },
-  { name: "Decoration", amount: 3920, share: "18.6%", color: "hsl(40, 70%, 75%)" },
-  { name: "Photography", amount: 3210, share: "15.3%", color: "hsl(0, 60%, 80%)" },
-  { name: "Entertainment", amount: 3010, share: "14.3%", color: "hsl(0, 0%, 85%)" },
-];
-
-const ProfileDropdown = ({ onClose, onNavigate, onSignOut, userEmail, userName }: { onClose: () => void; onNavigate: (path: string) => void; onSignOut: () => void; userEmail: string; userName?: string }) => (
-  <div className="fixed inset-0 z-50 flex items-start justify-end pt-16 pr-4 sm:pr-6" onClick={onClose}>
-    <div className="w-[92vw] max-w-[380px] bg-card rounded-2xl border border-border shadow-elevated p-6 animate-scale-in" onClick={e => e.stopPropagation()}>
-      <div className="flex items-center justify-between mb-5">
-        <span className="text-xs font-medium text-muted-foreground uppercase tracking-wider">Account</span>
-        <button onClick={onClose} className="w-7 h-7 rounded-full border border-border flex items-center justify-center text-muted-foreground hover:text-foreground transition-colors">
-          <X className="w-3.5 h-3.5" />
-        </button>
-      </div>
-      <div className="flex items-center gap-3 mb-6">
-        <div className="w-11 h-11 rounded-full bg-foreground flex items-center justify-center text-background font-semibold text-sm">
-          {(userName || userEmail).charAt(0).toUpperCase()}
-        </div>
-        <div className="min-w-0">
-          <p className="font-semibold text-foreground text-sm truncate">{userName || userEmail.split("@")[0]}</p>
-          <p className="text-xs text-muted-foreground truncate">{userEmail}</p>
-        </div>
-      </div>
-      <div className="space-y-4 mb-5">
-        <div>
-          <div className="flex items-center justify-between mb-1.5">
-            <span className="text-sm text-foreground">Daily prompts</span>
-            <span className="text-xs text-muted-foreground">0/3</span>
-          </div>
-          <div className="w-full h-1.5 bg-muted rounded-full overflow-hidden">
-            <div className="h-full bg-muted-foreground/30 rounded-full" style={{ width: '0%' }} />
-          </div>
-        </div>
-        <div>
-          <div className="flex items-center justify-between mb-1.5">
-            <span className="text-sm text-foreground">Monthly prompts</span>
-            <span className="text-xs text-muted-foreground">3/10</span>
-          </div>
-          <div className="w-full h-1.5 bg-muted rounded-full overflow-hidden">
-            <div className="h-full bg-primary/40 rounded-full" style={{ width: '30%' }} />
-          </div>
-        </div>
-      </div>
-      <div className="border-t border-border my-4" />
-      <div className="space-y-0.5">
-        {[
-          { icon: User, label: "Profile", path: "/dashboard/settings" },
-          { icon: Settings, label: "Settings", path: "/dashboard/settings" },
-          { icon: Users, label: "Team", path: "/dashboard/team" },
-          { icon: LogOut, label: "Log out", path: "/signin", isLogout: true },
-        ].map(item => (
-          <button key={item.label} className="w-full flex items-center gap-3 px-3 py-2 rounded-lg text-sm text-muted-foreground hover:text-foreground hover:bg-muted transition-colors"
-            onClick={() => { if ((item as any).isLogout) { onSignOut(); } onNavigate(item.path); onClose(); }}>
-            <item.icon className="w-4 h-4" />
-            {item.label}
-          </button>
-        ))}
-      </div>
-    </div>
-  </div>
-);
-
+// 1. Dashboard Overview Component
 const DashboardHome = () => {
   const navigate = useNavigate();
   const { user } = useAuth();
-  const [budgetTab, setBudgetTab] = useState<"category" | "employee">("category");
+  const { events, vendors, savedEventIds } = useEventStore();
 
-  const budgetByEmployee = [
-    { name: "Jane Doe", amount: 5710, share: "27.2%", color: "hsl(0, 70%, 65%)" },
-    { name: "Michael Chen", amount: 4940, share: "23.5%", color: "hsl(20, 80%, 70%)" },
-    { name: "Sarah Williams", amount: 4523, share: "21.5%", color: "hsl(40, 70%, 75%)" },
-    { name: "David Kim", amount: 3240, share: "15.4%", color: "hsl(0, 60%, 80%)" },
-    { name: "Emily Brown", amount: 2577, share: "12.3%", color: "hsl(0, 0%, 85%)" },
-  ];
+  const myEvents = useMemo(() => {
+    return events.filter((e) => e.ownerId === user?.id || e.ownerId === "current-user");
+  }, [events, user]);
 
-  const activeBudgetData = budgetTab === "category" ? budgetCategories : budgetByEmployee;
-  const totalBudget = activeBudgetData.reduce((sum, item) => sum + item.amount, 0);
+  const myVendorProfile = useMemo(() => {
+    return vendors.find((v) => v.ownerId === user?.id || v.ownerId === "current-user");
+  }, [vendors, user]);
 
-  // Vendors are routed to /vendor — planner-only dashboard from here
+  const publishedCount = myEvents.filter((e) => e.status === "published").length;
+  const draftCount = myEvents.filter((e) => e.status === "draft").length;
 
   return (
     <div className="space-y-6">
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        {statCards.map(stat => (
-          <div key={stat.label} className="bg-card rounded-xl border border-border p-5 hover:shadow-elevated transition-shadow">
-            <div className="flex items-center gap-2 mb-3">
-              <stat.icon className="h-4 w-4 text-muted-foreground" />
-            </div>
-            <p className="text-2xl font-bold text-foreground tracking-tight">{stat.value}
-              {stat.change && (
-                <span className={`text-xs font-medium ml-2 ${stat.up ? 'text-emerald-500' : 'text-rose-500'}`}>
-                  {stat.change} {stat.up ? '↗' : '↘'}
-                </span>
-              )}
-            </p>
-            <p className="text-xs text-muted-foreground mt-1">{stat.label}</p>
-          </div>
-        ))}
-      </div>
-
-      <div className="bg-card rounded-xl border border-border p-5">
-        <h2 className="font-semibold text-foreground mb-4">Workflow monitor</h2>
-        <div className="overflow-x-auto">
-          <table className="w-full text-sm">
-            <thead>
-              <tr className="border-b border-border">
-                <th className="text-left py-3 px-3 text-xs text-muted-foreground font-medium">Vendor name</th>
-                <th className="text-left py-3 px-3 text-xs text-muted-foreground font-medium">Category</th>
-                <th className="text-left py-3 px-3 text-xs text-muted-foreground font-medium">Status</th>
-                <th className="text-left py-3 px-3 text-xs text-muted-foreground font-medium">Latency</th>
-                <th className="text-left py-3 px-3 text-xs text-muted-foreground font-medium">Last run</th>
-              </tr>
-            </thead>
-            <tbody>
-              {vendors.map(v => (
-                <tr key={v.name} className="border-b border-border last:border-0 hover:bg-muted/50 transition-colors">
-                  <td className="py-3 px-3 font-medium text-foreground">{v.name}</td>
-                  <td className="py-3 px-3">
-                    <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-muted text-xs font-medium text-foreground">{v.category}</span>
-                  </td>
-                  <td className="py-3 px-3">
-                    <span className="flex items-center gap-1.5 text-sm">
-                      <span className={`w-2 h-2 rounded-full ${v.status === 'Running' ? 'bg-emerald-500' : 'bg-amber-500'}`} />
-                      {v.status}
-                    </span>
-                  </td>
-                  <td className="py-3 px-3 text-muted-foreground">{v.latency}</td>
-                  <td className="py-3 px-3 text-muted-foreground">{v.lastRun}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+      {/* Banner */}
+      <div className="flex flex-col gap-4 rounded-3xl border border-stone-200/80 bg-card p-6 md:p-8 lg:flex-row lg:items-center lg:justify-between">
+        <div>
+          <span className="text-xs font-bold uppercase tracking-wider text-primary px-3 py-1 rounded-full bg-primary/10">
+            Account Overview
+          </span>
+          <h2 className="mt-3 text-2xl md:text-3xl font-normal text-foreground">
+            Welcome back, {user?.name || user?.email?.split("@")[0] || "Organizer"}
+          </h2>
+          <p className="mt-1.5 max-w-xl text-xs md:text-sm text-muted-foreground leading-relaxed">
+            Manage your published events, draft listings, vendor service storefront, and saved bookmarks all from your activity dashboard.
+          </p>
+        </div>
+        <div className="flex flex-wrap gap-2.5">
+          <Button onClick={() => navigate("/create/event")} className="rounded-xl font-bold gap-2 bg-primary text-primary-foreground shadow-sm">
+            <Plus className="h-4 w-4" /> Create Event
+          </Button>
+          <Button variant="outline" onClick={() => navigate("/create/vendor")} className="rounded-xl font-semibold gap-2 border-stone-300">
+            <Store className="h-4 w-4" /> {myVendorProfile ? "Edit Vendor Profile" : "List as Vendor"}
+          </Button>
         </div>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <div className="bg-card rounded-xl border border-border p-5">
-          <div className="flex items-center justify-between mb-4">
-            <h2 className="font-semibold text-foreground">Agents by status</h2>
-            <div className="flex gap-1 bg-muted rounded-lg p-0.5">
-              {(["category", "employee"] as const).map(tab => (
-                <button key={tab} onClick={() => setBudgetTab(tab)}
-                  className={`px-3 py-1.5 rounded-md text-xs font-medium transition-all capitalize ${budgetTab === tab ? 'bg-card border border-border shadow-sm text-foreground' : 'text-muted-foreground hover:text-foreground'}`}>
-                  By {tab}
-                </button>
-              ))}
-            </div>
+      {/* Quick Stats Grid */}
+      <div className="grid gap-4 md:grid-cols-3">
+        <div className="rounded-2xl border border-stone-200 bg-card p-5">
+          <div className="flex items-center justify-between">
+            <p className="text-xs font-bold text-muted-foreground uppercase">Published Events</p>
+            <Calendar className="h-4 w-4 text-emerald-500" />
           </div>
-          <div className="flex items-center gap-8">
-            <div className="relative w-36 h-36">
-              <svg viewBox="0 0 36 36" className="w-full h-full -rotate-90">
-                {activeBudgetData.map((item, i) => {
-                  const percentage = (item.amount / totalBudget) * 100;
-                  const offset = activeBudgetData.slice(0, i).reduce((sum, d) => sum + (d.amount / totalBudget) * 100, 0);
-                  return (
-                    <circle key={i} cx="18" cy="18" r="14" fill="none" stroke={item.color} strokeWidth="3.5"
-                      strokeDasharray={`${percentage * 0.88} ${88 - percentage * 0.88}`}
-                      strokeDashoffset={`${-offset * 0.88}`} />
-                  );
-                })}
-              </svg>
-              <div className="absolute inset-0 flex flex-col items-center justify-center">
-                <span className="text-2xl font-bold text-foreground">{Math.round(totalBudget / 1000 * 4.15)}</span>
-                <span className="text-[10px] text-muted-foreground">Total</span>
-              </div>
-            </div>
-            <div className="space-y-2 flex-1">
-              {activeBudgetData.map((item, i) => (
-                <div key={i} className="flex items-center justify-between">
-                  <div className="flex items-center gap-2">
-                    <div className="w-2.5 h-2.5 rounded-full" style={{ background: item.color }} />
-                    <span className="text-xs text-foreground">{item.name}</span>
+          <p className="mt-3 text-3xl font-black text-foreground">{publishedCount}</p>
+        </div>
+
+        <div className="rounded-2xl border border-stone-200 bg-card p-5">
+          <div className="flex items-center justify-between">
+            <p className="text-xs font-bold text-muted-foreground uppercase">Draft Listings</p>
+            <Calendar className="h-4 w-4 text-amber-500" />
+          </div>
+          <p className="mt-3 text-3xl font-black text-foreground">{draftCount}</p>
+        </div>
+
+        <div className="rounded-2xl border border-stone-200 bg-card p-5">
+          <div className="flex items-center justify-between">
+            <p className="text-xs font-bold text-muted-foreground uppercase">Saved Bookmarks</p>
+            <Heart className="h-4 w-4 text-red-500" />
+          </div>
+          <p className="mt-3 text-3xl font-black text-foreground">{savedEventIds.length}</p>
+        </div>
+      </div>
+
+      {/* My Events Preview */}
+      <div className="rounded-3xl border border-stone-200 bg-card p-6 md:p-8">
+        <div className="flex items-center justify-between mb-4">
+          <div>
+            <h3 className="text-lg font-normal text-foreground">Your Event Listings</h3>
+            <p className="text-xs text-muted-foreground">Manage your published and draft events.</p>
+          </div>
+          <Button variant="outline" size="sm" onClick={() => navigate("/dashboard/events")} className="rounded-xl text-xs font-semibold">
+            View All ({myEvents.length})
+          </Button>
+        </div>
+
+        {myEvents.length === 0 ? (
+          <div className="rounded-2xl border border-dashed border-stone-300 p-8 text-center bg-stone-50/50">
+            <p className="text-xs text-muted-foreground">You haven't created any event listings yet.</p>
+            <Button onClick={() => navigate("/create/event")} className="mt-4 rounded-xl text-xs font-semibold">
+              Publish Your First Event
+            </Button>
+          </div>
+        ) : (
+          <div className="space-y-3">
+            {myEvents.slice(0, 4).map((e) => (
+              <div key={e.id} className="p-4 rounded-2xl border border-stone-200 bg-stone-50/50 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                <div className="flex items-center gap-3">
+                  <img src={e.coverImage} alt={e.title} className="w-14 h-14 rounded-xl object-cover" />
+                  <div>
+                    <div className="flex items-center gap-2">
+                      <h4 className="text-sm font-normal text-foreground">{e.title}</h4>
+                      <Badge variant={e.status === "published" ? "default" : "secondary"} className="text-[10px]">
+                        {e.status}
+                      </Badge>
+                    </div>
+                    <p className="text-[11px] text-muted-foreground mt-0.5">{e.venue} · {e.city}</p>
                   </div>
-                  <span className="text-xs text-muted-foreground">{item.share}</span>
                 </div>
-              ))}
-            </div>
-          </div>
-        </div>
 
-        <div className="bg-card rounded-xl border border-border p-5">
-          <h2 className="font-semibold text-foreground mb-4">Tasks breakdown</h2>
-          <ResponsiveContainer width="100%" height={200}>
-            <BarChart data={chartData}>
-              <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
-              <XAxis dataKey="name" tick={{ fontSize: 11, fill: 'hsl(var(--muted-foreground))' }} stroke="hsl(var(--border))" />
-              <YAxis tick={{ fontSize: 11, fill: 'hsl(var(--muted-foreground))' }} stroke="hsl(var(--border))" />
-              <Tooltip contentStyle={{ background: 'hsl(var(--card))', border: '1px solid hsl(var(--border))', borderRadius: '8px', color: 'hsl(var(--foreground))', fontSize: '12px' }} />
-              <Bar dataKey="events" fill="hsl(0, 70%, 75%)" radius={[3, 3, 0, 0]} />
-            </BarChart>
-          </ResponsiveContainer>
-        </div>
-      </div>
-
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <div className="lg:col-span-2 bg-card rounded-xl border border-border p-5">
-          <h2 className="font-semibold text-foreground mb-4">Upcoming Tasks</h2>
-          <div className="space-y-1">
-            {tasks.map((task, i) => (
-              <div key={i} className="flex items-center gap-3 p-3 rounded-lg hover:bg-muted/50 transition-colors">
-                {task.done
-                  ? <CheckCircle className="h-4 w-4 text-emerald-500 flex-shrink-0" />
-                  : <div className="w-4 h-4 rounded-full border-2 border-border flex-shrink-0" />
-                }
-                <span className={`text-sm ${task.done ? "text-muted-foreground line-through" : "text-foreground"}`}>{task.title}</span>
+                <div className="flex items-center gap-2">
+                  <Button size="sm" variant="outline" onClick={() => navigate(`/events/${e.id}/edit`)} className="rounded-xl text-xs gap-1 font-semibold">
+                    <Edit3 className="w-3.5 h-3.5 text-primary" /> Edit
+                  </Button>
+                  <Button size="sm" variant="outline" onClick={() => navigate(`/events/${e.id}`)} className="rounded-xl text-xs gap-1">
+                    View Live <ExternalLink className="w-3 h-3" />
+                  </Button>
+                </div>
               </div>
             ))}
           </div>
-        </div>
-
-        <div className="bg-foreground rounded-xl p-5 text-background cursor-pointer hover:opacity-95 transition-opacity" onClick={() => navigate('/dashboard/ai')}>
-          <div className="flex items-center gap-2 mb-3">
-            <Sparkles className="h-5 w-5" />
-            <h2 className="font-semibold">AI Assistant</h2>
-          </div>
-          <p className="text-sm opacity-80 mb-3">Quick planning tips based on your data:</p>
-          <ul className="text-sm opacity-70 space-y-2 mb-4">
-            <li>• Consider booking caterer early for Q4</li>
-            <li>• Budget is on track — 25% remaining</li>
-            <li>• 3 vendor responses pending</li>
-          </ul>
-          <Button variant="secondary" size="sm" className="w-full rounded-lg">
-            Chat with AI <ArrowRight className="ml-2 h-4 w-4" />
-          </Button>
-        </div>
+        )}
       </div>
     </div>
   );
 };
 
-const useRouteTitle = () => {
-  const path = window.location.pathname;
-  if (path === "/dashboard") return "Analytics";
-  if (path.startsWith("/dashboard/events/publish")) return "Publish event";
-  if (path.startsWith("/dashboard/events/new")) return "New project";
-  if (path.startsWith("/dashboard/events")) return "Projects";
-  const seg = path.split("/").filter(Boolean).pop() || "";
-  if (seg === "ai") return "AI Assistant";
-  return seg.split("-").map((part) => part.charAt(0).toUpperCase() + part.slice(1)).join(" ");
+// 2. Manage My Events Component
+const MyEventsPage = () => {
+  const navigate = useNavigate();
+  const { user } = useAuth();
+  const { events, deleteEvent, updateEventStatus } = useEventStore();
+
+  const myEvents = useMemo(() => {
+    return events.filter((e) => e.ownerId === user?.id || e.ownerId === "current-user");
+  }, [events, user]);
+
+  return (
+    <div className="space-y-6">
+      <div className="flex items-center justify-between">
+        <div>
+          <h2 className="text-2xl font-normal text-foreground">Manage Your Events</h2>
+          <p className="text-xs text-muted-foreground">Draft, publish, edit, or remove your event listings.</p>
+        </div>
+        <Button onClick={() => navigate("/create/event")} className="rounded-xl text-xs font-bold gap-1 bg-primary text-primary-foreground">
+          <Plus className="w-4 h-4" /> New Event
+        </Button>
+      </div>
+
+      <div className="space-y-3">
+        {myEvents.length === 0 ? (
+          <div className="text-center py-12 rounded-2xl border border-dashed border-stone-300 bg-card p-6">
+            <Calendar className="w-8 h-8 text-stone-300 mx-auto mb-2" />
+            <p className="text-xs text-muted-foreground">No events found in your account.</p>
+            <Button onClick={() => navigate("/create/event")} className="mt-4 rounded-xl text-xs font-semibold">
+              Create an Event
+            </Button>
+          </div>
+        ) : (
+          myEvents.map((e) => (
+            <div key={e.id} className="p-4 rounded-2xl border border-stone-200 bg-card flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+              <div className="flex items-center gap-3">
+                <img src={e.coverImage} alt={e.title} className="w-16 h-14 rounded-xl object-cover" />
+                <div>
+                  <div className="flex items-center gap-2">
+                    <h3 className="text-sm font-normal text-foreground">{e.title}</h3>
+                    <Badge variant={e.status === "published" ? "default" : "secondary"} className="text-[10px]">
+                      {e.status}
+                    </Badge>
+                  </div>
+                  <p className="text-xs text-muted-foreground">{e.venue}, {e.city} · Category: {e.category}</p>
+                </div>
+              </div>
+
+              <div className="flex flex-wrap items-center gap-2">
+                <Button size="sm" variant="outline" onClick={() => navigate(`/events/${e.id}/edit`)} className="rounded-xl text-xs gap-1 font-semibold">
+                  <Edit3 className="w-3.5 h-3.5 text-primary" /> Edit Event
+                </Button>
+                <Button size="sm" variant="outline" onClick={() => navigate(`/events/${e.id}`)} className="rounded-xl text-xs">
+                  View
+                </Button>
+                {e.status === "draft" && (
+                  <Button size="sm" onClick={() => updateEventStatus(e.id, "published")} className="rounded-xl text-xs bg-emerald-600 hover:bg-emerald-700 text-white font-semibold">
+                    Publish Live
+                  </Button>
+                )}
+                <Button size="sm" variant="ghost" onClick={() => deleteEvent(e.id)} className="rounded-xl text-xs text-red-500 hover:text-red-700 hover:bg-red-50">
+                  <Trash2 className="w-3.5 h-3.5" />
+                </Button>
+              </div>
+            </div>
+          ))
+        )}
+      </div>
+    </div>
+  );
 };
 
-const Dashboard = () => {
+// 3. Saved Events Component
+const SavedEventsPage = () => {
   const navigate = useNavigate();
-  const { user, signOut } = useAuth();
-  const [showProfile, setShowProfile] = useState(false);
-  const [mobileNavOpen, setMobileNavOpen] = useState(false);
+  const { events, savedEventIds, toggleSaveEvent } = useEventStore();
 
-  const initials = (user?.name || user?.email || "U").charAt(0).toUpperCase();
-  const title = useRouteTitle();
+  const savedList = useMemo(() => {
+    return events.filter((e) => savedEventIds.includes(e.id));
+  }, [events, savedEventIds]);
 
-  const handleSignOut = () => {
-    signOut();
-    navigate("/signin");
+  return (
+    <div className="space-y-6">
+      <div>
+        <h2 className="text-2xl font-normal text-foreground">Saved Events</h2>
+        <p className="text-xs text-muted-foreground">Bookmarked events you are interested in attending.</p>
+      </div>
+
+      {savedList.length === 0 ? (
+        <div className="text-center py-16 rounded-2xl border border-dashed border-stone-300 bg-card p-6">
+          <Heart className="w-8 h-8 text-stone-300 mx-auto mb-2" />
+          <h3 className="text-base font-normal text-foreground">No saved events</h3>
+          <p className="text-xs text-muted-foreground mt-1">Browse events and click the heart icon to save them here.</p>
+          <Button onClick={() => navigate("/events")} className="mt-4 rounded-xl text-xs font-semibold">
+            Explore Events
+          </Button>
+        </div>
+      ) : (
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          {savedList.map((e) => (
+            <div key={e.id} className="p-4 rounded-2xl border border-stone-200 bg-card flex items-center justify-between gap-3">
+              <div className="flex items-center gap-3 min-w-0">
+                <img src={e.coverImage} alt={e.title} className="w-14 h-14 rounded-xl object-cover flex-shrink-0" />
+                <div className="min-w-0">
+                  <h3 className="text-xs font-normal text-foreground truncate">{e.title}</h3>
+                  <p className="text-[11px] text-muted-foreground truncate">{e.venue}, {e.city}</p>
+                </div>
+              </div>
+
+              <div className="flex gap-1.5 flex-shrink-0">
+                <Button size="sm" variant="outline" onClick={() => navigate(`/events/${e.id}`)} className="rounded-xl text-xs">
+                  View
+                </Button>
+                <Button size="sm" variant="ghost" onClick={() => toggleSaveEvent(e.id)} className="rounded-xl text-xs text-red-500">
+                  Remove
+                </Button>
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+};
+
+// 4. Vendor Storefront Redirect Component
+const CreateVendorPageRedirect = () => {
+  const navigate = useNavigate();
+  const { user } = useAuth();
+  const { vendors } = useEventStore();
+
+  const myVendor = useMemo(() => {
+    return vendors.find((v) => v.ownerId === user?.id || v.ownerId === "current-user");
+  }, [vendors, user]);
+
+  return (
+    <div className="p-8 bg-card border border-stone-200/80 rounded-3xl text-center space-y-4 max-w-2xl mx-auto">
+      <div className="w-14 h-14 rounded-full bg-primary/10 text-primary flex items-center justify-center mx-auto">
+        <Store className="w-7 h-7" />
+      </div>
+      <h2 className="text-2xl font-normal text-foreground">Vendor Services Storefront</h2>
+      <p className="text-xs text-muted-foreground max-w-md mx-auto leading-relaxed">
+        {myVendor
+          ? `Your vendor storefront "${myVendor.name}" is currently active on the directory.`
+          : "List your event services (DJ, Catering, MC, Security, Sound, Decor) on NextUp to get booked by event organizers."}
+      </p>
+      <Button onClick={() => navigate("/create/vendor")} className="rounded-xl text-xs font-bold px-6 bg-primary text-primary-foreground">
+        {myVendor ? "Edit Vendor Profile" : "Create Vendor Profile"}
+      </Button>
+    </div>
+  );
+};
+
+// MAIN REDESIGNED DASHBOARD / ACTIVITY PAGE
+export const Dashboard = () => {
+  const navigate = useNavigate();
+  const location = useLocation();
+  const { user } = useAuth();
+
+  const tabs = [
+    { label: "Overview", path: "/dashboard", icon: LayoutDashboard },
+    { label: "My Events", path: "/dashboard/events", icon: Calendar },
+    { label: "Vendor Profile", path: "/dashboard/vendors", icon: Store },
+    { label: "Saved Events", path: "/dashboard/saved", icon: Heart },
+    { label: "Settings", path: "/dashboard/settings", icon: Settings },
+  ];
+
+  if (user?.role === "admin") {
+    tabs.push({ label: "Admin Console", path: "/admin", icon: ShieldAlert });
+  }
+
+  const isTabActive = (path: string) => {
+    if (path === "/dashboard") return location.pathname === "/dashboard" || location.pathname === "/dashboard/";
+    return location.pathname.startsWith(path);
   };
 
   return (
-    <div className="flex min-h-screen bg-background relative z-[1]">
-      <DashboardSidebar open={mobileNavOpen} onClose={() => setMobileNavOpen(false)} />
-      <div className="flex-1 overflow-auto min-w-0">
-        <header className="h-14 bg-card border-b border-border flex items-center justify-between px-4 md:px-6 sticky top-0 z-10 gap-3">
-          <div className="flex items-center gap-2 min-w-0">
-            {/* Mobile menu button */}
-            <button
-              onClick={() => setMobileNavOpen(true)}
-              className="md:hidden p-2 -ml-2 rounded-lg text-foreground hover:bg-muted"
-              aria-label="Open menu"
-            >
-              <Menu className="h-4 w-4" />
-            </button>
-            <h1 className="text-sm font-semibold text-foreground truncate">{title}</h1>
-            {user?.role === "vendor" && (
-              <span className="hidden sm:inline-flex items-center gap-1 text-[10px] px-2 py-0.5 rounded-full bg-primary/10 text-primary font-medium ml-2">
-                Vendor
-              </span>
-            )}
-          </div>
-          <div className="flex items-center gap-2 md:gap-2.5">
-            <div className="relative hidden lg:block">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-muted-foreground" />
-              <input placeholder="Search for anything..." className="pl-9 w-56 h-8 rounded-lg bg-muted text-xs text-foreground placeholder:text-muted-foreground outline-none border border-border focus:ring-1 focus:ring-primary/20" />
-              <span className="absolute right-3 top-1/2 -translate-y-1/2 text-[10px] text-muted-foreground border border-border rounded px-1.5 py-0.5">⌘K</span>
-            </div>
-            <button className="w-8 h-8 rounded-full bg-foreground flex items-center justify-center hover:opacity-90 transition-opacity"
-              onClick={() => setShowProfile(true)} aria-label="Account">
-              <span className="text-background text-xs font-semibold">{initials}</span>
-            </button>
-          </div>
-        </header>
+    <div className="min-h-screen bg-background flex flex-col justify-between">
+      <Navbar />
 
-        {showProfile && (
-          <ProfileDropdown
-            onClose={() => setShowProfile(false)}
-            onNavigate={navigate}
-            onSignOut={handleSignOut}
-            userEmail={user?.email || ""}
-            userName={user?.name}
-          />
-        )}
+      <main className="pt-28 pb-20 container mx-auto px-4 lg:px-8 max-w-7xl flex-1">
+        {/* Page Top Header */}
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
+          <div>
+            <span className="text-xs font-bold uppercase tracking-wider text-primary px-3 py-1 rounded-full bg-primary/10">
+              NextUp Activity
+            </span>
+            <h1 className="text-3xl md:text-4xl font-normal text-foreground mt-2">
+              Activity & Account Hub
+            </h1>
+            <p className="text-xs md:text-sm text-muted-foreground mt-1">
+              Manage your event listings, vendor storefront, saved items, and settings.
+            </p>
+          </div>
 
-        <main className="p-4 md:p-6">
-          <Routes>
-            <Route index element={<DashboardHome />} />
-            <Route path="events" element={<EventsPage />} />
-            <Route path="events/new" element={<CreateEventWizard />} />
-            <Route path="events/publish" element={<PublishEventPage />} />
-            <Route path="events/nearby" element={<NearbyEventsPage />} />
-            <Route path="events/:eventId/*" element={<EventWorkspace />} />
-            <Route path="templates" element={<DashboardTemplatesPage />} />
-            <Route path="vendors" element={<VendorsPage />} />
-            <Route path="vendors/:vendorId" element={<VendorProfilePage />} />
-            <Route path="vendor-dashboard" element={<VendorDashboardPage />} />
-            <Route path="vendor-onboarding" element={<VendorOnboardingPage />} />
-            <Route path="team" element={<TeamPage />} />
-            <Route path="messages" element={<MessagesPage />} />
-            <Route path="ai" element={<AIAssistantPage />} />
-            <Route path="reports" element={<ReportsPage />} />
-            <Route path="ticketing" element={<TicketingPage />} />
-            <Route path="marketing" element={<MarketingPage />} />
-            <Route path="settings" element={<SettingsPage />} />
-            <Route path="notifications" element={<NotificationsPage />} />
-          </Routes>
-        </main>
-      </div>
+          <div className="flex items-center gap-2">
+            <Button onClick={() => navigate("/create/event")} className="rounded-xl text-xs font-bold gap-1.5 bg-primary text-primary-foreground shadow-sm">
+              <Plus className="w-4 h-4" /> Create Event
+            </Button>
+          </div>
+        </div>
+
+        {/* Sub-Navigation Pill Bar */}
+        <div className="flex items-center gap-2 border-b border-stone-200 pb-4 mb-8 overflow-x-auto">
+          {tabs.map((t) => {
+            const active = isTabActive(t.path);
+            const IconComponent = t.icon;
+            return (
+              <button
+                key={t.path}
+                onClick={() => navigate(t.path)}
+                className={`inline-flex items-center gap-2 px-4 py-2 rounded-full text-xs font-semibold transition-all whitespace-nowrap ${
+                  active
+                    ? "bg-foreground text-background shadow-xs"
+                    : "bg-stone-100/80 text-stone-700 hover:bg-stone-200/80 hover:text-black"
+                }`}
+              >
+                <IconComponent className="w-3.5 h-3.5" />
+                <span>{t.label}</span>
+              </button>
+            );
+          })}
+        </div>
+
+        {/* Tab Content Section */}
+        <Routes>
+          <Route index element={<DashboardHome />} />
+          <Route path="events" element={<MyEventsPage />} />
+          <Route path="vendors" element={<CreateVendorPageRedirect />} />
+          <Route path="saved" element={<SavedEventsPage />} />
+          <Route path="settings" element={<SettingsPage />} />
+        </Routes>
+      </main>
+
+      <Footer />
     </div>
   );
 };

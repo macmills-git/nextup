@@ -1,130 +1,215 @@
-import { Link, useLocation } from "react-router-dom";
-import { Button } from "@/components/ui/button";
-import { Menu, X } from "lucide-react";
-import { useState, useEffect } from "react";
+import React, { useState, useRef, useEffect } from "react";
+import { Link, useNavigate, useLocation } from "react-router-dom";
+import { useAuth } from "@/contexts/AuthContext";
+import { User, LogOut, Activity, ChevronDown } from "lucide-react";
+import Logo from "@/components/Logo";
 
-const navItems = [
-  { label: "Home", to: "/" },
-  { label: "Events Near Me", to: "/events-near-me" },
-  { label: "Features", to: "/features" },
-  { label: "Pricing", to: "/pricing" },
-  { label: "Docs", to: "/docs" },
-];
-
-const Wordmark = ({ scrolled }: { scrolled: boolean }) => (
-  <span
-    className="font-black text-foreground leading-none transition-all duration-500"
-    style={{
-      fontFamily: "'Space Grotesk', 'Inter Tight', 'Helvetica Now Display', sans-serif",
-      letterSpacing: "-0.06em",
-      fontSize: scrolled ? "20px" : "24px",
-    }}
-  >
-    NESTED
-  </span>
-);
-
-const Navbar = () => {
+export const Navbar = () => {
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [profileOpen, setProfileOpen] = useState(false);
+  const navigate = useNavigate();
   const location = useLocation();
-  const [scrolled, setScrolled] = useState(false);
+  const { isAuthenticated, user, signOut } = useAuth();
+  const profileRef = useRef<HTMLDivElement>(null);
 
+  // Close profile dropdown on click outside
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 40);
-    window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
+    const handleClickOutside = (event: MouseEvent) => {
+      if (profileRef.current && !profileRef.current.contains(event.target as Node)) {
+        setProfileOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  return (
-    <div
-      className="fixed top-0 left-0 right-0 z-50 flex justify-center transition-all duration-500 ease-[cubic-bezier(0.4,0,0.2,1)]"
-      style={{ padding: scrolled ? "12px 16px 0" : "0px" }}
-    >
-      <nav
-        className="w-full backdrop-blur-xl backdrop-saturate-150 border border-white/60 transition-all duration-500 ease-[cubic-bezier(0.4,0,0.2,1)]"
-        style={{
-          maxWidth: scrolled ? "920px" : "100%",
-          borderRadius: scrolled ? "9999px" : "0px",
-          background: "rgba(255,255,255,0.85)",
-          boxShadow: scrolled
-            ? "0 12px 40px -10px rgba(0,0,0,0.18), inset 0 1px 0 0 rgba(255,255,255,0.6)"
-            : "0 4px 24px -8px rgba(0,0,0,0.08), inset 0 1px 0 0 rgba(255,255,255,0.5)",
-        }}
-      >
-        <div className="flex items-center justify-between h-16 px-5 lg:px-7">
-          <Link to="/" className="flex items-center">
-            <Wordmark scrolled={scrolled} />
-          </Link>
+  const handleNavClick = (href: string) => {
+    setMobileOpen(false);
+    setProfileOpen(false);
+    if (href.startsWith("#")) {
+      const el = document.querySelector(href);
+      if (el) {
+        el.scrollIntoView({ behavior: "smooth" });
+      }
+    } else {
+      navigate(href);
+    }
+  };
 
-          <div className="hidden md:flex items-center gap-1 bg-stone-100/70 rounded-full px-2 py-1.5 border border-stone-200/60">
+  const navItems = [
+    { label: "Events", to: "/events" },
+    { label: "Vendors", to: "/vendors" },
+    user?.role === "admin"
+      ? { label: "Admin Console", to: "/admin" }
+      : { label: "Activity", to: "/dashboard" },
+  ];
+
+  return (
+    <header className="absolute top-6 left-1/2 -translate-x-1/2 z-50 w-full max-w-6xl px-4">
+      {/* Expanded Floating Pill Navbar */}
+      <div className="bg-white/95 backdrop-blur-md rounded-full px-6 py-3 flex items-center justify-between border border-black/10 relative z-50">
+        {/* Brand Logo */}
+        <Link 
+          to="/" 
+          className="hover:opacity-80 transition-opacity flex items-center"
+        >
+          <Logo variant="dark" size="md" />
+        </Link>
+
+        {/* Right Section: Desktop Navigation Items + Profile / User Actions */}
+        <div className="hidden md:flex items-center gap-3">
+          <nav className="flex items-center gap-1 bg-stone-100/80 rounded-full p-1 border border-stone-200/60">
             {navItems.map((item) => {
-              const isActive = location.pathname === item.to;
+              const isActive = location.pathname === item.to || (item.to !== "/" && !item.to.startsWith("#") && location.pathname.startsWith(item.to));
               return (
-                <Link
+                <button
                   key={item.label}
-                  to={item.to}
-                  className={`px-4 py-1.5 text-[15px] font-medium rounded-full transition-all duration-200 ${
+                  onClick={() => handleNavClick(item.to)}
+                  className={`px-4 py-1.5 text-xs font-semibold rounded-full transition-all duration-200 ${
                     isActive
-                      ? "bg-foreground text-background shadow-sm"
-                      : "text-stone-700 hover:text-foreground hover:bg-white/70"
+                      ? "bg-black text-white"
+                      : "text-stone-700 hover:text-black hover:bg-white/90"
                   }`}
                 >
                   {item.label}
-                </Link>
+                </button>
               );
             })}
-          </div>
+          </nav>
 
-          <div className="hidden md:flex items-center gap-2">
-            <Button
-              size="sm"
-              asChild
-              className="h-9 text-[15px] px-4 rounded-full border border-stone-300 bg-transparent text-foreground font-medium hover:bg-stone-100"
-              style={{ display: scrolled ? "none" : undefined }}
-            >
-              <Link to="/signin">Log in</Link>
-            </Button>
-            <Button
-              size="sm"
-              asChild
-              className="h-9 text-[15px] px-4 rounded-full bg-primary text-primary-foreground font-medium hover:brightness-110 shadow-sm"
-            >
-              <Link to="/signup">Sign up</Link>
-            </Button>
-          </div>
+          {isAuthenticated ? (
+            <div className="relative" ref={profileRef}>
+              <button
+                type="button"
+                onClick={() => setProfileOpen(!profileOpen)}
+                className="flex items-center gap-2 p-1 pr-2.5 rounded-full bg-stone-100 hover:bg-stone-200/80 transition-colors border border-stone-200 focus:outline-none"
+                aria-label="User account menu"
+              >
+                <div className="w-8 h-8 rounded-full bg-black text-white flex items-center justify-center font-bold text-xs">
+                  {user?.name ? user.name.charAt(0).toUpperCase() : <User size={16} />}
+                </div>
+                <ChevronDown size={14} className={`text-stone-600 transition-transform duration-200 ${profileOpen ? "rotate-180" : ""}`} />
+              </button>
 
-          <button
-            className="md:hidden text-foreground"
-            onClick={() => setMobileOpen(!mobileOpen)}
-          >
-            {mobileOpen ? <X size={22} /> : <Menu size={22} />}
-          </button>
+              {/* Profile Dropdown Menu */}
+              {profileOpen && (
+                <div className="absolute right-0 mt-2 w-52 bg-white rounded-2xl p-2 border border-stone-200 animate-in fade-in-down z-50 shadow-lg">
+                  <div className="px-3 py-2 border-b border-stone-100">
+                    <p className="text-xs font-bold text-stone-900 truncate">{user?.name || "Account"}</p>
+                    <p className="text-[11px] text-stone-500 truncate">{user?.email}</p>
+                  </div>
+
+                  <div className="pt-1">
+                    <button
+                      onClick={() => {
+                        setProfileOpen(false);
+                        signOut();
+                      }}
+                      className="w-full px-3 py-2 text-xs font-semibold text-red-600 hover:bg-red-50 rounded-xl flex items-center gap-2.5 transition-colors"
+                    >
+                      <LogOut size={15} className="text-red-500" />
+                      Log out
+                    </button>
+                  </div>
+                </div>
+              )}
+            </div>
+          ) : (
+            <div className="flex items-center gap-2">
+              <button
+                onClick={() => handleNavClick("/signin")}
+                className="px-4 py-2 text-xs font-semibold text-stone-800 hover:text-black hover:bg-stone-100 rounded-full transition-colors"
+              >
+                Log in
+              </button>
+              <button
+                onClick={() => handleNavClick("/signup")}
+                className="px-4 py-2 text-xs font-semibold bg-black text-white hover:bg-black/90 rounded-full transition-colors shadow-sm"
+              >
+                Get Started
+              </button>
+            </div>
+          )}
         </div>
 
-        {mobileOpen && (
-          <div className="md:hidden bg-white/95 backdrop-blur-xl border-t border-stone-200 px-5 pb-4 pt-2 space-y-2">
-            {navItems.map((item) => (
-              <Link
-                key={item.label}
-                to={item.to}
-                className="block text-[15px] text-foreground py-2 hover:text-primary"
-                onClick={() => setMobileOpen(false)}
+        {/* Mobile Animated Hamburger Icon */}
+        <button
+          type="button"
+          onClick={() => setMobileOpen(!mobileOpen)}
+          className="md:hidden relative w-6 h-5 flex flex-col justify-between items-center focus:outline-none cursor-pointer p-0 bg-transparent border-0"
+          aria-label="Toggle Navigation Menu"
+        >
+          <span
+            className={`w-5 h-[2px] bg-black rounded-full transition-transform duration-300 origin-center ${
+              mobileOpen ? "translate-y-[9px] rotate-45" : "translate-y-0"
+            }`}
+            style={{ transitionTimingFunction: "cubic-bezier(0.77,0,0.175,1)" }}
+          />
+          <span
+            className={`w-5 h-[2px] bg-black rounded-full transition-transform duration-300 origin-center ${
+              mobileOpen ? "-translate-y-[9px] -rotate-45" : "translate-y-0"
+            }`}
+            style={{ transitionTimingFunction: "cubic-bezier(0.77,0,0.175,1)" }}
+          />
+        </button>
+      </div>
+
+      {/* Mobile Dropdown Menu Container */}
+      <div
+        className={`md:hidden absolute top-full left-4 right-4 mt-3 bg-white rounded-2xl p-5 shadow-2xl transition-all duration-300 ease-out origin-top border border-black/5 ${
+          mobileOpen
+            ? "opacity-100 scale-100 translate-y-0 pointer-events-auto"
+            : "opacity-0 scale-95 -translate-y-2 pointer-events-none"
+        }`}
+      >
+        <nav className="flex flex-col space-y-2.5">
+          {navItems.map((item) => (
+            <button
+              key={item.label}
+              onClick={() => handleNavClick(item.to)}
+              className="text-left px-3 py-2 text-sm font-semibold text-stone-800 hover:text-black hover:bg-stone-50 rounded-xl transition-colors"
+            >
+              {item.label}
+            </button>
+          ))}
+
+          <hr className="border-stone-100 my-1" />
+
+          {isAuthenticated ? (
+            <div className="pt-1 flex flex-col gap-2">
+              <div className="px-3 py-1.5">
+                <p className="text-xs font-bold text-stone-900">{user?.name || "Account"}</p>
+                <p className="text-[11px] text-stone-500">{user?.email}</p>
+              </div>
+              <button
+                onClick={() => {
+                  setMobileOpen(false);
+                  signOut();
+                }}
+                className="w-full py-2 text-xs text-red-600 font-semibold hover:bg-red-50 rounded-xl flex items-center justify-center gap-2"
               >
-                {item.label}
-              </Link>
-            ))}
-            <div className="flex gap-2 pt-2 items-center">
-              <Button size="sm" asChild className="h-9 text-[15px] rounded-full border border-stone-300 bg-transparent text-foreground">
-                <Link to="/signin">Log in</Link>
-              </Button>
-              <Button size="sm" asChild className="h-9 text-[15px] rounded-full bg-primary text-primary-foreground">
-                <Link to="/signup">Sign up</Link>
-              </Button>
+                <LogOut size={14} /> Log out
+              </button>
             </div>
-          </div>
-        )}
-      </nav>
-    </div>
+          ) : (
+            <div className="pt-2 flex items-center gap-2">
+              <button
+                onClick={() => handleNavClick("/signin")}
+                className="flex-1 py-2.5 rounded-xl border border-stone-200 text-black text-xs font-semibold hover:bg-stone-50 transition-colors"
+              >
+                Log in
+              </button>
+              <button
+                onClick={() => handleNavClick("/signup")}
+                className="flex-1 py-2.5 rounded-xl bg-black text-white text-xs font-semibold hover:bg-black/90 transition-colors"
+              >
+                Get Started
+              </button>
+            </div>
+          )}
+        </nav>
+      </div>
+    </header>
   );
 };
 
