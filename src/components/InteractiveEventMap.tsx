@@ -101,21 +101,24 @@ export const InteractiveEventMap: React.FC<InteractiveEventMapProps> = ({
     const tileUrl = customTileUrl
       ? customTileUrl
       : cartoKey
-      ? `https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png`
+      ? `https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png?api_key=${cartoKey}`
       : mapboxToken
       ? `https://api.mapbox.com/styles/v1/mapbox/streets-v12/tiles/{z}/{x}/{y}?access_token=${mapboxToken}`
-      : "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png";
+      : "https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png";
 
-    L.tileLayer(tileUrl, {
-      attribution: cartoKey || customTileUrl
-        ? '&copy; <a href="https://carto.com/attributions">CARTO</a> &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
-        : mapboxToken
-        ? '&copy; <a href="https://www.mapbox.com/">Mapbox</a>'
-        : '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+    const tileLayer = L.tileLayer(tileUrl, {
+      subdomains: "abcd",
+      attribution:
+        '&copy; <a href="https://carto.com/attributions">CARTO</a> &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
       maxZoom: 19,
       tileSize: mapboxToken ? 512 : 256,
       zoomOffset: mapboxToken ? -1 : 0,
     }).addTo(map);
+
+    // Automatic fail-safe fallback to OpenStreetMap if custom tiles encounter network/auth errors
+    tileLayer.on("tileerror", () => {
+      tileLayer.setUrl("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png");
+    });
 
     L.control.zoom({ position: "bottomright" }).addTo(map);
 
