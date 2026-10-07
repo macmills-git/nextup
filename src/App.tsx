@@ -52,7 +52,11 @@ const App = () => (
                   <Route path="/events/:id" element={<PublicEventDetailPage />} />
 
                   <Route path="/vendors" element={<VendorsDirectoryPage />} />
+                  <Route path="/vendor" element={<Navigate to="/vendors" replace />} />
                   <Route path="/vendors/:id" element={<VendorProfileDetailPage />} />
+                  <Route path="/vendor/:id" element={<VendorProfileDetailPage />} />
+                  <Route path="/vendor-profile/:id" element={<VendorProfileDetailPage />} />
+                  <Route path="/vendors-profile/:id" element={<VendorProfileDetailPage />} />
 
                   {/* Authentication Routes */}
                   <Route path="/signin" element={<SignIn />} />

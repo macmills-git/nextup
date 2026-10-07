@@ -2238,7 +2238,27 @@ export const EventStoreProvider: React.FC<{ children: React.ReactNode }> = ({ ch
     return model;
   };
 
-  const getVendor = (id: string) => vendors.find(v => v.id === id);
+  const getVendor = (id: string) => {
+    if (!id) return undefined;
+    const clean = decodeURIComponent(id).trim();
+    // 1. Direct match
+    let found = vendors.find(v => v.id === clean);
+    if (found) return found;
+
+    // 2. Case-insensitive match
+    found = vendors.find(v => v.id.toLowerCase() === clean.toLowerCase());
+    if (found) return found;
+
+    // 3. Prefix match ("101" -> "ven-101")
+    found = vendors.find(v => v.id.toLowerCase() === `ven-${clean.toLowerCase()}`);
+    if (found) return found;
+
+    // 4. Match by name slug
+    found = vendors.find(v => 
+      v.name.toLowerCase().replace(/[^a-z0-9]+/g, '-') === clean.toLowerCase()
+    );
+    return found;
+  };
 
   const getVendorByOwner = (ownerId: string) => vendors.find(v => v.ownerId === ownerId);
 

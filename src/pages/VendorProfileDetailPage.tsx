@@ -42,6 +42,7 @@ export const VendorProfileDetailPage = () => {
   const [selectedCert, setSelectedCert] = useState<VendorCertificate | null>(null);
   const [selectedMediaUrl, setSelectedMediaUrl] = useState<string | null>(null);
   const [openFaqIndex, setOpenFaqIndex] = useState<number | null>(0);
+  const [billingCycle, setBillingCycle] = useState<"Per Event" | "Full Day">("Per Event");
   const effectivePortfolio = useMemo(() => {
     const fallbackPhotos = [
       "https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?w=800&auto=format&fit=crop&q=80",
