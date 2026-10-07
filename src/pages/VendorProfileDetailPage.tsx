@@ -157,7 +157,65 @@ export const VendorProfileDetailPage = () => {
     <div className="min-h-screen bg-background">
       <Navbar />
 
-      <div className="pt-8 pb-20 container mx-auto px-4 lg:px-8 max-w-7xl">
+      {/* Full-width Screen Header Banner (No rounded corners, +20% height) */}
+      <div className="relative w-full rounded-none border-y border-stone-200/80 bg-stone-900 text-white py-8 md:py-14 lg:py-16 px-4 md:px-8 lg:px-12 mb-6 shadow-md min-h-[240px] md:min-h-[300px] flex items-center">
+        {vendor.portfolio && vendor.portfolio[0] ? (
+          <img
+            src={vendor.portfolio[0]}
+            alt={vendor.name}
+            className="absolute inset-0 w-full h-full object-cover opacity-25 filter blur-xs"
+          />
+        ) : null}
+
+        <div className="relative z-10 container mx-auto max-w-7xl flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
+          <div className="flex flex-col md:flex-row items-start md:items-center gap-6">
+            <img
+              src={vendor.logo}
+              alt={vendor.name}
+              className="w-24 h-24 md:w-28 md:h-28 rounded-2xl object-cover border-4 border-white bg-white flex-shrink-0 shadow-lg"
+            />
+            <div>
+              <div className="flex flex-wrap items-center gap-2">
+                <h1 className="text-2xl md:text-3xl font-semibold tracking-tight">{vendor.name}</h1>
+              </div>
+
+              {/* Categories */}
+              <div className="flex flex-wrap gap-2 mt-3">
+                {vendor.categories.map((c) => (
+                  <span
+                    key={c}
+                    className="text-[10px] font-bold uppercase tracking-wider px-2.5 py-1 rounded-full bg-white/20 text-white backdrop-blur border border-white/10"
+                  >
+                    {c}
+                  </span>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          <div className="flex flex-wrap gap-2 w-full md:w-auto">
+            {vendor.contact.whatsapp || vendor.contact.phone ? (
+              <Button
+                onClick={() => handleWhatsApp()}
+                size="lg"
+                className="rounded-xl font-bold gap-2 bg-emerald-500 hover:bg-emerald-600 text-white flex-1 md:flex-initial shadow-md"
+              >
+                <MessageCircle className="w-4 h-4" /> Chat on WhatsApp
+              </Button>
+            ) : null}
+            <Button
+              variant="outline"
+              size="lg"
+              onClick={() => setShareOpen(true)}
+              className="rounded-xl font-semibold gap-2 bg-white/10 hover:bg-white/20 text-white border-white/30 backdrop-blur"
+            >
+              <Share2 className="w-4 h-4" /> Share Profile
+            </Button>
+          </div>
+        </div>
+      </div>
+
+      <div className="pb-20 container mx-auto px-4 lg:px-8 max-w-7xl">
         {/* Navigation back */}
         <button
           onClick={() => navigate("/vendors")}
@@ -165,64 +223,6 @@ export const VendorProfileDetailPage = () => {
         >
           <ArrowLeft className="w-4 h-4" /> Back to Vendor Directory
         </button>
-
-        {/* Vendor Header Banner */}
-        <div className="relative rounded-3xl overflow-hidden border border-stone-200/80 bg-stone-900 text-white p-6 md:p-10 mb-8 shadow-md">
-          {vendor.portfolio && vendor.portfolio[0] ? (
-            <img
-              src={vendor.portfolio[0]}
-              alt={vendor.name}
-              className="absolute inset-0 w-full h-full object-cover opacity-25 filter blur-xs"
-            />
-          ) : null}
-
-          <div className="relative z-10 flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
-            <div className="flex flex-col md:flex-row items-start md:items-center gap-5">
-              <img
-                src={vendor.logo}
-                alt={vendor.name}
-                className="w-20 h-20 md:w-24 md:h-24 rounded-2xl object-cover border-4 border-white bg-white flex-shrink-0 shadow-lg"
-              />
-              <div>
-                <div className="flex flex-wrap items-center gap-2">
-                  <h1 className="text-xl md:text-2xl font-semibold tracking-tight">{vendor.name}</h1>
-                </div>
-
-                {/* Categories */}
-                <div className="flex flex-wrap gap-2 mt-3">
-                  {vendor.categories.map((c) => (
-                    <span
-                      key={c}
-                      className="text-[10px] font-bold uppercase tracking-wider px-2.5 py-1 rounded-full bg-white/20 text-white backdrop-blur border border-white/10"
-                    >
-                      {c}
-                    </span>
-                  ))}
-                </div>
-              </div>
-            </div>
-
-            <div className="flex flex-wrap gap-2 w-full md:w-auto">
-              {vendor.contact.whatsapp || vendor.contact.phone ? (
-                <Button
-                  onClick={() => handleWhatsApp()}
-                  size="lg"
-                  className="rounded-xl font-bold gap-2 bg-emerald-500 hover:bg-emerald-600 text-white flex-1 md:flex-initial shadow-md"
-                >
-                  <MessageCircle className="w-4 h-4" /> Chat on WhatsApp
-                </Button>
-              ) : null}
-              <Button
-                variant="outline"
-                size="lg"
-                onClick={() => setShareOpen(true)}
-                className="rounded-xl font-semibold gap-2 bg-white/10 hover:bg-white/20 text-white border-white/30 backdrop-blur"
-              >
-                <Share2 className="w-4 h-4" /> Share Profile
-              </Button>
-            </div>
-          </div>
-        </div>
 
         <div className="space-y-8 max-w-full">
             {/* 1. Benefits Grid Section */}
