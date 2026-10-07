@@ -93,38 +93,13 @@ export const InteractiveEventMap: React.FC<InteractiveEventMapProps> = ({
       zoomControl: false,
     });
 
-    // Map tile source: Default to 100% free OpenStreetMap (no API key required), or custom provider if set
-    const cartoKey = import.meta.env.VITE_CARTO_API_KEY;
-    const mapboxToken = import.meta.env.VITE_MAPBOX_TOKEN;
-    const customTileUrl = import.meta.env.VITE_MAP_TILE_URL;
-
-    let tileUrl = "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png";
-    let attribution = '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors';
-    let subdomains = "abc";
-
-    if (customTileUrl) {
-      tileUrl = customTileUrl;
-    } else if (mapboxToken) {
-      tileUrl = `https://api.mapbox.com/styles/v1/mapbox/streets-v12/tiles/{z}/{x}/{y}?access_token=${mapboxToken}`;
-      attribution = '&copy; <a href="https://www.mapbox.com/">Mapbox</a>';
-    } else if (cartoKey && cartoKey !== "cb1_4c1r_1_423f973fc40c9c55c7bd527a") {
-      tileUrl = `https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png?api_key=${cartoKey}`;
-      attribution = '&copy; <a href="https://carto.com/">CARTO</a>';
-      subdomains = "abcd";
-    }
-
-    const tileLayer = L.tileLayer(tileUrl, {
-      subdomains,
-      attribution,
+    // Standard 100% free OpenStreetMap tiles (zero API keys required, works 100% reliably on Vercel)
+    const tileLayer = L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+      subdomains: "abc",
+      attribution:
+        '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
       maxZoom: 19,
-      tileSize: mapboxToken ? 512 : 256,
-      zoomOffset: mapboxToken ? -1 : 0,
     }).addTo(map);
-
-    // Fail-safe tile error listener to prevent any broken tiles or API error overlays
-    tileLayer.on("tileerror", () => {
-      tileLayer.setUrl("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png");
-    });
 
     L.control.zoom({ position: "bottomright" }).addTo(map);
 
