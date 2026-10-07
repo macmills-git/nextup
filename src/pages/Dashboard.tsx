@@ -16,14 +16,21 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { useAuth } from "@/contexts/AuthContext";
 import { useEventStore } from "@/contexts/EventStore";
-import { useMemo } from "react";
+import { useMemo, useState, useEffect } from "react";
 import SettingsPage from "./dashboard/SettingsPage";
+import { ListItemSkeleton } from "@/components/CardSkeletons";
 
 // 1. Dashboard Overview Component
 const DashboardHome = () => {
   const navigate = useNavigate();
   const { user } = useAuth();
   const { events, vendors, savedEventIds } = useEventStore();
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    const timer = setTimeout(() => setIsLoading(false), 400);
+    return () => clearTimeout(timer);
+  }, []);
 
   const myEvents = useMemo(() => {
     return events.filter((e) => e.ownerId === user?.id || e.ownerId === "current-user");
@@ -100,7 +107,13 @@ const DashboardHome = () => {
           </Button>
         </div>
 
-        {myEvents.length === 0 ? (
+        {isLoading ? (
+          <div className="space-y-3">
+            <ListItemSkeleton />
+            <ListItemSkeleton />
+            <ListItemSkeleton />
+          </div>
+        ) : myEvents.length === 0 ? (
           <div className="rounded-2xl border border-dashed border-stone-300 p-8 text-center bg-stone-50/50">
             <p className="text-xs text-muted-foreground">You haven't created any event listings yet.</p>
             <Button onClick={() => navigate("/create/event")} className="mt-4 rounded-xl text-xs font-semibold">
@@ -146,6 +159,12 @@ const MyEventsPage = () => {
   const navigate = useNavigate();
   const { user } = useAuth();
   const { events, deleteEvent, updateEventStatus } = useEventStore();
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    const timer = setTimeout(() => setIsLoading(false), 400);
+    return () => clearTimeout(timer);
+  }, []);
 
   const myEvents = useMemo(() => {
     return events.filter((e) => e.ownerId === user?.id || e.ownerId === "current-user");
@@ -164,7 +183,13 @@ const MyEventsPage = () => {
       </div>
 
       <div className="space-y-3">
-        {myEvents.length === 0 ? (
+        {isLoading ? (
+          <>
+            <ListItemSkeleton />
+            <ListItemSkeleton />
+            <ListItemSkeleton />
+          </>
+        ) : myEvents.length === 0 ? (
           <div className="text-center py-12 rounded-2xl border border-dashed border-stone-300 bg-card p-6">
             <Calendar className="w-8 h-8 text-stone-300 mx-auto mb-2" />
             <p className="text-xs text-muted-foreground">No events found in your account.</p>
@@ -216,6 +241,12 @@ const MyEventsPage = () => {
 const SavedEventsPage = () => {
   const navigate = useNavigate();
   const { events, savedEventIds, toggleSaveEvent } = useEventStore();
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    const timer = setTimeout(() => setIsLoading(false), 400);
+    return () => clearTimeout(timer);
+  }, []);
 
   const savedList = useMemo(() => {
     return events.filter((e) => savedEventIds.includes(e.id));
@@ -228,7 +259,12 @@ const SavedEventsPage = () => {
         <p className="text-xs text-muted-foreground">Bookmarked events you are interested in attending.</p>
       </div>
 
-      {savedList.length === 0 ? (
+      {isLoading ? (
+        <div className="space-y-3">
+          <ListItemSkeleton />
+          <ListItemSkeleton />
+        </div>
+      ) : savedList.length === 0 ? (
         <div className="text-center py-16 rounded-2xl border border-dashed border-stone-300 bg-card p-6">
           <Heart className="w-8 h-8 text-stone-300 mx-auto mb-2" />
           <h3 className="text-base font-normal text-foreground">No saved events</h3>

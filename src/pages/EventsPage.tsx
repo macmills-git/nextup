@@ -8,6 +8,7 @@ import ShareModal from "@/components/ShareModal";
 import ReportModal from "@/components/ReportModal";
 import { Button } from "@/components/ui/button";
 import InteractiveEventMap from "@/components/InteractiveEventMap";
+import { EventCardSkeleton, EventMapCardSkeleton } from "@/components/CardSkeletons";
 
 const categories: ("All" | EventCategory | "Free")[] = [
   "All",
@@ -46,6 +47,15 @@ export const EventsPage = () => {
   const [locating, setLocating] = useState(false);
   const [viewMode, setViewMode] = useState<"grid" | "map">("grid");
   const [selectedEventId, setSelectedEventId] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    // Load once on page load and fetch data
+    const timer = setTimeout(() => {
+      setIsLoading(false);
+    }, 500);
+    return () => clearTimeout(timer);
+  }, []);
 
   // Modals
   const [shareTarget, setShareTarget] = useState<EventModel | null>(null);
@@ -276,7 +286,24 @@ export const EventsPage = () => {
         </div>
 
         {/* Event Listings Display: Grid Mode or Map Explorer Mode */}
-        {viewMode === "grid" ? (
+        {isLoading ? (
+          viewMode === "grid" ? (
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+              {Array.from({ length: 8 }).map((_, idx) => (
+                <EventCardSkeleton key={idx} />
+              ))}
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+              <div className="lg:col-span-5 space-y-4 max-h-[640px] overflow-y-auto pr-1">
+                {Array.from({ length: 4 }).map((_, idx) => (
+                  <EventMapCardSkeleton key={idx} />
+                ))}
+              </div>
+              <div className="lg:col-span-7 sticky top-20 h-[640px] rounded-3xl bg-stone-100 animate-pulse border border-stone-200" />
+            </div>
+          )
+        ) : viewMode === "grid" ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
             {sorted.map((e) => {
               const saved = isEventSaved(e.id);

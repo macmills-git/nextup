@@ -1,13 +1,14 @@
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { Search, MapPin, Store, Share2, BadgeCheck, Phone, Mail, Plus, AlertCircle } from "lucide-react";
-import { useMemo, useState } from "react";
+import { useMemo, useState, useEffect } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { useEventStore, VendorCategory, VendorProfileModel } from "@/contexts/EventStore";
 import { useAuth } from "@/contexts/AuthContext";
 import ShareModal from "@/components/ShareModal";
 import ReportModal from "@/components/ReportModal";
 import { Button } from "@/components/ui/button";
+import { VendorCardSkeleton } from "@/components/CardSkeletons";
 
 const vendorCategories: ("All" | VendorCategory)[] = [
   "All",
@@ -41,8 +42,17 @@ export const VendorsDirectoryPage = () => {
   const [query, setQuery] = useState("");
   const [locationFilter, setLocationFilter] = useState("");
   const [activeCat, setActiveCat] = useState<"All" | VendorCategory>("All");
+  const [isLoading, setIsLoading] = useState(true);
 
   const [shareTarget, setShareTarget] = useState<VendorProfileModel | null>(null);
+
+  useEffect(() => {
+    // Load once on page load and fetch data
+    const timer = setTimeout(() => {
+      setIsLoading(false);
+    }, 500);
+    return () => clearTimeout(timer);
+  }, []);
 
   const publicVendors = useMemo(() => {
     return vendors.filter(v => v.status === "published" && !v.hidden);
@@ -138,8 +148,15 @@ export const VendorsDirectoryPage = () => {
 
 
         {/* Vendor Cards Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-          {filtered.map((v) => (
+        {isLoading ? (
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+            {Array.from({ length: 8 }).map((_, idx) => (
+              <VendorCardSkeleton key={idx} />
+            ))}
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+            {filtered.map((v) => (
             <article
               key={v.id}
               onClick={() => navigate(`/vendors/${v.id}`)}
@@ -226,8 +243,9 @@ export const VendorsDirectoryPage = () => {
             </article>
           ))}
         </div>
+        )}
 
-        {filtered.length === 0 && (
+        {!isLoading && filtered.length === 0 && (
           <div className="text-center py-20 rounded-2xl border border-dashed border-stone-300 bg-card p-8">
             <AlertCircle className="w-8 h-8 text-stone-400 mx-auto mb-3" />
             <h3 className="text-base font-normal text-foreground">No vendors found</h3>
