@@ -157,8 +157,8 @@ export const VendorProfileDetailPage = () => {
     <div className="min-h-screen bg-background">
       <Navbar />
 
-      {/* Full-width Screen Header Banner (No rounded corners, +20% height) */}
-      <div className="relative w-full rounded-none border-y border-stone-200/80 bg-stone-900 text-white py-8 md:py-14 lg:py-16 px-4 md:px-8 lg:px-12 mb-6 shadow-md min-h-[240px] md:min-h-[300px] flex items-center">
+      {/* Full-width Screen Header Banner (No rounded corners, reduced height, orange outlined Back button inside) */}
+      <div className="relative w-full rounded-none border-y border-stone-200/80 bg-stone-900 text-white py-6 md:py-10 lg:py-12 px-4 md:px-8 lg:px-12 mb-6 shadow-md min-h-[200px] md:min-h-[250px] flex items-center">
         {vendor.portfolio && vendor.portfolio[0] ? (
           <img
             src={vendor.portfolio[0]}
@@ -167,62 +167,68 @@ export const VendorProfileDetailPage = () => {
           />
         ) : null}
 
-        <div className="relative z-10 container mx-auto max-w-7xl flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
-          <div className="flex flex-col md:flex-row items-start md:items-center gap-6">
-            <img
-              src={vendor.logo}
-              alt={vendor.name}
-              className="w-24 h-24 md:w-28 md:h-28 rounded-2xl object-cover border-4 border-white bg-white flex-shrink-0 shadow-lg"
-            />
-            <div>
-              <div className="flex flex-wrap items-center gap-2">
-                <h1 className="text-2xl md:text-3xl font-semibold tracking-tight">{vendor.name}</h1>
-              </div>
-
-              {/* Categories */}
-              <div className="flex flex-wrap gap-2 mt-3">
-                {vendor.categories.map((c) => (
-                  <span
-                    key={c}
-                    className="text-[10px] font-bold uppercase tracking-wider px-2.5 py-1 rounded-full bg-white/20 text-white backdrop-blur border border-white/10"
-                  >
-                    {c}
-                  </span>
-                ))}
-              </div>
-            </div>
+        <div className="relative z-10 container mx-auto max-w-7xl flex flex-col justify-between h-full gap-5">
+          {/* Top Row: Back button with orange outline inside banner */}
+          <div>
+            <button
+              onClick={() => navigate("/vendors")}
+              className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl border border-orange-500 text-orange-400 hover:bg-orange-500/15 text-xs font-normal transition-colors backdrop-blur-xs shadow-2xs"
+            >
+              <ArrowLeft className="w-3.5 h-3.5" /> Back
+            </button>
           </div>
 
-          <div className="flex flex-wrap gap-2 w-full md:w-auto">
-            {vendor.contact.whatsapp || vendor.contact.phone ? (
+          {/* Banner Details Content */}
+          <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
+            <div className="flex flex-col md:flex-row items-start md:items-center gap-5">
+              <img
+                src={vendor.logo}
+                alt={vendor.name}
+                className="w-20 h-20 md:w-24 md:h-24 rounded-2xl object-cover border-4 border-white bg-white flex-shrink-0 shadow-lg"
+              />
+              <div>
+                <div className="flex flex-wrap items-center gap-2">
+                  <h1 className="text-2xl md:text-3xl font-normal tracking-tight">{vendor.name}</h1>
+                </div>
+
+                {/* Categories */}
+                <div className="flex flex-wrap gap-2 mt-2.5">
+                  {vendor.categories.map((c) => (
+                    <span
+                      key={c}
+                      className="text-[10px] font-normal uppercase tracking-wider px-2.5 py-1 rounded-full bg-white/20 text-white backdrop-blur border border-white/10"
+                    >
+                      {c}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            </div>
+
+            <div className="flex flex-wrap gap-2 w-full md:w-auto">
+              {vendor.contact.whatsapp || vendor.contact.phone ? (
+                <Button
+                  onClick={() => handleWhatsApp()}
+                  size="lg"
+                  className="rounded-xl font-normal gap-2 bg-emerald-500 hover:bg-emerald-600 text-white flex-1 md:flex-initial shadow-md"
+                >
+                  <MessageCircle className="w-4 h-4" /> Chat on WhatsApp
+                </Button>
+              ) : null}
               <Button
-                onClick={() => handleWhatsApp()}
+                variant="outline"
                 size="lg"
-                className="rounded-xl font-bold gap-2 bg-emerald-500 hover:bg-emerald-600 text-white flex-1 md:flex-initial shadow-md"
+                onClick={() => setShareOpen(true)}
+                className="rounded-xl font-normal gap-2 bg-white/10 hover:bg-white/20 text-white border-white/30 backdrop-blur"
               >
-                <MessageCircle className="w-4 h-4" /> Chat on WhatsApp
+                <Share2 className="w-4 h-4" /> Share Profile
               </Button>
-            ) : null}
-            <Button
-              variant="outline"
-              size="lg"
-              onClick={() => setShareOpen(true)}
-              className="rounded-xl font-semibold gap-2 bg-white/10 hover:bg-white/20 text-white border-white/30 backdrop-blur"
-            >
-              <Share2 className="w-4 h-4" /> Share Profile
-            </Button>
+            </div>
           </div>
         </div>
       </div>
 
       <div className="pb-20 container mx-auto px-4 lg:px-8 max-w-7xl">
-        {/* Navigation back */}
-        <button
-          onClick={() => navigate("/vendors")}
-          className="inline-flex items-center gap-1.5 text-xs font-semibold text-muted-foreground hover:text-foreground mb-6 transition-colors"
-        >
-          <ArrowLeft className="w-4 h-4" /> Back to Vendor Directory
-        </button>
 
         <div className="space-y-8 max-w-full">
             {/* 1. Benefits Grid Section */}
@@ -234,7 +240,7 @@ export const VendorProfileDetailPage = () => {
                   <span className="text-[11px] font-bold uppercase tracking-widest text-stone-500 dark:text-stone-400 block">
                     BENEFITS & OVERVIEW
                   </span>
-                  <h2 className="text-2xl md:text-3xl font-semibold text-stone-900 dark:text-white tracking-tight leading-tight">
+                  <h2 className="text-2xl md:text-3xl font-normal text-stone-900 dark:text-white tracking-tight leading-tight">
                     About {vendor.name}
                   </h2>
                   <p className="text-xs md:text-sm text-stone-600 dark:text-stone-300 leading-relaxed font-normal">
@@ -246,7 +252,7 @@ export const VendorProfileDetailPage = () => {
                       <Button
                         onClick={() => handleWhatsApp()}
                         size="lg"
-                        className="rounded-xl font-medium text-xs px-6 py-3 bg-stone-900 hover:bg-stone-800 text-white dark:bg-slate-100 dark:text-slate-900 dark:hover:bg-slate-200 shadow-xs gap-2"
+                        className="rounded-xl font-normal text-xs px-6 py-3 bg-stone-900 hover:bg-stone-800 text-white dark:bg-slate-100 dark:text-slate-900 dark:hover:bg-slate-200 shadow-xs gap-2"
                       >
                         <MessageCircle className="w-4 h-4" /> Contact Vendor
                       </Button>
@@ -254,7 +260,7 @@ export const VendorProfileDetailPage = () => {
                       <Button
                         onClick={() => setShareOpen(true)}
                         size="lg"
-                        className="rounded-xl font-medium text-xs px-6 py-3 bg-stone-900 hover:bg-stone-800 text-white dark:bg-slate-100 dark:text-slate-900 dark:hover:bg-slate-200 shadow-xs gap-2"
+                        className="rounded-xl font-normal text-xs px-6 py-3 bg-stone-900 hover:bg-stone-800 text-white dark:bg-slate-100 dark:text-slate-900 dark:hover:bg-slate-200 shadow-xs gap-2"
                       >
                         <Share2 className="w-4 h-4" /> Share Profile
                       </Button>
@@ -271,7 +277,7 @@ export const VendorProfileDetailPage = () => {
                       {/* Box 1: Track Record */}
                       <div className="p-6 md:p-7 space-y-2.5 flex flex-col justify-start">
                         <Award className="w-6 h-6 text-orange-500 stroke-[2]" />
-                        <h3 className="text-base md:text-lg font-semibold text-stone-900 dark:text-white tracking-tight">
+                        <h3 className="text-base md:text-lg font-normal text-stone-900 dark:text-white tracking-tight">
                           Track Record & Experience
                         </h3>
                         <p className="text-xs text-stone-600 dark:text-stone-400 leading-relaxed font-normal">
@@ -284,7 +290,7 @@ export const VendorProfileDetailPage = () => {
                       {/* Box 2: Headquarters & Location */}
                       <div className="p-6 md:p-7 space-y-2.5 flex flex-col justify-start">
                         <MapPin className="w-6 h-6 text-orange-500 stroke-[2]" />
-                        <h3 className="text-base md:text-lg font-semibold text-stone-900 dark:text-white tracking-tight">
+                        <h3 className="text-base md:text-lg font-normal text-stone-900 dark:text-white tracking-tight">
                           Primary Base & Location
                         </h3>
                         <p className="text-xs text-stone-600 dark:text-stone-400 leading-relaxed font-normal">
@@ -298,18 +304,18 @@ export const VendorProfileDetailPage = () => {
                       {/* Box 3: Service Coverage */}
                       <div className="p-6 md:p-7 space-y-2.5 flex flex-col justify-start">
                         <Compass className="w-6 h-6 text-orange-500 stroke-[2]" />
-                        <h3 className="text-base md:text-lg font-semibold text-stone-900 dark:text-white tracking-tight">
+                        <h3 className="text-base md:text-lg font-normal text-stone-900 dark:text-white tracking-tight">
                           Service Region Coverage
                         </h3>
                         <p className="text-xs text-stone-600 dark:text-stone-400 leading-relaxed font-normal">
-                          Active across <span className="font-semibold text-stone-900 dark:text-stone-200">{vendor.serviceArea}</span> with full mobile logistics equipment transport.
+                          Active across <span className="font-normal text-stone-900 dark:text-stone-200">{vendor.serviceArea}</span> with full mobile logistics equipment transport.
                         </p>
                       </div>
 
                       {/* Box 4: Hours & Payment Terms */}
                       <div className="p-6 md:p-7 space-y-2.5 flex flex-col justify-start">
                         <Clock className="w-6 h-6 text-orange-500 stroke-[2]" />
-                        <h3 className="text-base md:text-lg font-semibold text-stone-900 dark:text-white tracking-tight">
+                        <h3 className="text-base md:text-lg font-normal text-stone-900 dark:text-white tracking-tight">
                           Operating Hours & Terms
                         </h3>
                         <p className="text-xs text-stone-600 dark:text-stone-400 leading-relaxed font-normal">
