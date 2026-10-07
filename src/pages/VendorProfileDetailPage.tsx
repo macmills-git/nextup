@@ -235,7 +235,7 @@ export const VendorProfileDetailPage = () => {
         </div>
 
         <div className="space-y-8 max-w-full">
-            {/* 1. Benefits Grid Section (Directly inspired by reference image) */}
+            {/* 1. Benefits Grid Section */}
             <section className="bg-stone-50/70 dark:bg-stone-900/40 border border-stone-200/80 dark:border-stone-800 rounded-[32px] p-6 md:p-10 lg:p-12 shadow-xs">
               <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-start">
                 
@@ -244,7 +244,7 @@ export const VendorProfileDetailPage = () => {
                   <span className="text-[11px] font-bold uppercase tracking-widest text-stone-500 dark:text-stone-400 block">
                     BENEFITS & OVERVIEW
                   </span>
-                  <h2 className="text-3xl md:text-4xl font-serif font-normal text-stone-900 dark:text-white tracking-tight leading-tight">
+                  <h2 className="text-2xl md:text-3xl font-semibold text-stone-900 dark:text-white tracking-tight leading-tight">
                     About {vendor.name}
                   </h2>
                   <p className="text-xs md:text-sm text-stone-600 dark:text-stone-300 leading-relaxed font-normal">
@@ -272,18 +272,16 @@ export const VendorProfileDetailPage = () => {
                   </div>
                 </div>
 
-                {/* Right Column: 2x2 Grid of Feature Cards matching reference image */}
+                {/* Right Column: 2x2 Grid of Feature Cards */}
                 <div className="lg:col-span-7">
                   <div className="bg-white dark:bg-stone-900 rounded-3xl border border-stone-200 dark:border-stone-800 divide-y divide-stone-200 dark:divide-stone-800 overflow-hidden shadow-xs">
                     
                     {/* Top Row of 2x2 Grid */}
                     <div className="grid grid-cols-1 sm:grid-cols-2 divide-y sm:divide-y-0 sm:divide-x divide-stone-200 dark:divide-stone-800">
                       {/* Box 1: Track Record */}
-                      <div className="p-6 md:p-7 space-y-3 flex flex-col justify-start">
-                        <div className="w-10 h-10 rounded-xl bg-orange-500 text-white flex items-center justify-center shadow-xs">
-                          <Award className="w-5 h-5 stroke-[2]" />
-                        </div>
-                        <h3 className="text-base md:text-lg font-serif font-semibold text-stone-900 dark:text-white tracking-tight">
+                      <div className="p-6 md:p-7 space-y-2.5 flex flex-col justify-start">
+                        <Award className="w-6 h-6 text-orange-500 stroke-[2]" />
+                        <h3 className="text-base md:text-lg font-semibold text-stone-900 dark:text-white tracking-tight">
                           Track Record & Experience
                         </h3>
                         <p className="text-xs text-stone-600 dark:text-stone-400 leading-relaxed font-normal">
@@ -294,11 +292,9 @@ export const VendorProfileDetailPage = () => {
                       </div>
 
                       {/* Box 2: Headquarters & Location */}
-                      <div className="p-6 md:p-7 space-y-3 flex flex-col justify-start">
-                        <div className="w-10 h-10 rounded-xl bg-orange-500 text-white flex items-center justify-center shadow-xs">
-                          <MapPin className="w-5 h-5 stroke-[2]" />
-                        </div>
-                        <h3 className="text-base md:text-lg font-serif font-semibold text-stone-900 dark:text-white tracking-tight">
+                      <div className="p-6 md:p-7 space-y-2.5 flex flex-col justify-start">
+                        <MapPin className="w-6 h-6 text-orange-500 stroke-[2]" />
+                        <h3 className="text-base md:text-lg font-semibold text-stone-900 dark:text-white tracking-tight">
                           Primary Base & Location
                         </h3>
                         <p className="text-xs text-stone-600 dark:text-stone-400 leading-relaxed font-normal">
@@ -310,11 +306,9 @@ export const VendorProfileDetailPage = () => {
                     {/* Bottom Row of 2x2 Grid */}
                     <div className="grid grid-cols-1 sm:grid-cols-2 divide-y sm:divide-y-0 sm:divide-x divide-stone-200 dark:divide-stone-800">
                       {/* Box 3: Service Coverage */}
-                      <div className="p-6 md:p-7 space-y-3 flex flex-col justify-start">
-                        <div className="w-10 h-10 rounded-xl bg-orange-500 text-white flex items-center justify-center shadow-xs">
-                          <Compass className="w-5 h-5 stroke-[2]" />
-                        </div>
-                        <h3 className="text-base md:text-lg font-serif font-semibold text-stone-900 dark:text-white tracking-tight">
+                      <div className="p-6 md:p-7 space-y-2.5 flex flex-col justify-start">
+                        <Compass className="w-6 h-6 text-orange-500 stroke-[2]" />
+                        <h3 className="text-base md:text-lg font-semibold text-stone-900 dark:text-white tracking-tight">
                           Service Region Coverage
                         </h3>
                         <p className="text-xs text-stone-600 dark:text-stone-400 leading-relaxed font-normal">
@@ -323,11 +317,9 @@ export const VendorProfileDetailPage = () => {
                       </div>
 
                       {/* Box 4: Hours & Payment Terms */}
-                      <div className="p-6 md:p-7 space-y-3 flex flex-col justify-start">
-                        <div className="w-10 h-10 rounded-xl bg-orange-500 text-white flex items-center justify-center shadow-xs">
-                          <Clock className="w-5 h-5 stroke-[2]" />
-                        </div>
-                        <h3 className="text-base md:text-lg font-serif font-semibold text-stone-900 dark:text-white tracking-tight">
+                      <div className="p-6 md:p-7 space-y-2.5 flex flex-col justify-start">
+                        <Clock className="w-6 h-6 text-orange-500 stroke-[2]" />
+                        <h3 className="text-base md:text-lg font-semibold text-stone-900 dark:text-white tracking-tight">
                           Operating Hours & Terms
                         </h3>
                         <p className="text-xs text-stone-600 dark:text-stone-400 leading-relaxed font-normal">
