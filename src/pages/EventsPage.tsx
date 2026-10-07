@@ -50,10 +50,10 @@ export const EventsPage = () => {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    // Load once on page load and fetch data
+    // Fast, responsive single page load fetch state (< 3 seconds)
     const timer = setTimeout(() => {
       setIsLoading(false);
-    }, 500);
+    }, 350);
     return () => clearTimeout(timer);
   }, []);
 
@@ -300,7 +300,7 @@ export const EventsPage = () => {
                   <EventMapCardSkeleton key={idx} />
                 ))}
               </div>
-              <div className="lg:col-span-7 sticky top-20 h-[640px] rounded-3xl bg-stone-100 animate-pulse border border-stone-200" />
+              <Skeleton className="lg:col-span-7 sticky top-20 h-[640px] rounded-3xl border border-stone-200" />
             </div>
           )
         ) : viewMode === "grid" ? (

@@ -142,3 +142,37 @@ html {
     transform: translateY(-6px);
   }
 }
+
+@keyframes skeleton-shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+.animate-skeleton-shimmer {
+  background: linear-gradient(
+    90deg,
+    rgba(231, 229, 228, 0.65) 0%,
+    rgba(255, 255, 255, 0.95) 25%,
+    rgba(231, 229, 228, 0.65) 50%,
+    rgba(231, 229, 228, 0.65) 100%
+  );
+  background-size: 200% 100%;
+  animation: skeleton-shimmer 1.4s infinite linear;
+}
+
+.dark .animate-skeleton-shimmer {
+  background: linear-gradient(
+    90deg,
+    rgba(41, 37, 36, 0.65) 0%,
+    rgba(87, 83, 78, 0.95) 25%,
+    rgba(41, 37, 36, 0.65) 50%,
+    rgba(41, 37, 36, 0.65) 100%
+  );
+  background-size: 200% 100%;
+  animation: skeleton-shimmer 1.4s infinite linear;
+}
+

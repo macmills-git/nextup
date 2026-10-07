@@ -47,10 +47,10 @@ export const VendorsDirectoryPage = () => {
   const [shareTarget, setShareTarget] = useState<VendorProfileModel | null>(null);
 
   useEffect(() => {
-    // Load once on page load and fetch data
+    // Fast, responsive single page load fetch state (< 3 seconds)
     const timer = setTimeout(() => {
       setIsLoading(false);
-    }, 500);
+    }, 350);
     return () => clearTimeout(timer);
   }, []);
 
