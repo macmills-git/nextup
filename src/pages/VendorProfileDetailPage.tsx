@@ -188,7 +188,7 @@ export const VendorProfileDetailPage = () => {
                   <h1 className="text-xl md:text-2xl font-semibold tracking-tight">{vendor.name}</h1>
                 </div>
 
-                {/* Categories & Verification Pills */}
+                {/* Categories */}
                 <div className="flex flex-wrap gap-2 mt-3">
                   {vendor.categories.map((c) => (
                     <span
@@ -198,16 +198,6 @@ export const VendorProfileDetailPage = () => {
                       {c}
                     </span>
                   ))}
-                  {vendor.taxIdNumber && (
-                    <span className="text-[10px] font-bold uppercase tracking-wider px-2.5 py-1 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">
-                      TIN Registered
-                    </span>
-                  )}
-                  {vendor.businessRegistrationNumber && (
-                    <span className="text-[10px] font-bold uppercase tracking-wider px-2.5 py-1 rounded-full bg-blue-500/20 text-blue-300 border border-blue-500/30">
-                      RGD Reg: {vendor.businessRegistrationNumber}
-                    </span>
-                  )}
                 </div>
               </div>
             </div>
