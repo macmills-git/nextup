@@ -93,13 +93,23 @@ export const InteractiveEventMap: React.FC<InteractiveEventMapProps> = ({
       zoomControl: false,
     });
 
-    // Use standard OpenStreetMap tiles - 100% open-source & free without API keys
-    const tileUrl = "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png";
+    // Map tile source (Defaults to OpenStreetMap, supports custom Mapbox or MapTiler via VITE_MAPBOX_TOKEN / VITE_MAP_TILE_URL)
+    const mapboxToken = import.meta.env.VITE_MAPBOX_TOKEN;
+    const customTileUrl = import.meta.env.VITE_MAP_TILE_URL;
+
+    const tileUrl = customTileUrl
+      ? customTileUrl
+      : mapboxToken
+      ? `https://api.mapbox.com/styles/v1/mapbox/streets-v12/tiles/{z}/{x}/{y}?access_token=${mapboxToken}`
+      : "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png";
 
     L.tileLayer(tileUrl, {
-      attribution:
-        '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+      attribution: customTileUrl || mapboxToken
+        ? '&copy; <a href="https://www.mapbox.com/">Mapbox</a>'
+        : '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
       maxZoom: 19,
+      tileSize: mapboxToken ? 512 : 256,
+      zoomOffset: mapboxToken ? -1 : 0,
     }).addTo(map);
 
     L.control.zoom({ position: "bottomright" }).addTo(map);
