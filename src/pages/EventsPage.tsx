@@ -50,10 +50,10 @@ export const EventsPage = () => {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    // Fast, responsive single page load fetch state (< 3 seconds)
+    // Single page load fetch state (3-5 seconds duration)
     const timer = setTimeout(() => {
       setIsLoading(false);
-    }, 350);
+    }, 3500);
     return () => clearTimeout(timer);
   }, []);
 
