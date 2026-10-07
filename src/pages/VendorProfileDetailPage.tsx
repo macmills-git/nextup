@@ -158,9 +158,9 @@ export const VendorProfileDetailPage = () => {
         {/* Navigation back */}
         <button
           onClick={() => navigate("/vendors")}
-          className="inline-flex items-center gap-2 text-xs font-semibold text-muted-foreground hover:text-foreground mb-6 transition-colors"
+          className="inline-flex items-center gap-1.5 text-xs font-semibold text-muted-foreground hover:text-foreground mb-6 transition-colors"
         >
-          <i className="fa-solid fa-arrow-left text-xs" /> Back to Vendor Directory
+          <ArrowLeft className="w-4 h-4" /> Back to Vendor Directory
         </button>
 
         {/* Vendor Header Banner */}
@@ -185,7 +185,7 @@ export const VendorProfileDetailPage = () => {
                   <h1 className="text-xl md:text-2xl font-semibold tracking-tight">{vendor.name}</h1>
                 </div>
 
-                {/* Categories */}
+                {/* Categories & Verification Pills */}
                 <div className="flex flex-wrap gap-2 mt-3">
                   {vendor.categories.map((c) => (
                     <span
@@ -195,6 +195,16 @@ export const VendorProfileDetailPage = () => {
                       {c}
                     </span>
                   ))}
+                  {vendor.taxIdNumber && (
+                    <span className="text-[10px] font-bold uppercase tracking-wider px-2.5 py-1 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">
+                      TIN Registered
+                    </span>
+                  )}
+                  {vendor.businessRegistrationNumber && (
+                    <span className="text-[10px] font-bold uppercase tracking-wider px-2.5 py-1 rounded-full bg-blue-500/20 text-blue-300 border border-blue-500/30">
+                      RGD Reg: {vendor.businessRegistrationNumber}
+                    </span>
+                  )}
                 </div>
               </div>
             </div>
@@ -204,9 +214,9 @@ export const VendorProfileDetailPage = () => {
                 <Button
                   onClick={() => handleWhatsApp()}
                   size="lg"
-                  className="rounded-xl font-bold gap-2 bg-stone-900 hover:bg-stone-800 text-white border border-white/20 flex-1 md:flex-initial shadow-md"
+                  className="rounded-xl font-bold gap-2 bg-emerald-500 hover:bg-emerald-600 text-white flex-1 md:flex-initial shadow-md"
                 >
-                  <i className="fa-brands fa-whatsapp text-sm" /> Chat on WhatsApp
+                  <MessageCircle className="w-4 h-4" /> Chat on WhatsApp
                 </Button>
               ) : null}
               <Button
@@ -215,7 +225,7 @@ export const VendorProfileDetailPage = () => {
                 onClick={() => setShareOpen(true)}
                 className="rounded-xl font-semibold gap-2 bg-white/10 hover:bg-white/20 text-white border-white/30 backdrop-blur"
               >
-                <i className="fa-solid fa-share-nodes text-sm" /> Share Profile
+                <Share2 className="w-4 h-4" /> Share Profile
               </Button>
             </div>
           </div>
@@ -229,8 +239,8 @@ export const VendorProfileDetailPage = () => {
                 <div>
                   {/* Card Header: Squircle Icon + Pill Badge */}
                   <div className="flex items-center justify-between mb-6">
-                    <div className="w-11 h-11 rounded-2xl bg-white dark:bg-stone-800 border border-stone-200 dark:border-stone-700 text-stone-900 dark:text-white flex items-center justify-center shadow-2xs">
-                      <i className="fa-solid fa-briefcase text-sm" />
+                    <div className="w-12 h-12 rounded-2xl bg-stone-900 text-white dark:bg-white dark:text-stone-900 flex items-center justify-center shadow-md">
+                      <Briefcase className="w-6 h-6 stroke-[2]" />
                     </div>
                     <span className="text-xs font-bold px-3.5 py-1 rounded-full bg-white dark:bg-stone-800 border border-stone-200 dark:border-stone-700 text-stone-700 dark:text-stone-300 shadow-2xs">
                       01
@@ -272,8 +282,8 @@ export const VendorProfileDetailPage = () => {
                 <div>
                   {/* Card Header: Squircle Icon + Pill Badge */}
                   <div className="flex items-center justify-between mb-6">
-                    <div className="w-11 h-11 rounded-2xl bg-white dark:bg-stone-800 border border-stone-200 dark:border-stone-700 text-stone-900 dark:text-white flex items-center justify-center shadow-2xs">
-                      <i className="fa-solid fa-location-dot text-sm" />
+                    <div className="w-12 h-12 rounded-2xl bg-white dark:bg-stone-800 text-rose-500 border border-stone-200 dark:border-stone-700 flex items-center justify-center shadow-2xs">
+                      <MapPin className="w-6 h-6 stroke-[2]" />
                     </div>
                     <span className="text-xs font-bold px-3.5 py-1 rounded-full bg-white dark:bg-stone-800 border border-stone-200 dark:border-stone-700 text-stone-700 dark:text-stone-300 shadow-2xs">
                       02
@@ -286,7 +296,7 @@ export const VendorProfileDetailPage = () => {
 
                   {/* Primary Location Description */}
                   <div className="p-4 rounded-2xl bg-white dark:bg-stone-800/80 border border-stone-200/80 dark:border-stone-700/80 mb-4 shadow-2xs">
-                    <span className="text-[10px] font-bold uppercase tracking-wider text-stone-500 dark:text-stone-400 block mb-1">
+                    <span className="text-[10px] font-bold uppercase tracking-wider text-rose-500 block mb-1">
                       Primary Base & Headquarters
                     </span>
                     <p className="text-sm font-semibold text-stone-900 dark:text-white">
@@ -302,7 +312,7 @@ export const VendorProfileDetailPage = () => {
                 <div className="space-y-3 pt-3 border-t border-stone-200/70 dark:border-stone-800">
                   {vendor.businessHours && (
                     <div className="flex items-start gap-3 p-3 rounded-xl bg-white/70 dark:bg-stone-800/50 border border-stone-200/60 dark:border-stone-700/60">
-                      <i className="fa-solid fa-clock text-xs text-stone-700 dark:text-stone-300 mt-1 flex-shrink-0" />
+                      <Clock className="w-4 h-4 text-primary mt-0.5 flex-shrink-0" />
                       <div>
                         <span className="text-[11px] font-bold text-stone-900 dark:text-white block">Operating Hours</span>
                         <span className="text-xs text-stone-600 dark:text-stone-400 font-medium">{vendor.businessHours}</span>
@@ -311,7 +321,7 @@ export const VendorProfileDetailPage = () => {
                   )}
                   {vendor.paymentTerms && (
                     <div className="flex items-start gap-3 p-3 rounded-xl bg-white/70 dark:bg-stone-800/50 border border-stone-200/60 dark:border-stone-700/60">
-                      <i className="fa-solid fa-credit-card text-xs text-stone-700 dark:text-stone-300 mt-1 flex-shrink-0" />
+                      <CreditCard className="w-4 h-4 text-emerald-600 mt-0.5 flex-shrink-0" />
                       <div>
                         <span className="text-[11px] font-bold text-stone-900 dark:text-white block">Booking & Payment Terms</span>
                         <span className="text-xs text-stone-600 dark:text-stone-400 font-medium">{vendor.paymentTerms}</span>
@@ -427,16 +437,16 @@ export const VendorProfileDetailPage = () => {
             {/* 3. PORTFOLIO PHOTO GALLERY & SHOWCASE */}
             <section className="bg-card border border-stone-200/80 rounded-3xl p-6 md:p-8 shadow-xs space-y-6">
               <h2 className="text-xl font-normal text-foreground flex items-center gap-2">
-                <i className="fa-solid fa-image text-stone-700 dark:text-stone-300 text-lg" /> Portfolio Photo Gallery
+                <Eye className="w-5 h-5 text-primary" /> Portfolio Photo Gallery
               </h2>
 
-              {/* Portfolio Photo Grid */}
+              {/* Portfolio Photo Grid (Guaranteed 4+ photos) */}
               <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
                 {effectivePortfolio.map((imgUrl, i) => (
                   <div
                     key={i}
                     onClick={() => setSelectedMediaUrl(imgUrl)}
-                    className="aspect-[4/3] rounded-2xl overflow-hidden border border-stone-200 bg-stone-100 cursor-pointer group relative shadow-xs hover:border-stone-400 transition"
+                    className="aspect-[4/3] rounded-2xl overflow-hidden border border-stone-200 bg-stone-100 cursor-pointer group relative shadow-xs hover:border-primary transition"
                   >
                     <img
                       src={imgUrl}
@@ -444,7 +454,7 @@ export const VendorProfileDetailPage = () => {
                       className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                     />
                     <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center text-white">
-                      <i className="fa-solid fa-eye text-base" />
+                      <Eye className="w-5 h-5" />
                     </div>
                   </div>
                 ))}
@@ -454,7 +464,7 @@ export const VendorProfileDetailPage = () => {
                 {vendor.mediaFiles && vendor.mediaFiles.some((m) => m.type === "video") && (
                   <div className="pt-4 border-t border-stone-100">
                     <h3 className="text-xs font-bold uppercase tracking-wider text-stone-500 mb-3 flex items-center gap-1.5">
-                      <i className="fa-solid fa-play text-xs text-stone-700 dark:text-stone-300" /> Featured Video Showcase
+                      <Play className="w-3.5 h-3.5 text-primary" /> Featured Video Showcase
                     </h3>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                       {vendor.mediaFiles
@@ -486,8 +496,8 @@ export const VendorProfileDetailPage = () => {
             <section className="bg-card border border-stone-200/80 rounded-3xl p-6 md:p-8 shadow-xs">
               <div className="flex items-center justify-between mb-4">
                 <div>
-                  <span className="text-xs font-bold uppercase tracking-wider text-stone-700 dark:text-stone-300 flex items-center gap-1.5">
-                    <i className="fa-solid fa-shield-halved text-xs" /> Official Business Documents
+                  <span className="text-xs font-bold uppercase tracking-wider text-emerald-600 flex items-center gap-1">
+                    <ShieldCheck className="w-4 h-4" /> Official Business Documents
                   </span>
                   <h2 className="text-xl font-normal text-foreground mt-0.5">
                     Certificates & Compliance Verification
@@ -503,8 +513,8 @@ export const VendorProfileDetailPage = () => {
                       className="p-4 rounded-2xl border border-stone-200 bg-stone-50/70 flex items-center justify-between gap-3"
                     >
                       <div className="flex items-center gap-3">
-                        <div className="w-10 h-10 rounded-xl bg-white dark:bg-stone-800 border border-stone-200 text-stone-900 dark:text-white flex items-center justify-center flex-shrink-0 shadow-2xs">
-                          <i className="fa-solid fa-file-contract text-sm" />
+                        <div className="w-10 h-10 rounded-xl bg-emerald-100 text-emerald-700 flex items-center justify-center flex-shrink-0">
+                          <FileText className="w-5 h-5" />
                         </div>
                         <div>
                           <h4 className="text-xs font-bold text-stone-900">{cert.title}</h4>
