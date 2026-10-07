@@ -7,6 +7,7 @@ import { useEventStore, EventCategory, EventModel } from "@/contexts/EventStore"
 import ShareModal from "@/components/ShareModal";
 import ReportModal from "@/components/ReportModal";
 import { Button } from "@/components/ui/button";
+import InteractiveEventMap from "@/components/InteractiveEventMap";
 
 const categories: ("All" | EventCategory | "Free")[] = [
   "All",
@@ -44,6 +45,7 @@ export const EventsPage = () => {
   const [sortOpen, setSortOpen] = useState(false);
   const [locating, setLocating] = useState(false);
   const [viewMode, setViewMode] = useState<"grid" | "map">("grid");
+  const [selectedEventId, setSelectedEventId] = useState<string | null>(null);
 
   // Modals
   const [shareTarget, setShareTarget] = useState<EventModel | null>(null);
@@ -189,34 +191,70 @@ export const EventsPage = () => {
           </Button>
         </div>
 
-        {/* Search & Location bar */}
-        <div className="flex flex-col md:flex-row gap-3 mb-4 bg-card border border-border p-2.5 rounded-2xl">
-          <div className="flex-1 relative">
+        {/* Search & View Mode / Sort bar */}
+        <div className="flex flex-col md:flex-row items-center gap-3 mb-6 bg-card border border-border p-2.5 rounded-2xl shadow-sm">
+          <div className="flex-1 relative w-full">
             <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
             <input
               value={query}
               onChange={(e) => setQuery(e.target.value)}
-              placeholder="Search by event title, keyword, organizer or venue..."
+              placeholder="Search by event title, city, venue, or organizer..."
               className="w-full h-11 rounded-xl bg-muted/60 pl-11 pr-4 text-xs md:text-sm text-foreground placeholder:text-muted-foreground outline-none border border-transparent focus:border-primary/30 transition-all"
             />
           </div>
-          <div className="relative md:w-80">
-            <MapPin className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-            <input
-              value={cityFilter}
-              onChange={(e) => setCityFilter(e.target.value)}
-              placeholder="Filter by location (e.g. Accra, Legon)..."
-              className="w-full h-11 rounded-xl bg-muted/60 pl-11 pr-12 text-xs md:text-sm text-foreground placeholder:text-muted-foreground outline-none border border-transparent focus:border-primary/30 transition-all"
-            />
-            <button
-              onClick={useMyLocation}
-              disabled={locating}
-              title="Use current location"
-              aria-label="Use current location"
-              className="absolute right-2 top-1/2 -translate-y-1/2 w-8 h-8 rounded-lg hover:bg-stone-200/60 flex items-center justify-center transition disabled:opacity-50"
-            >
-              <Locate className={`w-4 h-4 text-muted-foreground ${locating ? "animate-spin" : ""}`} />
-            </button>
+
+          <div className="flex items-center gap-2 w-full md:w-auto justify-between md:justify-end">
+            {/* View Mode Switcher (Grid View & Map View) */}
+            <div className="flex items-center bg-stone-100 dark:bg-stone-800 p-1 rounded-xl border border-stone-200 dark:border-stone-700">
+              <button
+                onClick={() => setViewMode("grid")}
+                className={`flex items-center gap-1.5 px-3.5 py-1.5 text-xs font-semibold rounded-lg transition-all ${
+                  viewMode === "grid"
+                    ? "bg-white dark:bg-stone-900 text-stone-900 dark:text-white shadow-sm"
+                    : "text-stone-600 dark:text-stone-400 hover:text-stone-900 dark:hover:text-white"
+                }`}
+              >
+                <LayoutGrid className="w-3.5 h-3.5" /> Grid View
+              </button>
+              <button
+                onClick={() => setViewMode("map")}
+                className={`flex items-center gap-1.5 px-3.5 py-1.5 text-xs font-semibold rounded-lg transition-all ${
+                  viewMode === "map"
+                    ? "bg-white dark:bg-stone-900 text-stone-900 dark:text-white shadow-sm"
+                    : "text-stone-600 dark:text-stone-400 hover:text-stone-900 dark:hover:text-white"
+                }`}
+              >
+                <MapIcon className="w-3.5 h-3.5 text-primary" /> Map View
+              </button>
+            </div>
+
+            {/* Sort Dropdown */}
+            <div ref={sortRef} className="relative">
+              <button
+                onClick={() => setSortOpen((o) => !o)}
+                className="h-10 text-xs font-semibold text-stone-700 dark:text-stone-300 hover:text-foreground inline-flex items-center gap-1.5 px-3.5 rounded-xl border border-stone-200 dark:border-stone-700 bg-stone-50 dark:bg-stone-800/60 transition-colors"
+              >
+                Sort: {sortOptions.find((s) => s.id === sort)?.label}
+                <ChevronDown className="w-3.5 h-3.5 text-muted-foreground" />
+              </button>
+              {sortOpen && (
+                <div className="absolute right-0 top-full mt-1.5 w-48 rounded-xl border border-border bg-card z-20 py-1 shadow-lg">
+                  {sortOptions.map((opt) => (
+                    <button
+                      key={opt.id}
+                      onClick={() => {
+                        setSort(opt.id);
+                        setSortOpen(false);
+                      }}
+                      className="w-full flex items-center justify-between px-3 py-2 text-xs font-medium text-foreground hover:bg-muted"
+                    >
+                      {opt.label}
+                      {sort === opt.id && <Check className="w-3.5 h-3.5 text-primary" />}
+                    </button>
+                  ))}
+                </div>
+              )}
+            </div>
           </div>
         </div>
 
@@ -235,63 +273,6 @@ export const EventsPage = () => {
               {cat}
             </button>
           ))}
-        </div>
-
-        {/* View Toggle & Sort */}
-        <div className="flex flex-col sm:flex-row sm:items-center justify-end gap-4 mb-6">
-          <div className="flex items-center gap-2">
-            {/* View Mode Switcher */}
-            <div className="flex items-center bg-stone-100 p-1 rounded-xl border border-stone-200">
-              <button
-                onClick={() => setViewMode("grid")}
-                className={`flex items-center gap-1.5 px-3 py-1 text-xs font-medium rounded-lg transition-all ${
-                  viewMode === "grid"
-                    ? "bg-white text-stone-900 shadow-sm"
-                    : "text-stone-600 hover:text-stone-900"
-                }`}
-              >
-                <LayoutGrid className="w-3.5 h-3.5" /> Grid View
-              </button>
-              <button
-                onClick={() => setViewMode("map")}
-                className={`flex items-center gap-1.5 px-3 py-1 text-xs font-medium rounded-lg transition-all ${
-                  viewMode === "map"
-                    ? "bg-white text-stone-900 shadow-sm"
-                    : "text-stone-600 hover:text-stone-900"
-                }`}
-              >
-                <MapIcon className="w-3.5 h-3.5 text-primary" /> Map View
-              </button>
-            </div>
-
-            {/* Sort Dropdown */}
-            <div ref={sortRef} className="relative">
-              <button
-                onClick={() => setSortOpen((o) => !o)}
-                className="text-xs font-medium text-stone-600 hover:text-foreground inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-border bg-card"
-              >
-                Sort: {sortOptions.find((s) => s.id === sort)?.label}
-                <ChevronDown className="w-3.5 h-3.5 text-muted-foreground" />
-              </button>
-              {sortOpen && (
-                <div className="absolute right-0 top-full mt-1 w-48 rounded-xl border border-border bg-card z-20 py-1 shadow-lg">
-                  {sortOptions.map((opt) => (
-                    <button
-                      key={opt.id}
-                      onClick={() => {
-                        setSort(opt.id);
-                        setSortOpen(false);
-                      }}
-                      className="w-full flex items-center justify-between px-3 py-2 text-xs font-medium text-foreground hover:bg-muted"
-                    >
-                      {opt.label}
-                      {sort === opt.id && <Check className="w-3.5 h-3.5 text-primary" />}
-                    </button>
-                  ))}
-                </div>
-              )}
-            </div>
-          </div>
         </div>
 
         {/* Event Listings Display: Grid Mode or Map Explorer Mode */}
@@ -384,14 +365,19 @@ export const EventsPage = () => {
         ) : (
           /* Split Map View Mode */
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
-            <div className="lg:col-span-5 space-y-4">
+            <div className="lg:col-span-5 space-y-4 max-h-[640px] overflow-y-auto pr-1">
               {sorted.map((e) => {
                 const saved = isEventSaved(e.id);
+                const isSelected = e.id === selectedEventId;
                 return (
                   <article
                     key={e.id}
-                    onClick={() => navigate(`/events/${e.id}`)}
-                    className="rounded-[24px] border border-stone-200/90 bg-card p-3 hover:border-stone-400 transition-colors cursor-pointer flex gap-4"
+                    onClick={() => setSelectedEventId(e.id)}
+                    className={`rounded-[24px] border p-3 transition-all cursor-pointer flex gap-4 ${
+                      isSelected
+                        ? "border-black bg-stone-100/90 shadow-md ring-1 ring-black"
+                        : "border-stone-200/90 bg-card hover:border-stone-400"
+                    }`}
                   >
                     <img
                       src={e.coverImage}
@@ -406,15 +392,23 @@ export const EventsPage = () => {
                           </span>
                           <span className="text-xs font-extrabold text-foreground">{e.isFree ? "Free" : e.price || "Free"}</span>
                         </div>
-                        <h3 className="text-sm font-normal text-foreground mt-1 truncate group-hover:text-primary">
+                        <h3 className="text-sm font-semibold text-foreground mt-1 truncate group-hover:text-primary">
                           {e.title}
                         </h3>
                         <p className="text-xs text-stone-500 truncate mt-0.5">{e.venue}, {e.city}</p>
                       </div>
                       <div className="flex items-center justify-between text-xs text-muted-foreground pt-2 border-t border-stone-100">
                         <span className="flex items-center gap-1"><Calendar className="w-3 h-3 text-stone-400" /> {formatDate(e.startAt)}</span>
-                        <Button variant="ghost" size="sm" className="h-7 text-xs font-medium text-primary p-0">
-                          View Interactive Map &rarr;
+                        <Button
+                          onClick={(ev) => {
+                            ev.stopPropagation();
+                            navigate(`/events/${e.id}`);
+                          }}
+                          variant="ghost"
+                          size="sm"
+                          className="h-7 text-xs font-semibold text-primary p-0 hover:bg-transparent hover:underline"
+                        >
+                          View Details &rarr;
                         </Button>
                       </div>
                     </div>
@@ -423,20 +417,13 @@ export const EventsPage = () => {
               })}
             </div>
 
-            <div className="lg:col-span-7 sticky top-28 h-[600px] rounded-3xl border border-stone-200 overflow-hidden bg-stone-100 relative shadow-sm">
-              <iframe
-                title="Interactive Event Map View"
-                src={`https://maps.google.com/maps?q=${encodeURIComponent(cityFilter ? `${cityFilter}, Ghana` : "Accra, Ghana")}&t=&z=13&ie=UTF8&iwloc=&output=embed`}
-                className="w-full h-full border-0"
-                loading="lazy"
+            <div className="lg:col-span-7 sticky top-20 h-[640px]">
+              <InteractiveEventMap
+                events={sorted}
+                selectedEventId={selectedEventId}
+                onSelectEvent={(evt) => setSelectedEventId(evt.id)}
+                className="w-full h-full"
               />
-              <div className="absolute top-4 left-4 bg-white/95 backdrop-blur-md px-3.5 py-2 rounded-2xl border border-stone-200 shadow-md flex items-center gap-2">
-                <MapPin className="w-4 h-4 text-primary" />
-                <div>
-                  <p className="text-xs font-semibold text-stone-900">Map View Center</p>
-                  <p className="text-[11px] text-stone-500">{cityFilter || "Accra & Surrounding Venues"}</p>
-                </div>
-              </div>
             </div>
           </div>
         )}

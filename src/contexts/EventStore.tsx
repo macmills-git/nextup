@@ -112,6 +112,59 @@ export type EventModel = {
   updatedAt: number;
 };
 
+export type VendorCertificate = {
+  id?: string;
+  title: string;
+  certNumber?: string;
+  issuingAuthority?: string;
+  issueDate?: string;
+  fileUrl: string;
+  status?: 'verified' | 'pending';
+};
+
+export type VendorPricingPackage = {
+  id?: string;
+  name: string;
+  price: string;
+  billingCycle?: string;
+  popular?: boolean;
+  description: string;
+  features: string[];
+  deliverables?: string;
+};
+
+export type VendorDetailedService = {
+  title: string;
+  category?: string;
+  priceRange?: string;
+  description?: string;
+  setupIncluded?: boolean;
+  turnaroundTime?: string;
+  equipmentIncluded?: string[];
+  specs?: string;
+};
+
+export type VendorMediaFile = {
+  id?: string;
+  type: 'image' | 'video' | 'audio' | 'document';
+  url: string;
+  title?: string;
+  caption?: string;
+};
+
+export type VendorFAQ = {
+  question: string;
+  answer: string;
+};
+
+export type VendorTestimonial = {
+  clientName: string;
+  eventTitle: string;
+  rating: number;
+  comment: string;
+  date?: string;
+};
+
 export type VendorProfileModel = {
   id: string;
   ownerId: string;
@@ -119,7 +172,8 @@ export type VendorProfileModel = {
   logo: string;
   description: string;
   categories: VendorCategory[];
-  services: { title: string; priceRange?: string; description?: string }[];
+  services: VendorDetailedService[];
+  pricingPackages?: VendorPricingPackage[];
   location: string;
   city: string;
   serviceArea: string;
@@ -131,12 +185,27 @@ export type VendorProfileModel = {
     email?: string;
     instagram?: string;
     website?: string;
+    linkedin?: string;
   };
   portfolio: string[];
+  mediaFiles?: VendorMediaFile[];
+  certificates?: VendorCertificate[];
+  businessRegistrationNumber?: string;
+  taxIdNumber?: string;
+  experienceYears?: number;
+  teamSize?: string;
+  completedEventsCount?: number;
+  rating?: number;
+  reviewsCount?: number;
+  businessHours?: string;
+  paymentTerms?: string;
+  faqs?: VendorFAQ[];
+  testimonials?: VendorTestimonial[];
   verified: boolean;
   status: 'published' | 'draft';
   hidden?: boolean;
   createdAt: number;
+  updatedAt?: number;
 };
 
 export type DynamicCategory = {
@@ -1265,9 +1334,111 @@ const INITIAL_VENDORS: VendorProfileModel[] = [
     logo: 'https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?w=400&auto=format&fit=crop&q=80',
     description: 'Professional high-definition sound reinforcement, stage lighting setup, wireless mics, and sound engineers for concerts, conferences, and weddings.',
     categories: ['Sound', 'Lighting', 'Equipment Rental'],
+    businessRegistrationNumber: 'CS-984210026',
+    taxIdNumber: 'C001294819X',
+    experienceYears: 8,
+    teamSize: '14 Certified Technicians & Crew',
+    completedEventsCount: 240,
+    rating: 4.9,
+    reviewsCount: 48,
+    businessHours: 'Mon – Sat: 8:00 AM – 9:00 PM (24/7 Event On-Call Support)',
+    paymentTerms: '50% deposit upon booking confirmation. Balance due 24 hours prior to event setup. Mobile Money & Bank Transfer accepted.',
     services: [
-      { title: 'Concert Sound Package (Up to 1000 pax)', priceRange: 'GHS 2,500 - 5,000', description: 'Full line array system, digital mixer, sound engineer, and stage monitors.' },
-      { title: 'Conference & Seminar Audio', priceRange: 'GHS 1,200', description: 'Crisp speech amplification, lapel mics, and recording setup.' },
+      { title: 'Concert Sound Package (Up to 1000 pax)', priceRange: 'GHS 2,500 - 5,000', description: 'Full line array system, digital mixer, sound engineer, and stage monitors.', setupIncluded: true, turnaroundTime: '3 Hours Setup', equipmentIncluded: ['Line Array Tops', 'Dual 18" Subwoofers', 'Allen & Heath Digital Desk'] },
+      { title: 'Conference & Seminar Audio', priceRange: 'GHS 1,200', description: 'Crisp speech amplification, lapel mics, and recording setup.', setupIncluded: true, turnaroundTime: '1.5 Hours Setup', equipmentIncluded: ['RCF Active Speakers', '4x UHF Lapel Mics'] },
+    ],
+    pricingPackages: [
+      {
+        name: 'Bronze Seminar Package',
+        price: 'GHS 1,500',
+        billingCycle: 'Per Day',
+        description: 'Ideal for indoor seminars, workshops, and corporate training up to 150 guests.',
+        features: [
+          '2x RCF Active PA Speakers',
+          '4x UHF Wireless Lapel/Handheld Mics',
+          '12-Channel Digital Mixing Console',
+          '1x On-site Sound Engineer',
+        ],
+        deliverables: 'Speech clarity guarantee & MP3 audio recording export',
+      },
+      {
+        name: 'Silver Concert & Gala Package',
+        price: 'GHS 3,500',
+        popular: true,
+        billingCycle: 'Per Day',
+        description: 'High-power sound system with Intelligent LED stage lighting for medium concerts & galas up to 600 guests.',
+        features: [
+          '4x Line Array Top Speakers + 2x Dual 18" Subwoofers',
+          '6x Wireless UHF Mics & Stage Monitors',
+          '16x Moving Head & Par LED Stage Lights',
+          '2x Senior Sound & Lighting Engineers',
+        ],
+        deliverables: 'Full live multi-track audio recording & lighting choreography',
+      },
+      {
+        name: 'Gold Festival & Outdoor VIP Package',
+        price: 'GHS 7,500',
+        billingCycle: 'Per Day',
+        description: 'Stadium & festival grade sound rig with hydraulic trussing and beam lighting.',
+        features: [
+          '8x Line Array Modules + 4x Ground Subwoofers',
+          'Digital Snake & 32-Channel Allen & Heath Desk',
+          'Complete Intelligent Truss Lighting Rig & Fog Machine',
+          'Dedicated 4-man Technical Crew & Backup Generator',
+        ],
+        deliverables: 'Uninterrupted festival sound guarantee & live broadcast audio feed',
+      },
+    ],
+    certificates: [
+      {
+        title: "RGD Certificate of Incorporation",
+        certNumber: "CS-984210026",
+        issuingAuthority: "Registrar General's Dept Ghana",
+        issueDate: "2018-04-12",
+        fileUrl: "https://images.unsplash.com/photo-1589829545856-d10d557cf95f?w=800&auto=format&fit=crop&q=80",
+        status: "verified",
+      },
+      {
+        title: "GRA Tax Clearance Certificate",
+        certNumber: "TIN-C001294819X",
+        issuingAuthority: "Ghana Revenue Authority",
+        issueDate: "2026-01-10",
+        fileUrl: "https://images.unsplash.com/photo-1450133064473-71024230f91b?w=800&auto=format&fit=crop&q=80",
+        status: "verified",
+      },
+    ],
+    mediaFiles: [
+      {
+        type: "video",
+        url: "https://www.youtube.com/embed/dQw4w9WgXcQ",
+        title: "Live Concert Sound Setup & Soundcheck",
+        caption: "Pan-African Music Fest Stage Production",
+      },
+      {
+        type: "image",
+        url: "https://images.unsplash.com/photo-1470225620780-dba8ba36b745?w=1200&auto=format&fit=crop&q=80",
+        title: "Intelligent LED Lighting Rig",
+        caption: "Kempinski Ballroom Gala Night",
+      },
+    ],
+    faqs: [
+      {
+        question: "Do you supply power generators if the venue loses electricity?",
+        answer: "Yes! All our Silver and Gold packages include automatic generator power backups to ensure uninterrupted events.",
+      },
+      {
+        question: "How early does your crew arrive for setup?",
+        answer: "We arrive at least 3 hours prior to event doors opening to perform full acoustic checks and line testing.",
+      },
+    ],
+    testimonials: [
+      {
+        clientName: "Kwame Osei (Pan African Summit)",
+        eventTitle: "AI & Tech Summit 2025",
+        rating: 5,
+        comment: "SoundWave provided crystal clear sound for over 800 delegates. Flawless execution and super professional crew!",
+        date: "Nov 2025",
+      },
     ],
     location: 'Legon Road, East Legon',
     city: 'Accra',
@@ -1283,6 +1454,8 @@ const INITIAL_VENDORS: VendorProfileModel[] = [
     portfolio: [
       'https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?w=800&auto=format&fit=crop&q=80',
       'https://images.unsplash.com/photo-1470225620780-dba8ba36b745?w=800&auto=format&fit=crop&q=80',
+      'https://images.unsplash.com/photo-1501386761578-eac5c94b800a?w=800&auto=format&fit=crop&q=80',
+      'https://images.unsplash.com/photo-1492684223066-81342ee5ff30?w=800&auto=format&fit=crop&q=80',
     ],
     verified: true,
     status: 'published',
@@ -1299,6 +1472,57 @@ const INITIAL_VENDORS: VendorProfileModel[] = [
       { title: 'Full Buffet Catering per Head', priceRange: 'GHS 60 / person', description: 'Jollof, fried rice, grilled chicken/fish, salads, and dessert table.' },
       { title: 'VIP Cocktail & Hors d’oeuvres', priceRange: 'GHS 45 / person', description: 'Finger foods, sliders, spring rolls, and fresh mocktail bar.' },
     ],
+    pricingPackages: [
+      {
+        name: 'Starter Banquet',
+        price: 'GHS 45',
+        billingCycle: 'Per Person',
+        description: 'For cocktail receptions, corporate networking, and finger food events.',
+        features: [
+          'Choice of 5 gourmet sliders & finger foods',
+          'Fresh mocktail bar station',
+          'Professional uniformed servers',
+          'Setup & chaffing dish presentation',
+        ],
+        deliverables: 'Complete cocktail food station setup',
+      },
+      {
+        name: 'Pro Buffet Package',
+        price: 'GHS 65',
+        popular: true,
+        billingCycle: 'Per Person',
+        description: 'Full Ghanaian & Continental buffet feast for galas, conferences, & weddings.',
+        features: [
+          'Jollof rice, fried rice & banku station',
+          'Grilled chicken, tilapia & beef kebabs',
+          'Salad bar & fried plantain',
+          'Complimentary fruit carving display',
+        ],
+        deliverables: 'Full buffet dining setup with server staff',
+      },
+      {
+        name: 'Expert Royal Feast',
+        price: 'GHS 95',
+        billingCycle: 'Per Person',
+        description: 'Luxury VIP multi-course experience with live grill chef & dessert bar.',
+        features: [
+          'Live charcoal barbecue & seafood station',
+          'Red velvet & chocolate dessert fountain',
+          'Dedicated table service staff',
+          'Custom menu printing & table decor',
+        ],
+        deliverables: 'VIP white-glove catering service',
+      },
+    ],
+    testimonials: [
+      {
+        clientName: "Sarah Mensah (CEO @ Horizon)",
+        eventTitle: "Annual Corporate Gala 2025",
+        rating: 5,
+        comment: "Savory Delights catered for 300 guests with flawless taste and presentation. Highly recommended!",
+        date: "Dec 2025",
+      },
+    ],
     location: 'Airport Residential Area',
     city: 'Accra',
     serviceArea: 'Greater Accra Region',
@@ -1313,6 +1537,8 @@ const INITIAL_VENDORS: VendorProfileModel[] = [
     portfolio: [
       'https://images.unsplash.com/photo-1555244162-803834f70033?w=800&auto=format&fit=crop&q=80',
       'https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=800&auto=format&fit=crop&q=80',
+      'https://images.unsplash.com/photo-1540189549336-e6e99c3679fe?w=800&auto=format&fit=crop&q=80',
+      'https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?w=800&auto=format&fit=crop&q=80',
     ],
     verified: true,
     status: 'published',
@@ -1329,6 +1555,57 @@ const INITIAL_VENDORS: VendorProfileModel[] = [
       { title: 'Full Event Photography Coverage', priceRange: 'GHS 1,500', description: 'Unlimited edited digital photos, online private gallery, fast delivery.' },
       { title: '4K Cinematic Aftermovie (3-5 min)', priceRange: 'GHS 2,200', description: 'Drone footage, color grading, licensed soundtrack.' },
     ],
+    pricingPackages: [
+      {
+        name: 'Starter Lens',
+        price: 'GHS 1,500',
+        billingCycle: 'Per Day',
+        description: 'For solo creators, corporate seminars, and private parties.',
+        features: [
+          '1x Senior Event Photographer',
+          'Unlimited edited high-resolution photos',
+          'Private online gallery link',
+          'Fast 48-hour digital delivery',
+        ],
+        deliverables: 'Edited photo gallery export',
+      },
+      {
+        name: 'Pro Cinema',
+        price: 'GHS 3,500',
+        popular: true,
+        billingCycle: 'Per Day',
+        description: 'Complete photo & video coverage for major conferences and weddings.',
+        features: [
+          '2x Photographers + 1x Videographer',
+          '4K Cinematic Highlight Film (3-5 mins)',
+          'Licensed audio soundtrack & drone aerials',
+          'Same-day sneak peek 20 photos',
+        ],
+        deliverables: '4K Highlight Reel & full photo album',
+      },
+      {
+        name: 'Expert Media Suite',
+        price: 'GHS 6,500',
+        billingCycle: 'Per Day',
+        description: 'Full festival broadcast, 4K multi-cam live stream, and drone squad.',
+        features: [
+          '3x 4K Camera Crew + 1x Licensed Drone Pilot',
+          'YouTube / Facebook 4K Live Stream Setup',
+          'Same-day 60-sec social reel edit',
+          'Complete raw video footage hard drive',
+        ],
+        deliverables: 'Multi-cam broadcast stream & master video drive',
+      },
+    ],
+    testimonials: [
+      {
+        clientName: "Ben Foster (CEO @ Company)",
+        eventTitle: "Ghana Developer Fest 2026",
+        rating: 5,
+        comment: "This is truly the perfect plan for me and my team. I would recommend Luminary Studios to anyone looking to move forward quickly.",
+        date: "Jan 2026",
+      },
+    ],
     location: 'Osu RE',
     city: 'Accra',
     serviceArea: 'Nationwide',
@@ -1341,6 +1618,8 @@ const INITIAL_VENDORS: VendorProfileModel[] = [
     portfolio: [
       'https://images.unsplash.com/photo-1542038784456-1ea8e935640e?w=800&auto=format&fit=crop&q=80',
       'https://images.unsplash.com/photo-1511578314322-379afb476865?w=800&auto=format&fit=crop&q=80',
+      'https://images.unsplash.com/photo-1492684223066-81342ee5ff30?w=800&auto=format&fit=crop&q=80',
+      'https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?w=800&auto=format&fit=crop&q=80',
     ],
     verified: true,
     status: 'published',
@@ -1369,6 +1648,8 @@ const INITIAL_VENDORS: VendorProfileModel[] = [
     portfolio: [
       'https://images.unsplash.com/photo-1475721027785-f74eccf877e2?w=800&auto=format&fit=crop&q=80',
       'https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?w=800&auto=format&fit=crop&q=80',
+      'https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?w=800&auto=format&fit=crop&q=80',
+      'https://images.unsplash.com/photo-1501386761578-eac5c94b800a?w=800&auto=format&fit=crop&q=80',
     ],
     verified: true,
     status: 'published',
@@ -1394,6 +1675,9 @@ const INITIAL_VENDORS: VendorProfileModel[] = [
     },
     portfolio: [
       'https://images.unsplash.com/photo-1571266028243-e4733b0f0bb1?w=800&auto=format&fit=crop&q=80',
+      'https://images.unsplash.com/photo-1470225620780-dba8ba36b745?w=800&auto=format&fit=crop&q=80',
+      'https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?w=800&auto=format&fit=crop&q=80',
+      'https://images.unsplash.com/photo-1492684223066-81342ee5ff30?w=800&auto=format&fit=crop&q=80',
     ],
     verified: true,
     status: 'published',
@@ -1419,6 +1703,9 @@ const INITIAL_VENDORS: VendorProfileModel[] = [
     },
     portfolio: [
       'https://images.unsplash.com/photo-1519167758481-83f550bb49b3?w=800&auto=format&fit=crop&q=80',
+      'https://images.unsplash.com/photo-1511795409834-ef04bbd61622?w=800&auto=format&fit=crop&q=80',
+      'https://images.unsplash.com/photo-1464366400600-7168b8af9bc3?w=800&auto=format&fit=crop&q=80',
+      'https://images.unsplash.com/photo-1501386761578-eac5c94b800a?w=800&auto=format&fit=crop&q=80',
     ],
     verified: true,
     status: 'published',
@@ -1443,6 +1730,9 @@ const INITIAL_VENDORS: VendorProfileModel[] = [
     },
     portfolio: [
       'https://images.unsplash.com/photo-1507679799987-c73779587ccf?w=800&auto=format&fit=crop&q=80',
+      'https://images.unsplash.com/photo-1511578314322-379afb476865?w=800&auto=format&fit=crop&q=80',
+      'https://images.unsplash.com/photo-1475721027785-f74eccf877e2?w=800&auto=format&fit=crop&q=80',
+      'https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?w=800&auto=format&fit=crop&q=80',
     ],
     verified: true,
     status: 'published',
@@ -1467,6 +1757,9 @@ const INITIAL_VENDORS: VendorProfileModel[] = [
     },
     portfolio: [
       'https://images.unsplash.com/photo-1464366400600-7168b8af9bc3?w=800&auto=format&fit=crop&q=80',
+      'https://images.unsplash.com/photo-1519167758481-83f550bb49b3?w=800&auto=format&fit=crop&q=80',
+      'https://images.unsplash.com/photo-1511795409834-ef04bbd61622?w=800&auto=format&fit=crop&q=80',
+      'https://images.unsplash.com/photo-1470225620780-dba8ba36b745?w=800&auto=format&fit=crop&q=80',
     ],
     verified: true,
     status: 'published',

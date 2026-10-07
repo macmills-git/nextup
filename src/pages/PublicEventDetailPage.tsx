@@ -660,25 +660,36 @@ export const PublicEventDetailPage = () => {
                 </p>
               </div>
 
-              {event.externalLink ? (
-                <Button
-                  asChild
-                  size="lg"
-                  className="w-full rounded-xl bg-primary text-primary-foreground font-bold hover:brightness-110 gap-2 shadow-sm"
-                >
-                  <a href={event.externalLink} target="_blank" rel="noopener noreferrer">
-                    Get tickets <ExternalLink className="w-4 h-4" />
-                  </a>
-                </Button>
-              ) : (
-                <Button
-                  size="lg"
-                  onClick={() => toast.success("You are registered! Event details saved.")}
-                  className="w-full rounded-xl bg-primary text-primary-foreground font-bold hover:brightness-110 shadow-sm"
-                >
-                  Get tickets
-                </Button>
-              )}
+              {(() => {
+                const isPaid = !event.isFree && Boolean(event.price) && event.price.toLowerCase() !== "free";
+                const targetUrl = isPaid
+                  ? (event.externalLink || "https://usexharp.io/events/")
+                  : event.externalLink;
+
+                if (targetUrl) {
+                  return (
+                    <Button
+                      asChild
+                      size="lg"
+                      className="w-full rounded-xl bg-primary text-primary-foreground font-bold hover:brightness-110 gap-2 shadow-sm"
+                    >
+                      <a href={targetUrl} target="_blank" rel="noopener noreferrer">
+                        Get tickets <ExternalLink className="w-4 h-4" />
+                      </a>
+                    </Button>
+                  );
+                }
+
+                return (
+                  <Button
+                    size="lg"
+                    onClick={() => toast.success("You are registered! Event details saved.")}
+                    className="w-full rounded-xl bg-primary text-primary-foreground font-bold hover:brightness-110 shadow-sm"
+                  >
+                    Get tickets
+                  </Button>
+                );
+              })()}
 
               <div className="border-t border-stone-100 pt-4 space-y-2">
                 <Button

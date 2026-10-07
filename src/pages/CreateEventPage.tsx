@@ -393,7 +393,7 @@ export const CreateEventPage = () => {
       isFree,
       price: isFree ? "Free" : price || "GHS 20",
       ticketBadge: ticketBadge || undefined,
-      externalLink,
+      externalLink: externalLink || (!isFree ? "https://usexharp.io/events/" : undefined),
       contact,
       organizer: {
         name: organizerName || user?.name || "Organizer",

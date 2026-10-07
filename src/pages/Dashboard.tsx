@@ -1,6 +1,5 @@
 import Navbar from "@/components/Navbar";
-import Footer from "@/components/Footer";
-import { Routes, Route, useNavigate, useLocation } from "react-router-dom";
+import { Routes, Route, useNavigate, useLocation, Navigate, Link } from "react-router-dom";
 import {
   LayoutDashboard,
   Calendar,
@@ -46,7 +45,7 @@ const DashboardHome = () => {
             Account Overview
           </span>
           <h2 className="mt-3 text-2xl md:text-3xl font-normal text-foreground">
-            Welcome back, {user?.name || user?.email?.split("@")[0] || "Organizer"}
+            Welcome back, {user?.name || user?.email?.split("@")[0] || "User"}
           </h2>
           <p className="mt-1.5 max-w-xl text-xs md:text-sm text-muted-foreground leading-relaxed">
             Manage your published events, draft listings, vendor service storefront, and saved bookmarks all from your activity dashboard.
@@ -301,7 +300,6 @@ export const Dashboard = () => {
   const { user } = useAuth();
 
   const tabs = [
-    { label: "Overview", path: "/dashboard", icon: LayoutDashboard },
     { label: "My Events", path: "/dashboard/events", icon: Calendar },
     { label: "Vendor Profile", path: "/dashboard/vendors", icon: Store },
     { label: "Saved Events", path: "/dashboard/saved", icon: Heart },
@@ -313,7 +311,6 @@ export const Dashboard = () => {
   }
 
   const isTabActive = (path: string) => {
-    if (path === "/dashboard") return location.pathname === "/dashboard" || location.pathname === "/dashboard/";
     return location.pathname.startsWith(path);
   };
 
@@ -322,27 +319,6 @@ export const Dashboard = () => {
       <Navbar />
 
       <main className="pt-8 pb-20 container mx-auto px-4 lg:px-8 max-w-7xl flex-1">
-        {/* Page Top Header */}
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
-          <div>
-            <span className="text-xs font-bold uppercase tracking-wider text-primary px-3 py-1 rounded-full bg-primary/10">
-              NextUp Activity
-            </span>
-            <h1 className="text-3xl md:text-4xl font-normal text-foreground mt-2">
-              Activity & Account Hub
-            </h1>
-            <p className="text-xs md:text-sm text-muted-foreground mt-1">
-              Manage your event listings, vendor storefront, saved items, and settings.
-            </p>
-          </div>
-
-          <div className="flex items-center gap-2">
-            <Button onClick={() => navigate("/create/event")} className="rounded-xl text-xs font-bold gap-1.5 bg-primary text-primary-foreground shadow-sm">
-              <Plus className="w-4 h-4" /> Create Event
-            </Button>
-          </div>
-        </div>
-
         {/* Sub-Navigation Pill Bar */}
         <div className="flex items-center gap-2 border-b border-stone-200 pb-4 mb-8 overflow-x-auto">
           {tabs.map((t) => {
@@ -367,7 +343,7 @@ export const Dashboard = () => {
 
         {/* Tab Content Section */}
         <Routes>
-          <Route index element={<DashboardHome />} />
+          <Route index element={<Navigate to="/dashboard/events" replace />} />
           <Route path="events" element={<MyEventsPage />} />
           <Route path="vendors" element={<CreateVendorPageRedirect />} />
           <Route path="saved" element={<SavedEventsPage />} />
@@ -375,7 +351,21 @@ export const Dashboard = () => {
         </Routes>
       </main>
 
-      <Footer />
+      {/* Minimal Small-Height Footer */}
+      <footer className="py-4 border-t border-stone-200/80 bg-stone-50/50 mt-auto">
+        <div className="max-w-7xl mx-auto px-4 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-stone-500">
+          <div className="flex items-center gap-2">
+            <span className="font-bold text-stone-900">NextUp</span>
+            <span>© {new Date().getFullYear()} NextUp. All rights reserved.</span>
+          </div>
+          <div className="flex items-center gap-5 text-xs text-stone-600">
+            <Link to="/events" className="hover:text-stone-900 transition-colors">Discover Events</Link>
+            <Link to="/vendors" className="hover:text-stone-900 transition-colors">Vendors</Link>
+            <a href="#" className="hover:text-stone-900 transition-colors">Privacy</a>
+            <a href="#" className="hover:text-stone-900 transition-colors">Terms</a>
+          </div>
+        </div>
+      </footer>
     </div>
   );
 };
