@@ -18,6 +18,9 @@ import {
   Eye,
   HelpCircle,
   Check,
+  Award,
+  Compass,
+  Zap,
 } from "lucide-react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
@@ -232,100 +235,110 @@ export const VendorProfileDetailPage = () => {
         </div>
 
         <div className="space-y-8 max-w-full">
-            {/* 1. Side-by-Side About & Location Section (Clean & Minimalist) */}
-            <section className="grid grid-cols-1 md:grid-cols-2 gap-6 items-stretch">
-              {/* Card 01: About Vendor */}
-              <div className="bg-card border border-stone-200/80 dark:border-stone-800 rounded-3xl p-6 md:p-8 flex flex-col justify-between shadow-xs">
-                <div>
-                  <div className="flex items-center justify-between mb-4">
-                    <span className="text-xs font-bold text-stone-400 tracking-wider">01</span>
-                    <Briefcase className="w-4 h-4 text-stone-400" />
-                  </div>
-
-                  <h2 className="text-xl font-normal text-foreground mb-3">
+            {/* 1. Benefits Grid Section (Directly inspired by reference image) */}
+            <section className="bg-stone-50/70 dark:bg-stone-900/40 border border-stone-200/80 dark:border-stone-800 rounded-[32px] p-6 md:p-10 lg:p-12 shadow-xs">
+              <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-start">
+                
+                {/* Left Column: Title, Subtitle, Description & CTA */}
+                <div className="lg:col-span-5 space-y-4">
+                  <span className="text-[11px] font-bold uppercase tracking-widest text-stone-500 dark:text-stone-400 block">
+                    BENEFITS & OVERVIEW
+                  </span>
+                  <h2 className="text-3xl md:text-4xl font-serif font-normal text-stone-900 dark:text-white tracking-tight leading-tight">
                     About {vendor.name}
                   </h2>
-                  <p className="text-xs md:text-sm text-stone-600 dark:text-stone-300 leading-relaxed whitespace-pre-line">
+                  <p className="text-xs md:text-sm text-stone-600 dark:text-stone-300 leading-relaxed font-normal">
                     {vendor.description}
                   </p>
-                </div>
 
-                {/* Bottom Metadata Tags */}
-                {(vendor.experienceYears || vendor.completedEventsCount || vendor.teamSize) && (
-                  <div className="flex flex-wrap items-center gap-2 mt-6 pt-4 border-t border-stone-100 dark:border-stone-800">
-                    {vendor.experienceYears ? (
-                      <span className="px-3 py-1 rounded-full text-xs font-medium bg-stone-100 dark:bg-stone-800 text-stone-700 dark:text-stone-300">
-                        {vendor.experienceYears}+ Years Experience
-                      </span>
-                    ) : null}
-                    {vendor.completedEventsCount ? (
-                      <span className="px-3 py-1 rounded-full text-xs font-medium bg-stone-100 dark:bg-stone-800 text-stone-700 dark:text-stone-300">
-                        {vendor.completedEventsCount}+ Events Completed
-                      </span>
-                    ) : null}
-                    {vendor.teamSize ? (
-                      <span className="px-3 py-1 rounded-full text-xs font-medium bg-stone-100 dark:bg-stone-800 text-stone-700 dark:text-stone-300">
-                        {vendor.teamSize}
-                      </span>
-                    ) : null}
-                  </div>
-                )}
-              </div>
-
-              {/* Card 02: Location & Service Area */}
-              <div className="bg-card border border-stone-200/80 dark:border-stone-800 rounded-3xl p-6 md:p-8 flex flex-col justify-between shadow-xs">
-                <div>
-                  <div className="flex items-center justify-between mb-4">
-                    <span className="text-xs font-bold text-stone-400 tracking-wider">02</span>
-                    <MapPin className="w-4 h-4 text-stone-400" />
-                  </div>
-
-                  <h2 className="text-xl font-normal text-foreground mb-4">
-                    Location & Service Area
-                  </h2>
-
-                  <div className="space-y-4 text-xs md:text-sm">
-                    <div>
-                      <span className="text-[11px] font-bold uppercase tracking-wider text-muted-foreground block mb-0.5">
-                        Primary Base & Headquarters
-                      </span>
-                      <p className="font-medium text-foreground">
-                        {vendor.location}, {vendor.city}
-                      </p>
-                    </div>
-
-                    <div>
-                      <span className="text-[11px] font-bold uppercase tracking-wider text-muted-foreground block mb-0.5">
-                        Service Region
-                      </span>
-                      <p className="font-medium text-foreground">
-                        {vendor.serviceArea}
-                      </p>
-                    </div>
-
-                    {vendor.businessHours && (
-                      <div>
-                        <span className="text-[11px] font-bold uppercase tracking-wider text-muted-foreground block mb-0.5 flex items-center gap-1">
-                          <Clock className="w-3 h-3 text-stone-400" /> Operating Hours
-                        </span>
-                        <p className="font-medium text-foreground">
-                          {vendor.businessHours}
-                        </p>
-                      </div>
-                    )}
-
-                    {vendor.paymentTerms && (
-                      <div>
-                        <span className="text-[11px] font-bold uppercase tracking-wider text-muted-foreground block mb-0.5 flex items-center gap-1">
-                          <CreditCard className="w-3 h-3 text-stone-400" /> Booking & Payment Terms
-                        </span>
-                        <p className="font-medium text-foreground">
-                          {vendor.paymentTerms}
-                        </p>
-                      </div>
+                  <div className="pt-2">
+                    {vendor.contact.whatsapp || vendor.contact.phone ? (
+                      <Button
+                        onClick={() => handleWhatsApp()}
+                        size="lg"
+                        className="rounded-xl font-medium text-xs px-6 py-3 bg-stone-900 hover:bg-stone-800 text-white dark:bg-slate-100 dark:text-slate-900 dark:hover:bg-slate-200 shadow-xs gap-2"
+                      >
+                        <MessageCircle className="w-4 h-4" /> Contact Vendor
+                      </Button>
+                    ) : (
+                      <Button
+                        onClick={() => setShareOpen(true)}
+                        size="lg"
+                        className="rounded-xl font-medium text-xs px-6 py-3 bg-stone-900 hover:bg-stone-800 text-white dark:bg-slate-100 dark:text-slate-900 dark:hover:bg-slate-200 shadow-xs gap-2"
+                      >
+                        <Share2 className="w-4 h-4" /> Share Profile
+                      </Button>
                     )}
                   </div>
                 </div>
+
+                {/* Right Column: 2x2 Grid of Feature Cards matching reference image */}
+                <div className="lg:col-span-7">
+                  <div className="bg-white dark:bg-stone-900 rounded-3xl border border-stone-200 dark:border-stone-800 divide-y divide-stone-200 dark:divide-stone-800 overflow-hidden shadow-xs">
+                    
+                    {/* Top Row of 2x2 Grid */}
+                    <div className="grid grid-cols-1 sm:grid-cols-2 divide-y sm:divide-y-0 sm:divide-x divide-stone-200 dark:divide-stone-800">
+                      {/* Box 1: Track Record */}
+                      <div className="p-6 md:p-7 space-y-3 flex flex-col justify-start">
+                        <div className="w-10 h-10 rounded-xl bg-orange-500 text-white flex items-center justify-center shadow-xs">
+                          <Award className="w-5 h-5 stroke-[2]" />
+                        </div>
+                        <h3 className="text-base md:text-lg font-serif font-semibold text-stone-900 dark:text-white tracking-tight">
+                          Track Record & Experience
+                        </h3>
+                        <p className="text-xs text-stone-600 dark:text-stone-400 leading-relaxed font-normal">
+                          {vendor.experienceYears ? `${vendor.experienceYears}+ years experience with ` : ""}
+                          {vendor.completedEventsCount ? `${vendor.completedEventsCount}+ events completed ` : "proven event track record "}
+                          {vendor.teamSize ? `and ${vendor.teamSize.toLowerCase()}` : ""}.
+                        </p>
+                      </div>
+
+                      {/* Box 2: Headquarters & Location */}
+                      <div className="p-6 md:p-7 space-y-3 flex flex-col justify-start">
+                        <div className="w-10 h-10 rounded-xl bg-orange-500 text-white flex items-center justify-center shadow-xs">
+                          <MapPin className="w-5 h-5 stroke-[2]" />
+                        </div>
+                        <h3 className="text-base md:text-lg font-serif font-semibold text-stone-900 dark:text-white tracking-tight">
+                          Primary Base & Location
+                        </h3>
+                        <p className="text-xs text-stone-600 dark:text-stone-400 leading-relaxed font-normal">
+                          {vendor.location}, {vendor.city}. Easily accessible for site visits and pre-event setup consultations.
+                        </p>
+                      </div>
+                    </div>
+
+                    {/* Bottom Row of 2x2 Grid */}
+                    <div className="grid grid-cols-1 sm:grid-cols-2 divide-y sm:divide-y-0 sm:divide-x divide-stone-200 dark:divide-stone-800">
+                      {/* Box 3: Service Coverage */}
+                      <div className="p-6 md:p-7 space-y-3 flex flex-col justify-start">
+                        <div className="w-10 h-10 rounded-xl bg-orange-500 text-white flex items-center justify-center shadow-xs">
+                          <Compass className="w-5 h-5 stroke-[2]" />
+                        </div>
+                        <h3 className="text-base md:text-lg font-serif font-semibold text-stone-900 dark:text-white tracking-tight">
+                          Service Region Coverage
+                        </h3>
+                        <p className="text-xs text-stone-600 dark:text-stone-400 leading-relaxed font-normal">
+                          Active across <span className="font-semibold text-stone-900 dark:text-stone-200">{vendor.serviceArea}</span> with full mobile logistics equipment transport.
+                        </p>
+                      </div>
+
+                      {/* Box 4: Hours & Payment Terms */}
+                      <div className="p-6 md:p-7 space-y-3 flex flex-col justify-start">
+                        <div className="w-10 h-10 rounded-xl bg-orange-500 text-white flex items-center justify-center shadow-xs">
+                          <Clock className="w-5 h-5 stroke-[2]" />
+                        </div>
+                        <h3 className="text-base md:text-lg font-serif font-semibold text-stone-900 dark:text-white tracking-tight">
+                          Operating Hours & Terms
+                        </h3>
+                        <p className="text-xs text-stone-600 dark:text-stone-400 leading-relaxed font-normal">
+                          {vendor.businessHours || "Mon – Sat: 8:00 AM – 9:00 PM"}. {vendor.paymentTerms || "Mobile Money & Bank Transfer accepted"}.
+                        </p>
+                      </div>
+                    </div>
+
+                  </div>
+                </div>
+
               </div>
             </section>
 
