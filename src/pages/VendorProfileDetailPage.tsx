@@ -232,45 +232,103 @@ export const VendorProfileDetailPage = () => {
         </div>
 
         <div className="space-y-8 max-w-full">
-            {/* 1. About / Business Bio */}
-            <section className="bg-card border border-stone-200/80 rounded-3xl p-6 md:p-8 shadow-xs">
-              <h2 className="text-xl font-normal text-foreground mb-3 flex items-center gap-2">
-                <Briefcase className="w-5 h-5 text-primary" /> About {vendor.name}
-              </h2>
-              <p className="text-sm text-stone-700 leading-relaxed whitespace-pre-line">
-                {vendor.description}
-              </p>
-
-              {/* Operating & Location Info Chips */}
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-6 pt-6 border-t border-stone-100">
-                <div className="flex items-start gap-3 p-3.5 rounded-2xl bg-stone-50 border border-stone-200/70">
-                  <MapPin className="w-4 h-4 text-rose-500 mt-0.5" />
-                  <div>
-                    <span className="text-xs font-bold text-stone-900 block">Location & Service Area</span>
-                    <span className="text-xs text-stone-600 font-medium">
-                      {vendor.location}, {vendor.city} ({vendor.serviceArea})
+            {/* 1. Side-by-Side About & Location Section (Inspired by step-card design) */}
+            <section className="grid grid-cols-1 md:grid-cols-2 gap-6 items-stretch">
+              {/* Card 01: About Vendor */}
+              <div className="bg-stone-50/90 dark:bg-stone-900/60 border border-stone-200/90 dark:border-stone-800 rounded-[32px] p-6 md:p-8 flex flex-col justify-between shadow-xs hover:border-stone-300 dark:hover:border-stone-700 transition-all">
+                <div>
+                  {/* Card Header: Squircle Icon + Pill Badge */}
+                  <div className="flex items-center justify-between mb-6">
+                    <div className="w-12 h-12 rounded-2xl bg-stone-900 text-white dark:bg-white dark:text-stone-900 flex items-center justify-center shadow-md">
+                      <Briefcase className="w-6 h-6 stroke-[2]" />
+                    </div>
+                    <span className="text-xs font-bold px-3.5 py-1 rounded-full bg-white dark:bg-stone-800 border border-stone-200 dark:border-stone-700 text-stone-700 dark:text-stone-300 shadow-2xs">
+                      01
                     </span>
+                  </div>
+
+                  <h2 className="text-xl md:text-2xl font-semibold tracking-tight text-foreground mb-3">
+                    About {vendor.name}
+                  </h2>
+                  <p className="text-xs md:text-sm text-stone-600 dark:text-stone-300 leading-relaxed whitespace-pre-line">
+                    {vendor.description}
+                  </p>
+                </div>
+
+                {/* Metadata tags at bottom of Card 01 */}
+                {(vendor.experienceYears || vendor.completedEventsCount || vendor.teamSize) && (
+                  <div className="flex flex-wrap items-center gap-2 mt-6 pt-5 border-t border-stone-200/70 dark:border-stone-800">
+                    {vendor.experienceYears ? (
+                      <span className="px-3 py-1 rounded-xl text-xs font-semibold bg-white dark:bg-stone-800 border border-stone-200/70 dark:border-stone-700 text-stone-700 dark:text-stone-300">
+                        {vendor.experienceYears}+ Years Experience
+                      </span>
+                    ) : null}
+                    {vendor.completedEventsCount ? (
+                      <span className="px-3 py-1 rounded-xl text-xs font-semibold bg-white dark:bg-stone-800 border border-stone-200/70 dark:border-stone-700 text-stone-700 dark:text-stone-300">
+                        {vendor.completedEventsCount}+ Events Completed
+                      </span>
+                    ) : null}
+                    {vendor.teamSize ? (
+                      <span className="px-3 py-1 rounded-xl text-xs font-semibold bg-white dark:bg-stone-800 border border-stone-200/70 dark:border-stone-700 text-stone-700 dark:text-stone-300">
+                        {vendor.teamSize}
+                      </span>
+                    ) : null}
+                  </div>
+                )}
+              </div>
+
+              {/* Card 02: Location & Service Area */}
+              <div className="bg-stone-50/90 dark:bg-stone-900/60 border border-stone-200/90 dark:border-stone-800 rounded-[32px] p-6 md:p-8 flex flex-col justify-between shadow-xs hover:border-stone-300 dark:hover:border-stone-700 transition-all">
+                <div>
+                  {/* Card Header: Squircle Icon + Pill Badge */}
+                  <div className="flex items-center justify-between mb-6">
+                    <div className="w-12 h-12 rounded-2xl bg-white dark:bg-stone-800 text-rose-500 border border-stone-200 dark:border-stone-700 flex items-center justify-center shadow-2xs">
+                      <MapPin className="w-6 h-6 stroke-[2]" />
+                    </div>
+                    <span className="text-xs font-bold px-3.5 py-1 rounded-full bg-white dark:bg-stone-800 border border-stone-200 dark:border-stone-700 text-stone-700 dark:text-stone-300 shadow-2xs">
+                      02
+                    </span>
+                  </div>
+
+                  <h2 className="text-xl md:text-2xl font-semibold tracking-tight text-foreground mb-3">
+                    Location & Service Area
+                  </h2>
+
+                  {/* Primary Location Description */}
+                  <div className="p-4 rounded-2xl bg-white dark:bg-stone-800/80 border border-stone-200/80 dark:border-stone-700/80 mb-4 shadow-2xs">
+                    <span className="text-[10px] font-bold uppercase tracking-wider text-rose-500 block mb-1">
+                      Primary Base & Headquarters
+                    </span>
+                    <p className="text-sm font-semibold text-stone-900 dark:text-white">
+                      {vendor.location}, {vendor.city}
+                    </p>
+                    <p className="text-xs text-stone-500 dark:text-stone-400 mt-1 font-medium">
+                      Service Region: <span className="text-stone-700 dark:text-stone-300 font-semibold">{vendor.serviceArea}</span>
+                    </p>
                   </div>
                 </div>
 
-                {vendor.businessHours && (
-                  <div className="flex items-start gap-3 p-3.5 rounded-2xl bg-stone-50 border border-stone-200/70">
-                    <Clock className="w-4 h-4 text-primary mt-0.5" />
-                    <div>
-                      <span className="text-xs font-bold text-stone-900 block">Operating Hours</span>
-                      <span className="text-xs text-stone-600 font-medium">{vendor.businessHours}</span>
+                {/* Secondary Info: Business Hours & Payment Terms */}
+                <div className="space-y-3 pt-3 border-t border-stone-200/70 dark:border-stone-800">
+                  {vendor.businessHours && (
+                    <div className="flex items-start gap-3 p-3 rounded-xl bg-white/70 dark:bg-stone-800/50 border border-stone-200/60 dark:border-stone-700/60">
+                      <Clock className="w-4 h-4 text-primary mt-0.5 flex-shrink-0" />
+                      <div>
+                        <span className="text-[11px] font-bold text-stone-900 dark:text-white block">Operating Hours</span>
+                        <span className="text-xs text-stone-600 dark:text-stone-400 font-medium">{vendor.businessHours}</span>
+                      </div>
                     </div>
-                  </div>
-                )}
-                {vendor.paymentTerms && (
-                  <div className="flex items-start gap-3 p-3.5 rounded-2xl bg-stone-50 border border-stone-200/70">
-                    <CreditCard className="w-4 h-4 text-emerald-600 mt-0.5" />
-                    <div>
-                      <span className="text-xs font-bold text-stone-900 block">Payment & Booking Terms</span>
-                      <span className="text-xs text-stone-600 font-medium">{vendor.paymentTerms}</span>
+                  )}
+                  {vendor.paymentTerms && (
+                    <div className="flex items-start gap-3 p-3 rounded-xl bg-white/70 dark:bg-stone-800/50 border border-stone-200/60 dark:border-stone-700/60">
+                      <CreditCard className="w-4 h-4 text-emerald-600 mt-0.5 flex-shrink-0" />
+                      <div>
+                        <span className="text-[11px] font-bold text-stone-900 dark:text-white block">Booking & Payment Terms</span>
+                        <span className="text-xs text-stone-600 dark:text-stone-400 font-medium">{vendor.paymentTerms}</span>
+                      </div>
                     </div>
-                  </div>
-                )}
+                  )}
+                </div>
               </div>
             </section>
 
