@@ -29,9 +29,13 @@ import {
   Layers,
   Video,
   HelpCircle,
-  Clock,
-  CreditCard,
   FileText,
+  Phone,
+  Mail,
+  Globe,
+  Instagram,
+  Linkedin,
+  MessageCircle,
 } from "lucide-react";
 import { toast } from "sonner";
 
@@ -65,7 +69,7 @@ export const CreateVendorPage = () => {
 
   const [isExisting, setIsExisting] = useState(false);
 
-  // Basic Info
+  // 1. Basic Info
   const [name, setName] = useState("");
   const [logo, setLogo] = useState(
     "https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?w=400&auto=format&fit=crop&q=80"
@@ -76,24 +80,28 @@ export const CreateVendorPage = () => {
   const [city, setCity] = useState("Accra");
   const [serviceArea, setServiceArea] = useState("Greater Accra Region");
   
-  // Verification & Business Certs
-  const [businessRegistrationNumber, setBusinessRegistrationNumber] = useState("");
-  const [taxIdNumber, setTaxIdNumber] = useState("");
+  // Track Record & Experience
   const [experienceYears, setExperienceYears] = useState<number>(5);
   const [teamSize, setTeamSize] = useState("10 Technicians & Staff");
   const [completedEventsCount, setCompletedEventsCount] = useState<number>(120);
 
-  // Contact Info
-  const [phone, setPhone] = useState("");
-  const [whatsapp, setWhatsapp] = useState("");
-  const [email, setEmail] = useState(user?.email || "");
-  const [instagram, setInstagram] = useState("");
+  // 2. Contact Info & Social Profiles
+  const [phone, setPhone] = useState("+233 24 123 4567");
+  const [whatsapp, setWhatsapp] = useState("+233 24 123 4567");
+  const [email, setEmail] = useState(user?.email || "vendor@example.com");
+  const [instagram, setInstagram] = useState("@soundwave_gh");
+  const [website, setWebsite] = useState("https://soundwave.gh");
+  const [linkedin, setLinkedin] = useState("https://linkedin.com/company/soundwave-audio");
 
-  // Operating Info
+  // 3. Verification & Business Certs
+  const [businessRegistrationNumber, setBusinessRegistrationNumber] = useState("CS-984210026");
+  const [taxIdNumber, setTaxIdNumber] = useState("C001294819X");
+
+  // 4. Operating Info
   const [businessHours, setBusinessHours] = useState("Mon – Sat: 8:00 AM – 9:00 PM");
   const [paymentTerms, setPaymentTerms] = useState("50% deposit upon booking confirmation. Balance due 24h prior to event.");
 
-  // Services
+  // 5. Detailed Services
   const [services, setServices] = useState<VendorDetailedService[]>([
     {
       title: "Standard Package",
@@ -101,11 +109,11 @@ export const CreateVendorPage = () => {
       description: "Complete service package for small events.",
       setupIncluded: true,
       turnaroundTime: "2 Hours Setup",
-      equipmentIncluded: ["Main PA Speakers", "Mics"],
+      equipmentIncluded: ["Main PA Speakers", "Wireless Mics"],
     },
   ]);
 
-  // Pricing Packages
+  // 6. Pricing Packages
   const [pricingPackages, setPricingPackages] = useState<VendorPricingPackage[]>([
     {
       name: "Bronze Package",
@@ -114,11 +122,11 @@ export const CreateVendorPage = () => {
       popular: false,
       description: "Ideal for small seminars and intimate indoor gatherings.",
       features: ["Standard Equipment Rig", "1x Technician", "Setup & Tear-down"],
-      deliverables: "High quality service execution",
+      deliverables: "High quality live audio setup & execution",
     },
   ]);
 
-  // Certificates
+  // 7. Certificates
   const [certificates, setCertificates] = useState<VendorCertificate[]>([
     {
       title: "RGD Business Registration Certificate",
@@ -130,7 +138,7 @@ export const CreateVendorPage = () => {
     },
   ]);
 
-  // Media Files & Portfolio
+  // 8. Media Files & Portfolio Gallery
   const [portfolioUrl, setPortfolioUrl] = useState("");
   const [portfolio, setPortfolio] = useState<string[]>([
     "https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?w=800&auto=format&fit=crop&q=80",
@@ -141,12 +149,13 @@ export const CreateVendorPage = () => {
 
   const [videoUrl, setVideoUrl] = useState("");
   const [videoTitle, setVideoTitle] = useState("");
+  const [videoCaption, setVideoCaption] = useState("");
   const [mediaFiles, setMediaFiles] = useState<VendorMediaFile[]>([
     {
       type: "video",
       url: "https://www.youtube.com/embed/dQw4w9WgXcQ",
       title: "Event Showcase Video",
-      caption: "Live Event Production",
+      caption: "Live Event Sound & Lighting Production",
     },
   ]);
 
@@ -179,6 +188,8 @@ export const CreateVendorPage = () => {
       setWhatsapp(existingVendor.contact?.whatsapp || "");
       setEmail(existingVendor.contact?.email || user?.email || "");
       setInstagram(existingVendor.contact?.instagram || "");
+      setWebsite(existingVendor.contact?.website || "");
+      setLinkedin(existingVendor.contact?.linkedin || "");
 
       setBusinessHours(existingVendor.businessHours || "Mon – Sat: 8:00 AM – 9:00 PM");
       setPaymentTerms(existingVendor.paymentTerms || "50% deposit upon booking confirmation. Balance due 24h prior to event.");
@@ -237,6 +248,7 @@ export const CreateVendorPage = () => {
         popular: false,
         description: "Package details and specifications...",
         features: ["Feature 1", "Feature 2"],
+        deliverables: "Professional delivery and setup",
       },
     ]);
   };
@@ -280,11 +292,17 @@ export const CreateVendorPage = () => {
           type: "video",
           url: videoUrl.trim(),
           title: videoTitle || "Showcase Video",
+          caption: videoCaption || "",
         },
       ]);
       setVideoUrl("");
       setVideoTitle("");
+      setVideoCaption("");
     }
+  };
+
+  const handleRemoveVideo = (index: number) => {
+    setMediaFiles((prev) => prev.filter((_, i) => i !== index));
   };
 
   // FAQ Management
@@ -345,6 +363,8 @@ export const CreateVendorPage = () => {
         whatsapp,
         email,
         instagram,
+        website,
+        linkedin,
       },
       portfolio,
       verified: true,
@@ -372,12 +392,10 @@ export const CreateVendorPage = () => {
             {isExisting ? "Update Storefront Listing" : "Vendor Directory Listing"}
           </span>
           <h1 className="text-3xl font-normal text-foreground mt-2">
-            {isExisting ? "Update Vendor Storefront" : "Create Professional Vendor Profile"}
+            {isExisting ? "Update Vendor Profile" : "Create Professional Vendor Profile"}
           </h1>
           <p className="text-sm text-muted-foreground mt-1">
-            {isExisting
-              ? "Update your business certificates, pricing packages, video showcases, and detailed services."
-              : "Set up pricing packages, business registration certificates, video showcases, and services to get booked by event organizers."}
+            Fill in all business details, contact information, rates, certificates, and portfolio media for 100% storefront display consistency.
           </p>
         </div>
 
@@ -385,7 +403,7 @@ export const CreateVendorPage = () => {
           {/* SECTION 1: BUSINESS PROFILE */}
           <div className="space-y-4">
             <h2 className="text-base font-bold text-foreground border-b border-stone-100 pb-2 flex items-center gap-2">
-              <Store className="w-4 h-4 text-primary" /> 1. Business Profile & General Information
+              <Store className="w-4 h-4 text-primary" /> 1. Business Profile & Track Record
             </h2>
 
             <div className="space-y-1.5">
@@ -446,7 +464,7 @@ export const CreateVendorPage = () => {
                 <Input
                   value={teamSize}
                   onChange={(e) => setTeamSize(e.target.value)}
-                  placeholder="e.g. 12 Technicians & Crew"
+                  placeholder="e.g. 10 Technicians & Crew"
                   className="rounded-xl text-xs bg-stone-50"
                 />
               </div>
@@ -463,10 +481,151 @@ export const CreateVendorPage = () => {
             </div>
           </div>
 
-          {/* SECTION 2: BUSINESS CERTIFICATES & COMPLIANCE */}
+          {/* SECTION 2: CONTACT & SOCIAL PROFILES */}
+          <div className="space-y-4 pt-4 border-t border-stone-100">
+            <h2 className="text-base font-bold text-foreground border-b border-stone-100 pb-2 flex items-center gap-2">
+              <Phone className="w-4 h-4 text-primary" /> 2. Contact Methods & Social Profiles
+            </h2>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+              <div className="space-y-1.5">
+                <Label className="text-xs font-normal text-foreground flex items-center gap-1.5">
+                  <Phone className="w-3.5 h-3.5 text-stone-500" /> Phone Number
+                </Label>
+                <Input
+                  value={phone}
+                  onChange={(e) => setPhone(e.target.value)}
+                  placeholder="+233 24 123 4567"
+                  className="rounded-xl text-xs bg-stone-50"
+                />
+              </div>
+
+              <div className="space-y-1.5">
+                <Label className="text-xs font-normal text-foreground flex items-center gap-1.5">
+                  <MessageCircle className="w-3.5 h-3.5 text-emerald-600" /> WhatsApp Number
+                </Label>
+                <Input
+                  value={whatsapp}
+                  onChange={(e) => setWhatsapp(e.target.value)}
+                  placeholder="+233 24 123 4567"
+                  className="rounded-xl text-xs bg-stone-50"
+                />
+              </div>
+
+              <div className="space-y-1.5">
+                <Label className="text-xs font-normal text-foreground flex items-center gap-1.5">
+                  <Mail className="w-3.5 h-3.5 text-stone-500" /> Email Address
+                </Label>
+                <Input
+                  type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  placeholder="contact@business.com"
+                  className="rounded-xl text-xs bg-stone-50"
+                />
+              </div>
+
+              <div className="space-y-1.5">
+                <Label className="text-xs font-normal text-foreground flex items-center gap-1.5">
+                  <Instagram className="w-3.5 h-3.5 text-pink-600" /> Instagram Handle / URL
+                </Label>
+                <Input
+                  value={instagram}
+                  onChange={(e) => setInstagram(e.target.value)}
+                  placeholder="@yourhandle or instagram.com/..."
+                  className="rounded-xl text-xs bg-stone-50"
+                />
+              </div>
+
+              <div className="space-y-1.5">
+                <Label className="text-xs font-normal text-foreground flex items-center gap-1.5">
+                  <Globe className="w-3.5 h-3.5 text-blue-600" /> Website URL
+                </Label>
+                <Input
+                  value={website}
+                  onChange={(e) => setWebsite(e.target.value)}
+                  placeholder="https://yourbusiness.com"
+                  className="rounded-xl text-xs bg-stone-50"
+                />
+              </div>
+
+              <div className="space-y-1.5">
+                <Label className="text-xs font-normal text-foreground flex items-center gap-1.5">
+                  <Linkedin className="w-3.5 h-3.5 text-sky-600" /> LinkedIn Profile
+                </Label>
+                <Input
+                  value={linkedin}
+                  onChange={(e) => setLinkedin(e.target.value)}
+                  placeholder="https://linkedin.com/company/..."
+                  className="rounded-xl text-xs bg-stone-50"
+                />
+              </div>
+            </div>
+          </div>
+
+          {/* SECTION 3: CATEGORIES & LOCATION */}
+          <div className="space-y-3 pt-4 border-t border-stone-100">
+            <h2 className="text-base font-bold text-foreground border-b border-stone-100 pb-2">
+              3. Service Categories & Coverage Area *
+            </h2>
+            <div className="flex flex-wrap gap-2">
+              {vendorCategoriesList.map((cat) => {
+                const selected = selectedCategories.includes(cat);
+                return (
+                  <button
+                    key={cat}
+                    type="button"
+                    onClick={() => toggleCategory(cat)}
+                    className={`px-3 py-1.5 rounded-xl text-xs font-semibold border transition-all ${
+                      selected
+                        ? "bg-primary text-primary-foreground border-primary shadow-xs"
+                        : "bg-stone-50 border-stone-200 text-stone-600 hover:bg-stone-100"
+                    }`}
+                  >
+                    {selected && <CheckCircle2 className="w-3.5 h-3.5 inline mr-1" />}
+                    {cat}
+                  </button>
+                );
+              })}
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 pt-2">
+              <div className="space-y-1.5">
+                <Label className="text-xs font-normal text-foreground">Neighborhood / Base Area</Label>
+                <Input
+                  value={location}
+                  onChange={(e) => setLocation(e.target.value)}
+                  placeholder="e.g. East Legon"
+                  className="rounded-xl text-xs bg-stone-50"
+                />
+              </div>
+
+              <div className="space-y-1.5">
+                <Label className="text-xs font-normal text-foreground">City</Label>
+                <Input
+                  value={city}
+                  onChange={(e) => setCity(e.target.value)}
+                  placeholder="e.g. Accra"
+                  className="rounded-xl text-xs bg-stone-50"
+                />
+              </div>
+
+              <div className="space-y-1.5">
+                <Label className="text-xs font-normal text-foreground">Service Region / Coverage</Label>
+                <Input
+                  value={serviceArea}
+                  onChange={(e) => setServiceArea(e.target.value)}
+                  placeholder="e.g. Greater Accra & Kumasi"
+                  className="rounded-xl text-xs bg-stone-50"
+                />
+              </div>
+            </div>
+          </div>
+
+          {/* SECTION 4: BUSINESS CERTIFICATES & COMPLIANCE */}
           <div className="space-y-4 pt-4 border-t border-stone-100">
             <h2 className="text-base font-bold text-foreground border-b border-stone-100 pb-2 flex items-center gap-2 text-emerald-700">
-              <ShieldCheck className="w-4 h-4 text-emerald-600" /> 2. Business Registration & Compliance Certificates
+              <ShieldCheck className="w-4 h-4 text-emerald-600" /> 4. Business Registration & Compliance Certificates
             </h2>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -508,7 +667,7 @@ export const CreateVendorPage = () => {
                     </button>
                   </div>
 
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3">
                     <Input
                       value={cert.title}
                       onChange={(e) => {
@@ -527,6 +686,27 @@ export const CreateVendorPage = () => {
                         setCertificates(updated);
                       }}
                       placeholder="Reg / ID Number"
+                      className="rounded-xl text-xs bg-white"
+                    />
+                    <Input
+                      value={cert.issuingAuthority || ""}
+                      onChange={(e) => {
+                        const updated = [...certificates];
+                        updated[index].issuingAuthority = e.target.value;
+                        setCertificates(updated);
+                      }}
+                      placeholder="Issuing Authority (e.g. Registrar General)"
+                      className="rounded-xl text-xs bg-white"
+                    />
+                    <Input
+                      type="date"
+                      value={cert.issueDate || ""}
+                      onChange={(e) => {
+                        const updated = [...certificates];
+                        updated[index].issueDate = e.target.value;
+                        setCertificates(updated);
+                      }}
+                      placeholder="Date Issued"
                       className="rounded-xl text-xs bg-white"
                     />
                   </div>
@@ -572,69 +752,10 @@ export const CreateVendorPage = () => {
             </div>
           </div>
 
-          {/* SECTION 3: CATEGORIES & LOCATION */}
-          <div className="space-y-3 pt-4 border-t border-stone-100">
-            <h2 className="text-base font-bold text-foreground border-b border-stone-100 pb-2">
-              3. Service Categories & Coverage Area *
-            </h2>
-            <div className="flex flex-wrap gap-2">
-              {vendorCategoriesList.map((cat) => {
-                const selected = selectedCategories.includes(cat);
-                return (
-                  <button
-                    key={cat}
-                    type="button"
-                    onClick={() => toggleCategory(cat)}
-                    className={`px-3 py-1.5 rounded-xl text-xs font-semibold border transition-all ${
-                      selected
-                        ? "bg-primary text-primary-foreground border-primary shadow-xs"
-                        : "bg-stone-50 border-stone-200 text-stone-600 hover:bg-stone-100"
-                    }`}
-                  >
-                    {selected && <CheckCircle2 className="w-3.5 h-3.5 inline mr-1" />}
-                    {cat}
-                  </button>
-                );
-              })}
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 pt-2">
-              <div className="space-y-1.5">
-                <Label className="text-xs font-normal text-foreground">Neighborhood / Area</Label>
-                <Input
-                  value={location}
-                  onChange={(e) => setLocation(e.target.value)}
-                  placeholder="e.g. East Legon"
-                  className="rounded-xl text-xs bg-stone-50"
-                />
-              </div>
-
-              <div className="space-y-1.5">
-                <Label className="text-xs font-normal text-foreground">City</Label>
-                <Input
-                  value={city}
-                  onChange={(e) => setCity(e.target.value)}
-                  placeholder="e.g. Accra"
-                  className="rounded-xl text-xs bg-stone-50"
-                />
-              </div>
-
-              <div className="space-y-1.5">
-                <Label className="text-xs font-normal text-foreground">Service Area / Coverage</Label>
-                <Input
-                  value={serviceArea}
-                  onChange={(e) => setServiceArea(e.target.value)}
-                  placeholder="e.g. Greater Accra & Kumasi"
-                  className="rounded-xl text-xs bg-stone-50"
-                />
-              </div>
-            </div>
-          </div>
-
-          {/* SECTION 4: PRICING PACKAGES EDITOR */}
+          {/* SECTION 5: PRICING PACKAGES EDITOR */}
           <div className="space-y-4 pt-4 border-t border-stone-100">
             <h2 className="text-base font-bold text-foreground border-b border-stone-100 pb-2 flex items-center gap-2">
-              <Package className="w-4 h-4 text-primary" /> 4. Pricing Packages & Tiers
+              <Package className="w-4 h-4 text-primary" /> 5. Pricing Packages & Tiers
             </h2>
 
             {pricingPackages.map((pkg, index) => (
@@ -708,16 +829,28 @@ export const CreateVendorPage = () => {
                   className="rounded-xl text-xs bg-white resize-none"
                 />
 
-                <Input
-                  value={pkg.features.join(", ")}
-                  onChange={(e) => {
-                    const updated = [...pricingPackages];
-                    updated[index].features = e.target.value.split(",").map((f) => f.trim());
-                    setPricingPackages(updated);
-                  }}
-                  placeholder="Included Features (comma separated: Line Array, 2x Mics, Setup)"
-                  className="rounded-xl text-xs bg-white"
-                />
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                  <Input
+                    value={pkg.deliverables || ""}
+                    onChange={(e) => {
+                      const updated = [...pricingPackages];
+                      updated[index].deliverables = e.target.value;
+                      setPricingPackages(updated);
+                    }}
+                    placeholder="Deliverables summary (e.g. Full sound system & recording)"
+                    className="rounded-xl text-xs bg-white"
+                  />
+                  <Input
+                    value={pkg.features.join(", ")}
+                    onChange={(e) => {
+                      const updated = [...pricingPackages];
+                      updated[index].features = e.target.value.split(",").map((f) => f.trim());
+                      setPricingPackages(updated);
+                    }}
+                    placeholder="Included Features (comma separated: Line Array, 2x Mics, Setup)"
+                    className="rounded-xl text-xs bg-white"
+                  />
+                </div>
               </div>
             ))}
 
@@ -731,23 +864,36 @@ export const CreateVendorPage = () => {
             </Button>
           </div>
 
-          {/* SECTION 5: DETAILED SERVICES EDITOR */}
+          {/* SECTION 6: DETAILED SERVICES EDITOR */}
           <div className="space-y-4 pt-4 border-t border-stone-100">
             <h2 className="text-base font-bold text-foreground border-b border-stone-100 pb-2 flex items-center gap-2">
-              <Layers className="w-4 h-4 text-primary" /> 5. Service Breakdown & Equipment Specs
+              <Layers className="w-4 h-4 text-primary" /> 6. Service Breakdown & Equipment Specs
             </h2>
 
             {services.map((service, index) => (
               <div key={index} className="p-4 rounded-2xl border border-stone-200 bg-stone-50 space-y-3">
                 <div className="flex items-center justify-between">
                   <span className="text-xs font-bold text-stone-900">Service #{index + 1}</span>
-                  <button
-                    type="button"
-                    onClick={() => handleRemoveService(index)}
-                    className="text-stone-400 hover:text-red-600 text-xs font-semibold"
-                  >
-                    <Trash2 className="w-3.5 h-3.5" />
-                  </button>
+                  <div className="flex items-center gap-3">
+                    <label className="flex items-center gap-1.5 text-xs text-stone-700 cursor-pointer">
+                      <span>Setup Included</span>
+                      <Switch
+                        checked={service.setupIncluded ?? true}
+                        onCheckedChange={(checked) => {
+                          const updated = [...services];
+                          updated[index].setupIncluded = checked;
+                          setServices(updated);
+                        }}
+                      />
+                    </label>
+                    <button
+                      type="button"
+                      onClick={() => handleRemoveService(index)}
+                      className="text-stone-400 hover:text-red-600 text-xs font-semibold"
+                    >
+                      <Trash2 className="w-3.5 h-3.5" />
+                    </button>
+                  </div>
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
@@ -819,20 +965,26 @@ export const CreateVendorPage = () => {
             </Button>
           </div>
 
-          {/* SECTION 6: MEDIA SHOWCASE & PORTFOLIO */}
+          {/* SECTION 7: MEDIA SHOWCASE & PORTFOLIO */}
           <div className="space-y-4 pt-4 border-t border-stone-100">
             <h2 className="text-base font-bold text-foreground border-b border-stone-100 pb-2 flex items-center gap-2">
-              <Video className="w-4 h-4 text-primary" /> 6. Media Files & Video Showcase
+              <Video className="w-4 h-4 text-primary" /> 7. Media Files & Video Showcase
             </h2>
 
             {/* Video Showcase Add */}
-            <div className="space-y-2 p-4 rounded-2xl bg-stone-50 border border-stone-200">
+            <div className="space-y-3 p-4 rounded-2xl bg-stone-50 border border-stone-200">
               <Label className="text-xs font-semibold text-stone-800">Add Video Showcase (YouTube Embed or MP4 Link)</Label>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
                 <Input
                   value={videoTitle}
                   onChange={(e) => setVideoTitle(e.target.value)}
-                  placeholder="Video Title (e.g. Live Concert Soundcheck)"
+                  placeholder="Video Title (e.g. Concert Soundcheck)"
+                  className="rounded-xl text-xs bg-white"
+                />
+                <Input
+                  value={videoCaption}
+                  onChange={(e) => setVideoCaption(e.target.value)}
+                  placeholder="Caption / Description"
                   className="rounded-xl text-xs bg-white"
                 />
                 <Input
@@ -845,6 +997,29 @@ export const CreateVendorPage = () => {
               <Button type="button" onClick={handleAddVideo} size="sm" className="rounded-xl text-xs mt-1">
                 Add Video Embed
               </Button>
+
+              {/* Added Videos List */}
+              {mediaFiles.length > 0 && (
+                <div className="pt-2 space-y-2">
+                  <span className="text-[11px] font-bold text-stone-600 block">Added Video Showcases:</span>
+                  {mediaFiles.map((m, mIdx) => (
+                    <div key={mIdx} className="flex items-center justify-between p-2.5 rounded-xl bg-white border border-stone-200 text-xs">
+                      <div>
+                        <span className="font-bold text-stone-900">{m.title || "Showcase Video"}</span>
+                        {m.caption && <span className="text-stone-500 text-[11px] ml-2">({m.caption})</span>}
+                        <p className="text-[10px] text-stone-400 truncate max-w-xs">{m.url}</p>
+                      </div>
+                      <button
+                        type="button"
+                        onClick={() => handleRemoveVideo(mIdx)}
+                        className="text-stone-400 hover:text-red-600 p-1"
+                      >
+                        <Trash2 className="w-3.5 h-3.5" />
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              )}
             </div>
 
             {/* Photo Portfolio Add */}
@@ -897,10 +1072,10 @@ export const CreateVendorPage = () => {
             </div>
           </div>
 
-          {/* SECTION 7: OPERATING INFO & FAQS */}
+          {/* SECTION 8: OPERATING INFO & FAQS */}
           <div className="space-y-4 pt-4 border-t border-stone-100">
             <h2 className="text-base font-bold text-foreground border-b border-stone-100 pb-2 flex items-center gap-2">
-              <HelpCircle className="w-4 h-4 text-primary" /> 7. Operating Hours, Payment Terms & FAQs
+              <HelpCircle className="w-4 h-4 text-primary" /> 8. Operating Hours, Payment Terms & FAQs
             </h2>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
