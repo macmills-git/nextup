@@ -9,6 +9,7 @@ import ShareModal from "@/components/ShareModal";
 import ReportModal from "@/components/ReportModal";
 import { Button } from "@/components/ui/button";
 import { VendorCardSkeleton } from "@/components/CardSkeletons";
+import { useInitialLoad } from "@/contexts/InitialLoadContext";
 
 const vendorCategories: ("All" | VendorCategory)[] = [
   "All",
@@ -42,17 +43,9 @@ export const VendorsDirectoryPage = () => {
   const [query, setQuery] = useState("");
   const [locationFilter, setLocationFilter] = useState("");
   const [activeCat, setActiveCat] = useState<"All" | VendorCategory>("All");
-  const [isLoading, setIsLoading] = useState(true);
+  const { isLoading } = useInitialLoad();
 
   const [shareTarget, setShareTarget] = useState<VendorProfileModel | null>(null);
-
-  useEffect(() => {
-    // Single page load fetch state (3-5 seconds duration)
-    const timer = setTimeout(() => {
-      setIsLoading(false);
-    }, 3500);
-    return () => clearTimeout(timer);
-  }, []);
 
   const publicVendors = useMemo(() => {
     return vendors.filter(v => v.status === "published" && !v.hidden);

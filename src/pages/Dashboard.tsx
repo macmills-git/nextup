@@ -19,18 +19,14 @@ import { useEventStore } from "@/contexts/EventStore";
 import { useMemo, useState, useEffect } from "react";
 import SettingsPage from "./dashboard/SettingsPage";
 import { ListItemSkeleton } from "@/components/CardSkeletons";
+import { useInitialLoad } from "@/contexts/InitialLoadContext";
 
 // 1. Dashboard Overview Component
 const DashboardHome = () => {
   const navigate = useNavigate();
   const { user } = useAuth();
   const { events, vendors, savedEventIds } = useEventStore();
-  const [isLoading, setIsLoading] = useState(true);
-
-  useEffect(() => {
-    const timer = setTimeout(() => setIsLoading(false), 3500);
-    return () => clearTimeout(timer);
-  }, []);
+  const { isLoading } = useInitialLoad();
 
   const myEvents = useMemo(() => {
     return events.filter((e) => e.ownerId === user?.id || e.ownerId === "current-user");
@@ -159,12 +155,7 @@ const MyEventsPage = () => {
   const navigate = useNavigate();
   const { user } = useAuth();
   const { events, deleteEvent, updateEventStatus } = useEventStore();
-  const [isLoading, setIsLoading] = useState(true);
-
-  useEffect(() => {
-    const timer = setTimeout(() => setIsLoading(false), 3500);
-    return () => clearTimeout(timer);
-  }, []);
+  const { isLoading } = useInitialLoad();
 
   const myEvents = useMemo(() => {
     return events.filter((e) => e.ownerId === user?.id || e.ownerId === "current-user");
@@ -241,12 +232,7 @@ const MyEventsPage = () => {
 const SavedEventsPage = () => {
   const navigate = useNavigate();
   const { events, savedEventIds, toggleSaveEvent } = useEventStore();
-  const [isLoading, setIsLoading] = useState(true);
-
-  useEffect(() => {
-    const timer = setTimeout(() => setIsLoading(false), 3500);
-    return () => clearTimeout(timer);
-  }, []);
+  const { isLoading } = useInitialLoad();
 
   const savedList = useMemo(() => {
     return events.filter((e) => savedEventIds.includes(e.id));

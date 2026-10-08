@@ -29,6 +29,8 @@ import Dashboard from "./pages/Dashboard";
 import AdminPage from "./pages/AdminPage";
 import NotFound from "./pages/NotFound";
 
+import { InitialLoadProvider } from "./contexts/InitialLoadContext";
+
 const queryClient = new QueryClient();
 const googleClientId = import.meta.env.VITE_GOOGLE_CLIENT_ID || "demo-google-client-id.apps.googleusercontent.com";
 
@@ -37,10 +39,11 @@ const App = () => (
     <GoogleOAuthProvider clientId={googleClientId}>
       <AuthProvider>
         <EventStoreProvider>
-          <TooltipProvider>
-            <Toaster />
-            <Sonner />
-            <BrowserRouter>
+          <InitialLoadProvider>
+            <TooltipProvider>
+              <Toaster />
+              <Sonner />
+              <BrowserRouter>
               <ScrollToTop />
               <PageTransition>
                 <Routes>
@@ -88,10 +91,11 @@ const App = () => (
               </PageTransition>
             </BrowserRouter>
           </TooltipProvider>
-        </EventStoreProvider>
-      </AuthProvider>
-    </GoogleOAuthProvider>
-  </QueryClientProvider>
+        </InitialLoadProvider>
+      </EventStoreProvider>
+    </AuthProvider>
+  </GoogleOAuthProvider>
+</QueryClientProvider>
 );
 
 export default App;

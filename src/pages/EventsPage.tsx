@@ -8,7 +8,7 @@ import ShareModal from "@/components/ShareModal";
 import ReportModal from "@/components/ReportModal";
 import { Button } from "@/components/ui/button";
 import InteractiveEventMap from "@/components/InteractiveEventMap";
-import { EventCardSkeleton, EventMapCardSkeleton } from "@/components/CardSkeletons";
+import { useInitialLoad } from "@/contexts/InitialLoadContext";
 
 const categories: ("All" | EventCategory | "Free")[] = [
   "All",
@@ -47,15 +47,7 @@ export const EventsPage = () => {
   const [locating, setLocating] = useState(false);
   const [viewMode, setViewMode] = useState<"grid" | "map">("grid");
   const [selectedEventId, setSelectedEventId] = useState<string | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
-
-  useEffect(() => {
-    // Single page load fetch state (3-5 seconds duration)
-    const timer = setTimeout(() => {
-      setIsLoading(false);
-    }, 3500);
-    return () => clearTimeout(timer);
-  }, []);
+  const { isLoading } = useInitialLoad();
 
   // Modals
   const [shareTarget, setShareTarget] = useState<EventModel | null>(null);
