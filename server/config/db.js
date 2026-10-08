@@ -1,12 +1,16 @@
 import mongoose from "mongoose";
 
+const ATLAS_URI = "mongodb+srv://kusiboatengmills_db_user:ueg9lIK4zQF6LKJu@cluster0.qody7yk.mongodb.net/upnext?retryWrites=true&w=majority&appName=Cluster0";
+
 export const connectDB = async () => {
+  const uri = process.env.MONGO_URI || ATLAS_URI;
   try {
-    const conn = await mongoose.connect(process.env.MONGO_URI || "mongodb://127.0.0.1:27017/upnext");
+    const conn = await mongoose.connect(uri, {
+      serverSelectionTimeoutMS: 5000,
+    });
     console.log(`[MongoDB Connected]: ${conn.connection.host} / Database: ${conn.connection.name}`);
   } catch (error) {
     console.error(`[MongoDB Connection Error]: ${error.message}`);
-    // Don't crash process in development if Mongo is down, but log warning
-    console.warn("⚠️ Continuing with fallback memory state until MongoDB connection is active.");
+    console.warn("⚠️ Continuing with fallback state until MongoDB connection is active.");
   }
 };
