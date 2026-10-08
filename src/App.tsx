@@ -30,6 +30,7 @@ import AdminPage from "./pages/AdminPage";
 import NotFound from "./pages/NotFound";
 
 import { InitialLoadProvider } from "./contexts/InitialLoadContext";
+import ErrorBoundary from "./components/ErrorBoundary";
 
 const queryClient = new QueryClient();
 const googleClientId = import.meta.env.VITE_GOOGLE_CLIENT_ID || "demo-google-client-id.apps.googleusercontent.com";
@@ -43,7 +44,8 @@ const App = () => (
             <TooltipProvider>
               <Toaster />
               <Sonner />
-              <BrowserRouter>
+              <ErrorBoundary>
+                <BrowserRouter>
               <ScrollToTop />
               <PageTransition>
                 <Routes>
@@ -90,7 +92,8 @@ const App = () => (
                 </Routes>
               </PageTransition>
             </BrowserRouter>
-          </TooltipProvider>
+          </ErrorBoundary>
+        </TooltipProvider>
         </InitialLoadProvider>
       </EventStoreProvider>
     </AuthProvider>

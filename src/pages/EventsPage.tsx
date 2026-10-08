@@ -9,6 +9,8 @@ import ReportModal from "@/components/ReportModal";
 import { Button } from "@/components/ui/button";
 import InteractiveEventMap from "@/components/InteractiveEventMap";
 import { useInitialLoad } from "@/contexts/InitialLoadContext";
+import { EventCardSkeleton, EventMapCardSkeleton } from "@/components/CardSkeletons";
+import { Skeleton } from "@/components/ui/skeleton";
 
 const categories: ("All" | EventCategory | "Free")[] = [
   "All",
