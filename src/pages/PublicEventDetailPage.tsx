@@ -126,10 +126,11 @@ export const PublicEventDetailPage = () => {
   const toggleFollow = () => {
     setIsFollowing((prev) => {
       const nextState = !prev;
+      const orgName = event.organizer?.name || "Organizer";
       toast.success(
         nextState
-          ? `You are now following ${event.organizer.name}!`
-          : `Unfollowed ${event.organizer.name}`
+          ? `You are now following ${orgName}!`
+          : `Unfollowed ${orgName}`
       );
       return nextState;
     });
@@ -243,9 +244,9 @@ export const PublicEventDetailPage = () => {
               {/* Top Organizer Link Row */}
               <div className="flex items-center gap-2 mb-2 text-xs text-muted-foreground">
                 <div className="w-6 h-6 rounded-full bg-stone-900 text-white flex items-center justify-center text-[10px] font-bold">
-                  {event.organizer.name.charAt(0)}
+                  {(event.organizer?.name || "E").charAt(0)}
                 </div>
-                <span>By <strong className="text-foreground font-medium">{event.organizer.name}</strong></span>
+                <span>By <strong className="text-foreground font-medium">{event.organizer?.name || "Event Organizer"}</strong></span>
                 <button
                   onClick={toggleFollow}
                   className={`ml-2 px-2.5 py-0.5 rounded-full text-[11px] font-medium border transition-colors ${
@@ -569,20 +570,20 @@ export const PublicEventDetailPage = () => {
 
               <div className="p-5 rounded-2xl border border-stone-200 bg-stone-50/60 flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
                 <div className="flex items-center gap-4">
-                  {event.organizer.logo ? (
+                  {event.organizer?.logo ? (
                     <img
                       src={event.organizer.logo}
-                      alt={event.organizer.name}
+                      alt={event.organizer.name || "Organizer"}
                       className="w-16 h-16 rounded-full object-cover border border-stone-200 shadow-xs"
                     />
                   ) : (
                     <div className="w-16 h-16 rounded-full bg-stone-900 text-white flex items-center justify-center font-bold text-xl shadow-xs">
-                      {event.organizer.name.charAt(0)}
+                      {(event.organizer?.name || "E").charAt(0)}
                     </div>
                   )}
 
                   <div>
-                    <h3 className="text-lg font-normal text-foreground">{event.organizer.name}</h3>
+                    <h3 className="text-lg font-normal text-foreground">{event.organizer?.name || "Event Organizer"}</h3>
 
                     {/* Stats Row */}
                     <div className="flex items-center gap-4 mt-2 text-xs text-stone-600">
@@ -609,7 +610,7 @@ export const PublicEventDetailPage = () => {
                   <Button
                     variant="outline"
                     onClick={() => {
-                      const contactInfo = event.contact || event.organizer.contact;
+                      const contactInfo = event.contact || event.organizer?.contact;
                       if (contactInfo?.includes("@")) {
                         window.location.href = `mailto:${contactInfo}`;
                       } else {

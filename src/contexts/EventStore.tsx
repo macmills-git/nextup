@@ -1992,17 +1992,7 @@ const STORAGE_USERS = 'nextup_admin_users_v1';
 const EventStoreContext = createContext<Ctx | null>(null);
 
 export const EventStoreProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [events, setEvents] = useState<EventModel[]>([]);
-  const [vendors, setVendors] = useState<VendorProfileModel[]>([]);
-  const [savedEventIds, setSavedEventIds] = useState<string[]>([]);
-  const [reports, setReports] = useState<ReportModel[]>([]);
-  const [categories, setCategories] = useState<DynamicCategory[]>([]);
-  const [locations, setLocations] = useState<LocationNode[]>([]);
-  const [usersList, setUsersList] = useState<AdminUserRecord[]>([]);
-  const [searchLogs] = useState<SearchLog[]>(INITIAL_SEARCH_LOGS);
-
-  // Load state from localStorage on mount or set initial seed data
-  useEffect(() => {
+  const [events, setEvents] = useState<EventModel[]>(() => {
     try {
       const storedEvts = localStorage.getItem(STORAGE_EVENTS);
       if (storedEvts) {
@@ -2022,17 +2012,19 @@ export const EventStoreProvider: React.FC<{ children: React.ReactNode }> = ({ ch
           }
           return evt;
         });
-        // Add any new initial seed events missing from stored list
         INITIAL_EVENTS.forEach((init) => {
           if (!merged.some((m) => m.id === init.id)) {
             merged.push(init);
           }
         });
-        setEvents(merged);
-      } else {
-        setEvents(INITIAL_EVENTS);
+        return merged;
       }
+    } catch {}
+    return INITIAL_EVENTS;
+  });
 
+  const [vendors, setVendors] = useState<VendorProfileModel[]>(() => {
+    try {
       const storedVends = localStorage.getItem(STORAGE_VENDORS);
       if (storedVends) {
         const parsedVends: VendorProfileModel[] = JSON.parse(storedVends);
@@ -2041,35 +2033,58 @@ export const EventStoreProvider: React.FC<{ children: React.ReactNode }> = ({ ch
             parsedVends.push(initV);
           }
         });
-        setVendors(parsedVends);
-      } else {
-        setVendors(INITIAL_VENDORS);
+        return parsedVends;
       }
+    } catch {}
+    return INITIAL_VENDORS;
+  });
 
+  const [savedEventIds, setSavedEventIds] = useState<string[]>(() => {
+    try {
       const storedSaved = localStorage.getItem(STORAGE_SAVED);
-      setSavedEventIds(storedSaved ? JSON.parse(storedSaved) : ['evt-101']);
-
-      const storedReps = localStorage.getItem(STORAGE_REPORTS);
-      setReports(storedReps ? JSON.parse(storedReps) : INITIAL_REPORTS_SEED);
-
-      const storedCats = localStorage.getItem(STORAGE_CATEGORIES);
-      setCategories(storedCats ? JSON.parse(storedCats) : INITIAL_CATEGORIES);
-
-      const storedLocs = localStorage.getItem(STORAGE_LOCATIONS);
-      setLocations(storedLocs ? JSON.parse(storedLocs) : INITIAL_LOCATIONS);
-
-      const storedUsers = localStorage.getItem(STORAGE_USERS);
-      setUsersList(storedUsers ? JSON.parse(storedUsers) : INITIAL_USERS);
+      return storedSaved ? JSON.parse(storedSaved) : ['evt-101'];
     } catch {
-      setEvents(INITIAL_EVENTS);
-      setVendors(INITIAL_VENDORS);
-      setSavedEventIds(['evt-101']);
-      setReports(INITIAL_REPORTS_SEED);
-      setCategories(INITIAL_CATEGORIES);
-      setLocations(INITIAL_LOCATIONS);
-      setUsersList(INITIAL_USERS);
+      return ['evt-101'];
     }
-  }, []);
+  });
+
+  const [reports, setReports] = useState<ReportModel[]>(() => {
+    try {
+      const storedReps = localStorage.getItem(STORAGE_REPORTS);
+      return storedReps ? JSON.parse(storedReps) : INITIAL_REPORTS_SEED;
+    } catch {
+      return INITIAL_REPORTS_SEED;
+    }
+  });
+
+  const [categories, setCategories] = useState<DynamicCategory[]>(() => {
+    try {
+      const storedCats = localStorage.getItem(STORAGE_CATEGORIES);
+      return storedCats ? JSON.parse(storedCats) : INITIAL_CATEGORIES;
+    } catch {
+      return INITIAL_CATEGORIES;
+    }
+  });
+
+  const [locations, setLocations] = useState<LocationNode[]>(() => {
+    try {
+      const storedLocs = localStorage.getItem(STORAGE_LOCATIONS);
+      return storedLocs ? JSON.parse(storedLocs) : INITIAL_LOCATIONS;
+    } catch {
+      return INITIAL_LOCATIONS;
+    }
+  });
+
+  const [usersList, setUsersList] = useState<AdminUserRecord[]>(() => {
+    try {
+      const storedUsers = localStorage.getItem(STORAGE_USERS);
+      return storedUsers ? JSON.parse(storedUsers) : INITIAL_USERS;
+    } catch {
+      return INITIAL_USERS;
+    }
+  });
+
+  const [searchLogs] = useState<SearchLog[]>(INITIAL_SEARCH_LOGS);
 
   // Sync to localStorage
   useEffect(() => {
