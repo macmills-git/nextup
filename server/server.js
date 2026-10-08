@@ -78,11 +78,18 @@ app.get("/api/health", (req, res) => {
   });
 });
 
-// Mounting API Routes
+// Mounting API Routes (supports both /api prefix and direct routes)
 app.use("/api/auth", authRoutes);
+app.use("/auth", authRoutes);
+
 app.use("/api/events", eventRoutes);
+app.use("/events", eventRoutes);
+
 app.use("/api/tickets", ticketRoutes);
+app.use("/tickets", ticketRoutes);
+
 app.use("/api/vendors", vendorRoutes);
+app.use("/vendors", vendorRoutes);
 
 // 404 Handler
 app.use((req, res) => {
