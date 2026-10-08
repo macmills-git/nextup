@@ -93,8 +93,8 @@ export const InteractiveEventMap: React.FC<InteractiveEventMapProps> = ({
       zoomControl: false,
     });
 
-    // Standard 100% free OpenStreetMap tiles (zero API keys required, works 100% reliably on Vercel)
-    const tileLayer = L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+    // Standard 100% free OpenStreetMap tiles
+    L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
       subdomains: "abc",
       attribution:
         '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
@@ -114,70 +114,81 @@ export const InteractiveEventMap: React.FC<InteractiveEventMapProps> = ({
     };
   }, []);
 
-  // Locate User Position using Geolocation API
-  const requestUserLocation = () => {
-    if (!navigator.geolocation) {
-      setLocationStatus("Geolocation not supported by browser");
-      return;
-    }
+  // IP Geolocation Fallback if Browser Geolocation is blocked/disabled/timed out
+  const fetchIpLocation = async () => {
+    try {
+      const res = await fetch("https://ipapi.co/json/");
+      if (res.ok) {
+        const data = await res.json();
+        if (data.latitude && data.longitude) {
+          const coords: [number, number] = [data.latitude, data.longitude];
+          setUserLocation(coords);
+          setLocationStatus(`Location active (${data.city || "Current Location"})`);
+          return true;
+        }
+      }
+    } catch {}
+    return false;
+  };
 
+  // Locate User Position using Browser Geolocation + IP Fallback
+  const requestUserLocation = () => {
     setLocating(true);
     setLocationStatus("Locating your position...");
+
+    if (!navigator.geolocation) {
+      fetchIpLocation().finally(() => setLocating(false));
+      return;
+    }
 
     navigator.geolocation.getCurrentPosition(
       (pos) => {
         const coords: [number, number] = [pos.coords.latitude, pos.coords.longitude];
         setUserLocation(coords);
         setLocating(false);
-        setLocationStatus("Location found");
-
-        if (mapInstanceRef.current) {
-          const map = mapInstanceRef.current;
-
-          // Remove existing user marker if any
-          if (userMarkerRef.current) {
-            userMarkerRef.current.remove();
-          }
-
-          // Create User Location Pulse Icon
-          const userIcon = L.divIcon({
-            className: "custom-user-marker",
-            html: `
-              <div class="relative flex items-center justify-center w-8 h-8">
-                <span class="absolute inline-flex h-full w-full rounded-full bg-blue-500 opacity-75 animate-ping"></span>
-                <span class="relative inline-flex rounded-full h-5 w-5 bg-blue-600 border-2 border-white shadow-md"></span>
-              </div>
-            `,
-            iconSize: [32, 32],
-            iconAnchor: [16, 16],
-          });
-
-          const userMarker = L.marker(coords, { icon: userIcon }).addTo(map);
-          userMarker.bindPopup(`
-            <div style="font-family: sans-serif; text-align: center; padding: 4px;">
-              <strong style="color: #2563eb; font-size: 13px;">📍 You Are Here</strong>
-              <p style="font-size: 11px; color: #64748b; margin-top: 2px;">Your Current Location</p>
-            </div>
-          `);
-
-          userMarkerRef.current = userMarker;
-
-          // Smoothly fly to user location if no events selected
-          if (!selectedEventId) {
-            map.flyTo(coords, 13, { duration: 1.5 });
-          }
-        }
+        setLocationStatus("Current location active");
       },
-      (err) => {
-        setLocating(false);
-        setLocationStatus("Could not fetch location (using default)");
-        console.warn("Geolocation warning:", err.message);
+      () => {
+        // Fallback to IP Geolocation if browser permission denied or device GPS unavailable
+        fetchIpLocation().finally(() => setLocating(false));
       },
-      { enableHighAccuracy: true, timeout: 10000, maximumAge: 60000 }
+      { enableHighAccuracy: false, timeout: 5000, maximumAge: 300000 }
     );
   };
 
-  // Update Event Markers on Map
+  // Dedicated Effect to Render User Location Pulse Marker on Map
+  useEffect(() => {
+    const map = mapInstanceRef.current;
+    if (!map || !userLocation) return;
+
+    if (userMarkerRef.current) {
+      userMarkerRef.current.remove();
+    }
+
+    const userIcon = L.divIcon({
+      className: "custom-user-location-marker",
+      html: `
+        <div class="relative flex items-center justify-center w-10 h-10 z-50">
+          <span class="absolute inline-flex h-full w-full rounded-full bg-blue-500 opacity-75 animate-ping"></span>
+          <span class="relative inline-flex rounded-full h-6 w-6 bg-blue-600 border-2 border-white shadow-xl flex items-center justify-center text-white text-[11px] font-bold">📍</span>
+        </div>
+      `,
+      iconSize: [40, 40],
+      iconAnchor: [20, 20],
+    });
+
+    const userMarker = L.marker(userLocation, { icon: userIcon, zIndexOffset: 2000 }).addTo(map);
+    userMarker.bindPopup(`
+      <div style="font-family: sans-serif; text-align: center; padding: 4px;">
+        <strong style="color: #2563eb; font-size: 13px;">📍 You Are Here</strong>
+        <p style="font-size: 11px; color: #64748b; margin-top: 2px;">Your Current Location</p>
+      </div>
+    `);
+
+    userMarkerRef.current = userMarker;
+  }, [userLocation]);
+
+  // Update Event Markers & Map Viewport Bounds
   useEffect(() => {
     const map = mapInstanceRef.current;
     if (!map) return;
@@ -185,8 +196,6 @@ export const InteractiveEventMap: React.FC<InteractiveEventMapProps> = ({
     // Clear previous markers
     Object.values(markersRef.current).forEach((m) => m.remove());
     markersRef.current = {};
-
-    if (events.length === 0) return;
 
     const bounds: [number, number][] = [];
 
@@ -289,25 +298,45 @@ export const InteractiveEventMap: React.FC<InteractiveEventMapProps> = ({
     }
   }, [events, selectedEventId, userLocation]);
 
+  const centerOnUser = () => {
+    if (userLocation && mapInstanceRef.current) {
+      mapInstanceRef.current.flyTo(userLocation, 14, { duration: 1.2 });
+      if (userMarkerRef.current) {
+        userMarkerRef.current.openPopup();
+      }
+    } else {
+      requestUserLocation();
+    }
+  };
+
   return (
     <div className={`relative w-full h-full rounded-3xl overflow-hidden border border-stone-200 shadow-md ${className}`}>
       {/* Map Element */}
       <div ref={mapContainerRef} className="w-full h-full z-0" />
 
-      {/* User Location Control Bar (Top Left) */}
+      {/* User Location Control Bar (Top Left Overlay) */}
       <div className="absolute top-4 left-4 z-10 flex items-center gap-2 bg-white/95 backdrop-blur-md px-3.5 py-2 rounded-2xl border border-stone-200/90 shadow-md">
         <button
-          onClick={requestUserLocation}
+          onClick={centerOnUser}
           disabled={locating}
-          className="w-8 h-8 rounded-xl bg-stone-100 hover:bg-stone-200 text-stone-800 flex items-center justify-center transition-all disabled:opacity-50"
-          title="Find my location"
+          className="w-8 h-8 rounded-xl bg-blue-50 hover:bg-blue-100 text-blue-600 flex items-center justify-center transition-all disabled:opacity-50 border border-blue-200"
+          title="Center on my location"
         >
           <Locate className={`w-4 h-4 text-blue-600 ${locating ? "animate-spin" : ""}`} />
         </button>
         <div>
           <p className="text-xs font-bold text-stone-900 flex items-center gap-1.5">
             <span>Map Explorer</span>
-            {userLocation && <span className="text-[10px] bg-blue-100 text-blue-700 px-1.5 py-0.5 rounded-full font-bold">Your Location Active</span>}
+            {userLocation ? (
+              <span className="text-[10px] bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded-full font-bold flex items-center gap-1">
+                <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
+                Location Active
+              </span>
+            ) : (
+              <span className="text-[10px] bg-amber-100 text-amber-800 px-2 py-0.5 rounded-full font-bold">
+                {locationStatus}
+              </span>
+            )}
           </p>
           <p className="text-[11px] text-stone-500 font-medium">
             {events.length} {events.length === 1 ? "Event Pin" : "Event Pins"} on Map
