@@ -3,8 +3,8 @@ import { EventModel } from "@/contexts/EventStore";
 const rawApiUrl = (import.meta.env.VITE_API_URL || "http://localhost:5000/api").trim().replace(/\/+$/, "");
 const API_BASE_URL = rawApiUrl.endsWith("/api") ? rawApiUrl : `${rawApiUrl}/api`;
 
-// Helper for safe fetch with timeout to prevent hanging
-async function fetchWithTimeout(url: string, options: RequestInit = {}, timeoutMs = 3000): Promise<Response> {
+// Helper for safe fetch with timeout to prevent hanging on cold starts
+async function fetchWithTimeout(url: string, options: RequestInit = {}, timeoutMs = 15000): Promise<Response> {
   const controller = new AbortController();
   const id = setTimeout(() => controller.abort(), timeoutMs);
   try {
@@ -28,7 +28,7 @@ export const apiService = {
   // Check backend server health
   async checkHealth(): Promise<boolean> {
     try {
-      const res = await fetchWithTimeout(`${API_BASE_URL}/health`, { method: "GET" }, 2000);
+      const res = await fetchWithTimeout(`${API_BASE_URL}/health`, { method: "GET" }, 5000);
       return res.ok;
     } catch {
       return false;
@@ -44,7 +44,7 @@ export const apiService = {
           method: "POST",
           body: JSON.stringify({ email, password }),
         },
-        4000
+        15000
       );
       const body = await res.json();
       if (res.ok && body.success) {
@@ -52,7 +52,11 @@ export const apiService = {
       }
       return { success: false, message: body.message || "Invalid credentials" };
     } catch (err: any) {
-      return { success: false, message: err.message || "Backend server unreachable" };
+      const isAbort = err?.name === "AbortError" || String(err).toLowerCase().includes("aborted");
+      return {
+        success: false,
+        message: isAbort ? "Cloud server is waking up, please try again in a few seconds." : err.message || "Backend server unreachable",
+      };
     }
   },
 
@@ -65,7 +69,7 @@ export const apiService = {
           method: "POST",
           body: JSON.stringify({ name, email, password, role }),
         },
-        4000
+        15000
       );
       const body = await res.json();
       if (res.ok && body.success) {
@@ -73,7 +77,11 @@ export const apiService = {
       }
       return { success: false, message: body.message || "Registration failed" };
     } catch (err: any) {
-      return { success: false, message: err.message || "Backend server unreachable" };
+      const isAbort = err?.name === "AbortError" || String(err).toLowerCase().includes("aborted");
+      return {
+        success: false,
+        message: isAbort ? "Cloud server is waking up, please try again in a few seconds." : err.message || "Backend server unreachable",
+      };
     }
   },
 
@@ -86,7 +94,7 @@ export const apiService = {
           method: "GET",
           headers: { Authorization: `Bearer ${token}` },
         },
-        3000
+        8000
       );
       if (!res.ok) return null;
       const body = await res.json();
@@ -95,6 +103,7 @@ export const apiService = {
       return null;
     }
   },
+
 
   // Fetch all events from Express / MongoDB backend
   async getEvents(params?: { search?: string; category?: string; lat?: number; lng?: number; radiusKm?: number }): Promise<EventModel[] | null> {
