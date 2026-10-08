@@ -78,8 +78,10 @@ export const InteractiveEventMap: React.FC<InteractiveEventMapProps> = ({
   const userMarkerRef = useRef<L.Marker | null>(null);
 
   const [userLocation, setUserLocation] = useState<[number, number] | null>(null);
+  const [locationAccuracy, setLocationAccuracy] = useState<number | null>(null);
   const [locating, setLocating] = useState(false);
   const [locationStatus, setLocationStatus] = useState<string>("Locating your position...");
+  const accuracyCircleRef = useRef<L.Circle | null>(null);
   const navigate = useNavigate();
 
   // Initialize Map
@@ -114,7 +116,7 @@ export const InteractiveEventMap: React.FC<InteractiveEventMapProps> = ({
     };
   }, []);
 
-  // IP Geolocation Fallback if Browser Geolocation is blocked/disabled/timed out
+  // IP Geolocation Fallback if Browser Geolocation is blocked/disabled
   const fetchIpLocation = async () => {
     try {
       const res = await fetch("https://ipapi.co/json/");
@@ -123,7 +125,7 @@ export const InteractiveEventMap: React.FC<InteractiveEventMapProps> = ({
         if (data.latitude && data.longitude) {
           const coords: [number, number] = [data.latitude, data.longitude];
           setUserLocation(coords);
-          setLocationStatus(`Location active (${data.city || "Current Location"})`);
+          setLocationStatus(`Estimated via IP (${data.city || "Current Location"})`);
           return true;
         }
       }
@@ -131,32 +133,47 @@ export const InteractiveEventMap: React.FC<InteractiveEventMapProps> = ({
     return false;
   };
 
-  // Locate User Position using Browser Geolocation + IP Fallback
+  // Locate User Position using High-Precision Device GPS + IP Fallback
   const requestUserLocation = () => {
     setLocating(true);
-    setLocationStatus("Locating your position...");
+    setLocationStatus("Acquiring high-precision GPS...");
 
     if (!navigator.geolocation) {
       fetchIpLocation().finally(() => setLocating(false));
       return;
     }
 
+    // Force real-time hardware location fix (maximumAge: 0)
     navigator.geolocation.getCurrentPosition(
       (pos) => {
         const coords: [number, number] = [pos.coords.latitude, pos.coords.longitude];
         setUserLocation(coords);
+        setLocationAccuracy(pos.coords.accuracy);
         setLocating(false);
-        setLocationStatus("Current location active");
+        setLocationStatus(`GPS Active (±${Math.round(pos.coords.accuracy)}m)`);
       },
       () => {
-        // Fallback to IP Geolocation if browser permission denied or device GPS unavailable
-        fetchIpLocation().finally(() => setLocating(false));
+        // Fallback to standard accuracy if high accuracy times out
+        navigator.geolocation.getCurrentPosition(
+          (pos) => {
+            const coords: [number, number] = [pos.coords.latitude, pos.coords.longitude];
+            setUserLocation(coords);
+            setLocationAccuracy(pos.coords.accuracy);
+            setLocating(false);
+            setLocationStatus("Location Active");
+          },
+          () => {
+            // Final fallback to IP location if browser permission was denied
+            fetchIpLocation().finally(() => setLocating(false));
+          },
+          { enableHighAccuracy: false, timeout: 6000, maximumAge: 60000 }
+        );
       },
-      { enableHighAccuracy: false, timeout: 5000, maximumAge: 300000 }
+      { enableHighAccuracy: true, timeout: 12000, maximumAge: 0 }
     );
   };
 
-  // Dedicated Effect to Render User Location Pulse Marker on Map
+  // Dedicated Effect to Render High-Precision User Location Pulse Marker + Accuracy Radius Circle
   useEffect(() => {
     const map = mapInstanceRef.current;
     if (!map || !userLocation) return;
@@ -164,29 +181,47 @@ export const InteractiveEventMap: React.FC<InteractiveEventMapProps> = ({
     if (userMarkerRef.current) {
       userMarkerRef.current.remove();
     }
+    if (accuracyCircleRef.current) {
+      accuracyCircleRef.current.remove();
+    }
+
+    // Render GPS Accuracy Radius Circle if precision accuracy is available
+    if (locationAccuracy && locationAccuracy < 5000) {
+      const circle = L.circle(userLocation, {
+        radius: locationAccuracy,
+        color: "#2563eb",
+        fillColor: "#3b82f6",
+        fillOpacity: 0.12,
+        weight: 1.5,
+      }).addTo(map);
+      accuracyCircleRef.current = circle;
+    }
 
     const userIcon = L.divIcon({
       className: "custom-user-location-marker",
       html: `
-        <div class="relative flex items-center justify-center w-10 h-10 z-50">
-          <span class="absolute inline-flex h-full w-full rounded-full bg-blue-500 opacity-75 animate-ping"></span>
-          <span class="relative inline-flex rounded-full h-6 w-6 bg-blue-600 border-2 border-white shadow-xl flex items-center justify-center text-white text-[11px] font-bold">📍</span>
+        <div class="relative flex items-center justify-center w-12 h-12 z-50">
+          <span class="absolute inline-flex h-full w-full rounded-full bg-blue-500 opacity-60 animate-ping"></span>
+          <span class="relative inline-flex rounded-full h-7 w-7 bg-blue-600 border-2 border-white shadow-2xl flex items-center justify-center text-white text-[12px] font-bold">📍</span>
         </div>
       `,
-      iconSize: [40, 40],
-      iconAnchor: [20, 20],
+      iconSize: [48, 48],
+      iconAnchor: [24, 24],
     });
 
-    const userMarker = L.marker(userLocation, { icon: userIcon, zIndexOffset: 2000 }).addTo(map);
+    const userMarker = L.marker(userLocation, { icon: userIcon, zIndexOffset: 3000 }).addTo(map);
     userMarker.bindPopup(`
-      <div style="font-family: sans-serif; text-align: center; padding: 4px;">
-        <strong style="color: #2563eb; font-size: 13px;">📍 You Are Here</strong>
-        <p style="font-size: 11px; color: #64748b; margin-top: 2px;">Your Current Location</p>
+      <div style="font-family: sans-serif; text-align: center; padding: 6px;">
+        <strong style="color: #2563eb; font-size: 14px;">📍 Your Precise Location</strong>
+        <p style="font-size: 11px; color: #475569; margin-top: 3px;">
+          Lat: ${userLocation[0].toFixed(5)}, Lng: ${userLocation[1].toFixed(5)}
+        </p>
+        ${locationAccuracy ? `<span style="font-size: 10px; background: #dbeafe; color: #1e40af; padding: 2px 8px; border-radius: 99px; font-weight: 700; display: inline-block; margin-top: 4px;">Precision: ±${Math.round(locationAccuracy)}m</span>` : ""}
       </div>
     `);
 
     userMarkerRef.current = userMarker;
-  }, [userLocation]);
+  }, [userLocation, locationAccuracy]);
 
   // Update Event Markers & Map Viewport Bounds
   useEffect(() => {
