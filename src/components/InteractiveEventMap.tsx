@@ -190,12 +190,17 @@ export const InteractiveEventMap: React.FC<InteractiveEventMapProps> = ({
 
     const bounds: [number, number][] = [];
 
+    if (userLocation) {
+      bounds.push(userLocation);
+    }
+
     events.forEach((evt) => {
       const coords = getEventCoordinates(evt);
       bounds.push(coords);
 
       const isSelected = evt.id === selectedEventId;
-      const priceText = evt.isFree ? "Free" : evt.price || "Free";
+      const isFree = evt.isFree || !evt.price || evt.price.trim().toLowerCase() === "free";
+      const pinLabel = isFree ? "Free" : "$";
 
       // Calculate distance if user location is available
       let distStr = "";
@@ -204,25 +209,27 @@ export const InteractiveEventMap: React.FC<InteractiveEventMapProps> = ({
         distStr = `${km} km away`;
       }
 
-      // Create Custom Pin Icon
+      // Create Custom Pin Icon (Free vs Paid $ badge)
       const pinIcon = L.divIcon({
         className: "custom-event-pin",
         html: `
           <div class="group relative flex items-center justify-center transition-transform transform hover:scale-110 ${
             isSelected ? "scale-110 z-30" : "z-10"
           }">
-            <div class="flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-bold shadow-lg border transition-colors ${
+            <div class="flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-bold shadow-md border transition-colors ${
               isSelected
                 ? "bg-black text-white border-black"
-                : "bg-white text-stone-900 border-stone-200/90 hover:bg-stone-50"
+                : isFree
+                ? "bg-emerald-50 text-emerald-700 border-emerald-300 hover:bg-emerald-100"
+                : "bg-amber-50 text-amber-900 border-amber-300 hover:bg-amber-100"
             }">
-              <span class="w-2 h-2 rounded-full bg-rose-500"></span>
-              <span>${priceText}</span>
+              <span class="w-2 h-2 rounded-full ${isFree ? "bg-emerald-500" : "bg-amber-500"}"></span>
+              <span>${pinLabel}</span>
             </div>
           </div>
         `,
-        iconSize: [80, 30],
-        iconAnchor: [40, 15],
+        iconSize: [64, 28],
+        iconAnchor: [32, 14],
       });
 
       const marker = L.marker(coords, { icon: pinIcon }).addTo(map);
@@ -277,8 +284,8 @@ export const InteractiveEventMap: React.FC<InteractiveEventMapProps> = ({
         map.flyTo(coords, 14, { duration: 1.2 });
         markersRef.current[selectedEventId].openPopup();
       }
-    } else if (bounds.length > 0 && !userLocation) {
-      map.fitBounds(bounds, { padding: [40, 40], maxZoom: 14 });
+    } else if (bounds.length > 0) {
+      map.fitBounds(bounds, { padding: [50, 50], maxZoom: 14 });
     }
   }, [events, selectedEventId, userLocation]);
 
