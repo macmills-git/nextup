@@ -39,7 +39,14 @@ const STORAGE_KEY = "nextup_auth_user_v1";
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
-  const [user, setUser] = useState<AuthUser | null>(null);
+  const [user, setUser] = useState<AuthUser | null>(() => {
+    try {
+      const stored = localStorage.getItem(STORAGE_KEY);
+      return stored ? JSON.parse(stored) : null;
+    } catch {
+      return null;
+    }
+  });
   const [loading, setLoading] = useState(true);
 
   // Convert Supabase User to NextUp AuthUser
@@ -78,23 +85,35 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   useEffect(() => {
     let mounted = true;
 
-    // 1. Initial Session Check from Supabase & localStorage fallback
+    // 1. Initial Session Check with 1.2s timeout fallback so page refresh never hangs
     const initSession = async () => {
       try {
-        const { data: { session } } = await supabase.auth.getSession();
-        if (session?.user) {
-          const authUser = mapSupabaseUser(session.user);
+        const sessionPromise = supabase.auth.getSession();
+        const timeoutPromise = new Promise<null>((resolve) =>
+          setTimeout(() => resolve(null), 1200)
+        );
+
+        const res = (await Promise.race([sessionPromise, timeoutPromise])) as
+          | { data: { session: any } }
+          | null;
+
+        if (res?.data?.session?.user) {
+          const authUser = mapSupabaseUser(res.data.session.user);
           if (mounted) saveUser(authUser);
         } else {
           const stored = localStorage.getItem(STORAGE_KEY);
           if (stored && mounted) {
-            setUser(JSON.parse(stored));
+            try {
+              setUser(JSON.parse(stored));
+            } catch {}
           }
         }
       } catch {
         const stored = localStorage.getItem(STORAGE_KEY);
         if (stored && mounted) {
-          setUser(JSON.parse(stored));
+          try {
+            setUser(JSON.parse(stored));
+          } catch {}
         }
       } finally {
         if (mounted) setLoading(false);

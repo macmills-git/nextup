@@ -2183,7 +2183,28 @@ export const EventStoreProvider: React.FC<{ children: React.ReactNode }> = ({ ch
     return updated;
   };
 
-  const getEvent = (id: string) => events.find(e => e.id === id);
+  const getEvent = (id: string) => {
+    if (!id) return undefined;
+    const clean = decodeURIComponent(id).trim();
+
+    // 1. Direct match
+    let found = events.find((e) => e.id === clean);
+    if (found) return found;
+
+    // 2. Case-insensitive match
+    found = events.find((e) => e.id.toLowerCase() === clean.toLowerCase());
+    if (found) return found;
+
+    // 3. Prefix match ("101" -> "evt-101")
+    found = events.find((e) => e.id.toLowerCase() === `evt-${clean.toLowerCase()}`);
+    if (found) return found;
+
+    // 4. Match by title slug
+    found = events.find(
+      (e) => e.title.toLowerCase().replace(/[^a-z0-9]+/g, "-") === clean.toLowerCase()
+    );
+    return found;
+  };
 
   const deleteEvent = (id: string) => {
     setEvents(prev => prev.filter(e => e.id !== id));

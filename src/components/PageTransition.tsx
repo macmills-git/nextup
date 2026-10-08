@@ -8,14 +8,18 @@ const PageTransition = ({ children }: { children: ReactNode }) => {
 
   useEffect(() => {
     if (!ref.current) return;
-    gsap.fromTo(
-      ref.current,
-      { opacity: 0, y: 12 },
-      { opacity: 1, y: 0, duration: 0.45, ease: 'power2.out' }
-    );
+    try {
+      gsap.fromTo(
+        ref.current,
+        { opacity: 0, y: 12 },
+        { opacity: 1, y: 0, duration: 0.45, ease: 'power2.out' }
+      );
+    } catch {
+      if (ref.current) ref.current.style.opacity = '1';
+    }
   }, [pathname]);
 
-  return <div ref={ref} key={pathname}>{children}</div>;
+  return <div ref={ref} key={pathname} className="w-full">{children}</div>;
 };
 
 export default PageTransition;
