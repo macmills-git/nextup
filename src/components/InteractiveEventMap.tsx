@@ -2,9 +2,8 @@ import React, { useEffect, useRef, useState } from "react";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 import { EventModel } from "@/contexts/EventStore";
-import { MapPin, Navigation, Locate, Calendar, ExternalLink, ArrowRight, CheckCircle2, RotateCcw } from "lucide-react";
+import { MapPin, Navigation, Locate, Calendar, ExternalLink, ArrowRight } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-import { toast } from "sonner";
 
 interface InteractiveEventMapProps {
   events: EventModel[];
@@ -12,8 +11,6 @@ interface InteractiveEventMapProps {
   onSelectEvent?: (event: EventModel) => void;
   className?: string;
 }
-
-const STORAGE_CUSTOM_LOCATION = "nextup_exact_user_location_v1";
 
 // Known coordinates mapping for fallback cities/venues in Ghana & beyond
 const KNOWN_COORDINATES: Record<string, [number, number]> = {
@@ -78,27 +75,12 @@ export const InteractiveEventMap: React.FC<InteractiveEventMapProps> = ({
   const mapContainerRef = useRef<HTMLDivElement>(null);
   const mapInstanceRef = useRef<L.Map | null>(null);
   const markersRef = useRef<Record<string, L.Marker>>({});
-  const userMarkerRef = useRef<L.Marker | null>(null);
 
-  const [userLocation, setUserLocation] = useState<[number, number] | null>(() => {
-    try {
-      const saved = localStorage.getItem(STORAGE_CUSTOM_LOCATION);
-      return saved ? JSON.parse(saved) : null;
-    } catch {
-      return null;
-    }
-  });
-
-  const [isCustomLocation, setIsCustomLocation] = useState<boolean>(() => {
-    return Boolean(localStorage.getItem(STORAGE_CUSTOM_LOCATION));
-  });
-
+  const [userLocation, setUserLocation] = useState<[number, number] | null>(null);
   const [locationAccuracy, setLocationAccuracy] = useState<number | null>(null);
   const [locating, setLocating] = useState(false);
-  const [locationStatus, setLocationStatus] = useState<string>(
-    isCustomLocation ? "Pin-point Spot Saved 🎯" : "Locating your position..."
-  );
-  const accuracyCircleRef = useRef<L.Circle | null>(null);
+  const [locationStatus, setLocationStatus] = useState<string>("Locating area radius...");
+  const areaCircleRef = useRef<L.Circle | null>(null);
   const navigate = useNavigate();
 
   // Initialize Map
@@ -107,7 +89,7 @@ export const InteractiveEventMap: React.FC<InteractiveEventMapProps> = ({
 
     // Default center: Accra, Ghana
     const map = L.map(mapContainerRef.current, {
-      center: userLocation || [5.5506, -0.1962],
+      center: [5.5506, -0.1962],
       zoom: 12,
       zoomControl: false,
     });
@@ -124,10 +106,8 @@ export const InteractiveEventMap: React.FC<InteractiveEventMapProps> = ({
 
     mapInstanceRef.current = map;
 
-    // Automatically attempt geolocation if not custom saved
-    if (!isCustomLocation) {
-      requestUserLocation();
-    }
+    // Automatically attempt geolocation
+    requestUserLocation();
 
     return () => {
       map.remove();
@@ -143,10 +123,8 @@ export const InteractiveEventMap: React.FC<InteractiveEventMapProps> = ({
         const data = await res.json();
         if (data.latitude && data.longitude) {
           const coords: [number, number] = [data.latitude, data.longitude];
-          if (!isCustomLocation) {
-            setUserLocation(coords);
-          }
-          setLocationStatus(`Location active (${data.city || "Current Location"})`);
+          setUserLocation(coords);
+          setLocationStatus(`Location area (${data.city || "Current Area"})`);
           return true;
         }
       }
@@ -154,10 +132,10 @@ export const InteractiveEventMap: React.FC<InteractiveEventMapProps> = ({
     return false;
   };
 
-  // Locate User Position using High-Precision Device GPS + IP Fallback
+  // Locate User Position Area Radius
   const requestUserLocation = () => {
     setLocating(true);
-    setLocationStatus("Acquiring high-precision GPS...");
+    setLocationStatus("Detecting location area...");
 
     if (!navigator.geolocation) {
       fetchIpLocation().finally(() => setLocating(false));
@@ -170,93 +148,47 @@ export const InteractiveEventMap: React.FC<InteractiveEventMapProps> = ({
         setUserLocation(coords);
         setLocationAccuracy(pos.coords.accuracy);
         setLocating(false);
-        setLocationStatus(`GPS Active (±${Math.round(pos.coords.accuracy)}m)`);
+        setLocationStatus("Location Area Active");
       },
       () => {
-        navigator.geolocation.getCurrentPosition(
-          (pos) => {
-            const coords: [number, number] = [pos.coords.latitude, pos.coords.longitude];
-            setUserLocation(coords);
-            setLocationAccuracy(pos.coords.accuracy);
-            setLocating(false);
-            setLocationStatus("Location Active");
-          },
-          () => {
-            fetchIpLocation().finally(() => setLocating(false));
-          },
-          { enableHighAccuracy: false, timeout: 6000, maximumAge: 60000 }
-        );
+        fetchIpLocation().finally(() => setLocating(false));
       },
-      { enableHighAccuracy: true, timeout: 12000, maximumAge: 0 }
+      { enableHighAccuracy: false, timeout: 8000, maximumAge: 300000 }
     );
   };
 
-  // Dedicated Effect to Render Draggable User Location Marker + Accuracy Circle
+  // Render Translucent Location Area Radius Circle (No Pinpoint Marker)
   useEffect(() => {
     const map = mapInstanceRef.current;
     if (!map || !userLocation) return;
 
-    if (userMarkerRef.current) {
-      userMarkerRef.current.remove();
-    }
-    if (accuracyCircleRef.current) {
-      accuracyCircleRef.current.remove();
+    if (areaCircleRef.current) {
+      areaCircleRef.current.remove();
     }
 
-    // Render GPS Accuracy Radius Circle if available and not custom drag
-    if (locationAccuracy && locationAccuracy < 5000 && !isCustomLocation) {
-      const circle = L.circle(userLocation, {
-        radius: locationAccuracy,
-        color: "#2563eb",
-        fillColor: "#3b82f6",
-        fillOpacity: 0.12,
-        weight: 1.5,
-      }).addTo(map);
-      accuracyCircleRef.current = circle;
-    }
+    // Determine radius size (defaults to ~1.2 km coverage area)
+    const radiusMeters = locationAccuracy ? Math.max(locationAccuracy, 800) : 1200;
 
-    const userIcon = L.divIcon({
-      className: "custom-user-location-marker",
-      html: `
-        <div class="relative flex items-center justify-center w-12 h-12 z-50 cursor-grab active:cursor-grabbing">
-          <span class="absolute inline-flex h-full w-full rounded-full bg-blue-500 opacity-60 animate-ping"></span>
-          <span class="relative inline-flex rounded-full h-7 w-7 bg-blue-600 border-2 border-white shadow-2xl flex items-center justify-center text-white text-[12px] font-bold">📍</span>
-        </div>
-      `,
-      iconSize: [48, 48],
-      iconAnchor: [24, 24],
-    });
-
-    const userMarker = L.marker(userLocation, {
-      icon: userIcon,
-      draggable: true,
-      zIndexOffset: 3000,
+    const circle = L.circle(userLocation, {
+      radius: radiusMeters,
+      color: "#2563eb",
+      fillColor: "#3b82f6",
+      fillOpacity: 0.16,
+      weight: 2,
+      dashArray: "6, 6",
     }).addTo(map);
 
-    userMarker.bindPopup(`
-      <div style="font-family: sans-serif; text-align: center; padding: 6px; max-width: 200px;">
-        <strong style="color: #2563eb; font-size: 14px;">📍 Your Location</strong>
-        <p style="font-size: 11px; color: #475569; margin-top: 3px;">
-          ${userLocation[0].toFixed(5)}, ${userLocation[1].toFixed(5)}
+    circle.bindPopup(`
+      <div style="font-family: sans-serif; text-align: center; padding: 6px;">
+        <strong style="color: #2563eb; font-size: 13px;">🔵 Your Location Area</strong>
+        <p style="font-size: 11px; color: #64748b; margin-top: 3px;">
+          Estimated coverage area (~${(radiusMeters / 1000).toFixed(1)} km radius)
         </p>
-        <div style="margin-top: 6px; font-size: 10.5px; background: #eff6ff; color: #1d4ed8; padding: 5px 8px; border-radius: 8px; border: 1px solid #bfdbfe; font-weight: 600;">
-          💡 <strong>Drag this pin</strong> to set your exact house/building spot!
-        </div>
       </div>
     `);
 
-    userMarker.on("dragend", (e: any) => {
-      const newPos = e.target.getLatLng();
-      const coords: [number, number] = [newPos.lat, newPos.lng];
-      setUserLocation(coords);
-      setIsCustomLocation(true);
-      localStorage.setItem(STORAGE_CUSTOM_LOCATION, JSON.stringify(coords));
-      setLocationStatus("Pin-point Location Saved 🎯");
-      toast.success("Exact location pin saved!");
-    });
-
-    userMarkerRef.current = userMarker;
-  }, [userLocation, locationAccuracy, isCustomLocation]);
+    areaCircleRef.current = circle;
+  }, [userLocation, locationAccuracy]);
 
   // Update Event Markers & Map Viewport Bounds
   useEffect(() => {
@@ -370,20 +302,13 @@ export const InteractiveEventMap: React.FC<InteractiveEventMapProps> = ({
 
   const centerOnUser = () => {
     if (userLocation && mapInstanceRef.current) {
-      mapInstanceRef.current.flyTo(userLocation, 15, { duration: 1.2 });
-      if (userMarkerRef.current) {
-        userMarkerRef.current.openPopup();
+      mapInstanceRef.current.flyTo(userLocation, 13, { duration: 1.2 });
+      if (areaCircleRef.current) {
+        areaCircleRef.current.openPopup();
       }
     } else {
       requestUserLocation();
     }
-  };
-
-  const resetUserLocation = () => {
-    localStorage.removeItem(STORAGE_CUSTOM_LOCATION);
-    setIsCustomLocation(false);
-    requestUserLocation();
-    toast.info("Location reset to GPS auto-detect.");
   };
 
   return (
@@ -392,42 +317,33 @@ export const InteractiveEventMap: React.FC<InteractiveEventMapProps> = ({
       <div ref={mapContainerRef} className="w-full h-full z-0" />
 
       {/* User Location Control Bar (Top Left Overlay) */}
-      <div className="absolute top-4 left-4 z-10 flex flex-wrap items-center gap-2 bg-white/95 backdrop-blur-md px-3.5 py-2 rounded-2xl border border-stone-200/90 shadow-md max-w-sm">
+      <div className="absolute top-4 left-4 z-10 flex items-center gap-2 bg-white/95 backdrop-blur-md px-3.5 py-2 rounded-2xl border border-stone-200/90 shadow-md">
         <button
           onClick={centerOnUser}
           disabled={locating}
-          className="w-8 h-8 rounded-xl bg-blue-50 hover:bg-blue-100 text-blue-600 flex items-center justify-center transition-all disabled:opacity-50 border border-blue-200 flex-shrink-0"
-          title="Center on my location"
+          className="w-8 h-8 rounded-xl bg-blue-50 hover:bg-blue-100 text-blue-600 flex items-center justify-center transition-all disabled:opacity-50 border border-blue-200"
+          title="Center on my location area"
         >
           <Locate className={`w-4 h-4 text-blue-600 ${locating ? "animate-spin" : ""}`} />
         </button>
-        <div className="min-w-0 flex-1">
-          <div className="flex items-center justify-between gap-1">
-            <span className="text-xs font-bold text-stone-900">Map Explorer</span>
+        <div>
+          <p className="text-xs font-bold text-stone-900 flex items-center gap-1.5">
+            <span>Map Explorer</span>
             {userLocation ? (
-              <span className="text-[10px] bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded-full font-bold flex items-center gap-1">
-                <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
-                {isCustomLocation ? "Exact Spot Saved 🎯" : "Location Active"}
+              <span className="text-[10px] bg-blue-100 text-blue-800 px-2 py-0.5 rounded-full font-bold flex items-center gap-1">
+                <span className="w-1.5 h-1.5 rounded-full bg-blue-500 animate-pulse"></span>
+                Location Area Active
               </span>
             ) : (
               <span className="text-[10px] bg-amber-100 text-amber-800 px-2 py-0.5 rounded-full font-bold">
                 {locationStatus}
               </span>
             )}
-          </div>
-          <p className="text-[10.5px] text-stone-500 font-medium truncate mt-0.5">
-            💡 Drag blue 📍 pin to your exact building or house!
+          </p>
+          <p className="text-[11px] text-stone-500 font-medium">
+            {events.length} {events.length === 1 ? "Event Pin" : "Event Pins"} on Map
           </p>
         </div>
-        {isCustomLocation && (
-          <button
-            onClick={resetUserLocation}
-            className="text-[10px] font-semibold text-stone-500 hover:text-stone-900 underline flex items-center gap-1 ml-auto"
-            title="Reset location to auto GPS"
-          >
-            <RotateCcw className="w-3 h-3" /> Reset
-          </button>
-        )}
       </div>
     </div>
   );
