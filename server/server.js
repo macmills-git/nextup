@@ -15,33 +15,27 @@ connectDB();
 
 const app = express();
 
-// Allowed Origins for CORS
-const allowedOrigins = [
-  "https://nextup-blond.vercel.app",
-  process.env.CLIENT_URL || "http://localhost:5173",
-  "http://localhost:5173",
-  "http://localhost:3000",
-  "http://127.0.0.1:5173",
-];
+// Clean duplicate slashes in URLs (e.g. //auth/register -> /auth/register)
+app.use((req, res, next) => {
+  if (req.url) {
+    req.url = req.url.replace(/\/{2,}/g, "/");
+  }
+  next();
+});
 
-// CORS Configuration
+// CORS Configuration - Allow all client origins (Vercel, Localhost, Render)
 app.use(
   cors({
-    origin: (origin, callback) => {
-      // Allow requests with no origin (like mobile apps, curl, or Render health probes)
-      if (!origin || allowedOrigins.some((o) => origin.startsWith(o)) || process.env.NODE_ENV !== "production") {
-        return callback(null, true);
-      }
-      return callback(null, true); // Allow all valid web clients
-    },
+    origin: true,
     credentials: true,
     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-    allowedHeaders: ["Content-Type", "Authorization"],
+    allowedHeaders: ["Content-Type", "Authorization", "X-Requested-With"],
   })
 );
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
 
 // Root Welcome Route (for Render Web Service probe)
 app.get("/", (req, res) => {
