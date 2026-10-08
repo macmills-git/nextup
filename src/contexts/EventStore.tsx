@@ -1,4 +1,5 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
+import { apiService } from '@/services/api';
 
 export type EventCategory =
   | 'Technology'
@@ -2114,6 +2115,23 @@ export const EventStoreProvider: React.FC<{ children: React.ReactNode }> = ({ ch
   useEffect(() => {
     try { localStorage.setItem(STORAGE_USERS, JSON.stringify(usersList)); } catch {}
   }, [usersList]);
+
+  // Attempt sync with backend Express / MongoDB API when online
+  useEffect(() => {
+    let isMounted = true;
+    apiService.getEvents().then((remoteEvents) => {
+      if (isMounted && remoteEvents && remoteEvents.length > 0) {
+        setEvents((prev) => {
+          const existingIds = new Set(prev.map((e) => e.id));
+          const newItems = remoteEvents.filter((re) => !existingIds.has(re.id));
+          return newItems.length > 0 ? [...newItems, ...prev] : prev;
+        });
+      }
+    });
+    return () => {
+      isMounted = false;
+    };
+  }, []);
 
   // Event Handlers
   const saveDraftEvent = (data: Partial<EventModel> & { title: string }): EventModel => {

@@ -1,5 +1,6 @@
 import { createContext, useContext, useState, useEffect, ReactNode } from "react";
 import { supabase } from "@/lib/supabase";
+import { apiService } from "@/services/api";
 import type { User as SupabaseUser } from "@supabase/supabase-js";
 
 export type UserRole = "admin" | "organizer" | "vendor";
@@ -142,23 +143,32 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   const signInWithPassword = async (email: string, password?: string) => {
     const cleanEmail = email.trim().toLowerCase();
-    const isAdminEmail = cleanEmail === "admin@nexttup.com" || cleanEmail === "admin@nextup.com";
 
-    if (isAdminEmail) {
-      if (password === "@nextupadmin!@#") {
-        const adminUser: AuthUser = {
-          id: "admin-system-1",
-          email: "admin@nextup.com",
-          name: "System Administrator",
-          role: "admin",
+    // 1. Live Express API + MongoDB Atlas Authentication
+    try {
+      const apiRes = await apiService.login(cleanEmail, password);
+      if (apiRes.success && apiRes.data) {
+        if (apiRes.data.token) {
+          localStorage.setItem("nextup_jwt_token", apiRes.data.token);
+        }
+        const authUser: AuthUser = {
+          id: apiRes.data._id || `user-${Date.now()}`,
+          email: apiRes.data.email,
+          name: apiRes.data.name,
+          avatarUrl: apiRes.data.avatar || `https://api.dicebear.com/7.x/avataaars/svg?seed=${encodeURIComponent(apiRes.data.email)}`,
+          role: apiRes.data.role === "admin" ? "admin" : "organizer",
           authProvider: "password",
         };
-        saveUser(adminUser);
+        saveUser(authUser);
         return {};
+      } else if (apiRes.message && !apiRes.message.includes("unreachable")) {
+        return { error: apiRes.message };
       }
-      return { error: "Invalid admin password. Special admin credentials required." };
+    } catch {
+      // Continue to Supabase / Local fallback
     }
 
+    // 2. Legacy Supabase Fallback
     try {
       if (password) {
         const { data, error } = await supabase.auth.signInWithPassword({
@@ -180,7 +190,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       id: `user-${Date.now().toString(36)}`,
       email: cleanEmail,
       name: cleanEmail.split("@")[0],
-      role: "organizer",
+      role: cleanEmail.includes("admin") ? "admin" : "organizer",
       authProvider: "password",
     };
     saveUser(newUser);
@@ -194,10 +204,32 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     role: UserRole = "organizer"
   ) => {
     const cleanEmail = email.trim().toLowerCase();
-    if (cleanEmail === "admin@nexttup.com" || cleanEmail === "admin@nextup.com") {
-      return { error: "Admin accounts cannot be registered via sign up. Please use admin sign-in credentials." };
+
+    // 1. Live Express API + MongoDB Atlas Registration
+    try {
+      const apiRes = await apiService.register(name || cleanEmail.split("@")[0], cleanEmail, password, role);
+      if (apiRes.success && apiRes.data) {
+        if (apiRes.data.token) {
+          localStorage.setItem("nextup_jwt_token", apiRes.data.token);
+        }
+        const authUser: AuthUser = {
+          id: apiRes.data._id || `user-${Date.now()}`,
+          email: apiRes.data.email,
+          name: apiRes.data.name,
+          avatarUrl: apiRes.data.avatar || `https://api.dicebear.com/7.x/avataaars/svg?seed=${encodeURIComponent(apiRes.data.email)}`,
+          role: apiRes.data.role === "admin" ? "admin" : "organizer",
+          authProvider: "password",
+        };
+        saveUser(authUser);
+        return {};
+      } else if (apiRes.message && !apiRes.message.includes("unreachable")) {
+        return { error: apiRes.message };
+      }
+    } catch {
+      // Continue to Supabase / Local fallback
     }
 
+    // 2. Legacy Supabase Fallback
     try {
       if (password) {
         const { data, error } = await supabase.auth.signUp({
@@ -228,6 +260,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     saveUser(newUser);
     return {};
   };
+
 
   // Supabase Google OAuth Authentication
   const signInWithGoogle = async (payload?: GoogleAuthPayload) => {
@@ -301,6 +334,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   const signOut = async () => {
     try {
+      localStorage.removeItem("nextup_jwt_token");
       await supabase.auth.signOut();
     } catch {
       // Ignored for fallback

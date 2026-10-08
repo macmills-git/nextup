@@ -1,0 +1,19 @@
+services:
+  - type: web
+    name: upnext-express-backend
+    env: node
+    region: oregon
+    plan: free
+    buildCommand: npm install
+    startCommand: node server.js
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: MONGO_URI
+        value: mongodb+srv://kusiboatengmills_db_user:ueg9lIK4zQF6LKJu@cluster0.qody7yk.mongodb.net/upnext?retryWrites=true&w=majority&appName=Cluster0
+      - key: JWT_SECRET
+        value: upnext_super_secret_jwt_key_2026_change_in_production
+      - key: JWT_EXPIRE
+        value: 30d
+      - key: CLIENT_URL
+        value: https://nextup-blond.vercel.app
