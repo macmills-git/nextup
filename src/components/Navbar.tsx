@@ -180,21 +180,14 @@ export const Navbar = () => {
               )}
             </div>
           ) : (
-            <div className="flex items-center gap-3">
-              <button
-                onClick={() => handleNavClick("/signin")}
-                className="text-sm font-medium text-stone-600 hover:text-stone-900 px-3 py-2 transition-colors"
-              >
-                Log in
-              </button>
-              <button
-                onClick={() => handleNavClick("/signin")}
-                className="bg-black text-white text-sm font-semibold px-6 py-2.5 rounded-full hover:bg-stone-800 transition-all shadow-xs"
-              >
-                Sign In
-              </button>
-            </div>
+            <button
+              onClick={() => handleNavClick("/signin")}
+              className="bg-black text-white text-sm font-semibold px-6 py-2.5 rounded-full hover:bg-stone-800 transition-all shadow-xs"
+            >
+              Sign In
+            </button>
           )}
+
         </div>
 
         {/* Mobile Animated Hamburger Icon */}
@@ -257,21 +250,16 @@ export const Navbar = () => {
               </button>
             </div>
           ) : (
-            <div className="pt-2 flex items-center gap-2">
+            <div className="pt-2">
               <button
                 onClick={() => handleNavClick("/signin")}
-                className="flex-1 py-2.5 rounded-full border border-stone-200 text-black text-xs font-semibold hover:bg-stone-50 transition-colors"
-              >
-                Log in
-              </button>
-              <button
-                onClick={() => handleNavClick("/signin")}
-                className="flex-1 py-2.5 rounded-full bg-black text-white text-xs font-semibold hover:bg-stone-800 transition-colors"
+                className="w-full py-2.5 rounded-full bg-black text-white text-xs font-semibold hover:bg-stone-800 transition-colors"
               >
                 Sign In
               </button>
             </div>
           )}
+
         </nav>
       </div>
     </header>
