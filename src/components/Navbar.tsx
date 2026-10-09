@@ -4,6 +4,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { User, LogOut, ChevronDown, LayoutDashboard, Heart, Settings, ShieldAlert } from "lucide-react";
 import Logo from "@/components/Logo";
 
+// Navbar Component - Single Sign In Action Button
 export const Navbar = () => {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [profileOpen, setProfileOpen] = useState(false);
