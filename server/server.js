@@ -13,6 +13,8 @@ dotenv.config();
 // Connect to MongoDB
 connectDB();
 
+import mongoose from "mongoose";
+
 const app = express();
 
 // Clean duplicate slashes in URLs (e.g. //auth/register -> /auth/register)
@@ -35,6 +37,26 @@ app.use(
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
+// Database Connection & Readiness Middleware
+app.use(async (req, res, next) => {
+  if (req.path === "/" || req.path === "/api/health") {
+    return next();
+  }
+  if (mongoose.connection.readyState !== 1) {
+    try {
+      await connectDB();
+    } catch {}
+  }
+  if (mongoose.connection.readyState !== 1) {
+    return res.status(503).json({
+      success: false,
+      message: "Database connection failed. Please ensure 0.0.0.0/0 is added under Network Access in your MongoDB Atlas dashboard.",
+    });
+  }
+  next();
+});
+
 
 
 // Root Welcome Route (for Render Web Service probe)
