@@ -10,15 +10,27 @@ export const getVendors = async (req, res) => {
     if (category) {
       query.categories = { $in: [category] };
     }
-    if (city) {
-      query.city = { $regex: city, $options: "i" };
+    if (city || req.query.location) {
+      const locTerm = (city || req.query.location).trim();
+      query.$or = [
+        { city: { $regex: locTerm, $options: "i" } },
+        { location: { $regex: locTerm, $options: "i" } },
+        { serviceArea: { $regex: locTerm, $options: "i" } },
+      ];
     }
     if (search) {
-      query.$or = [
+      const searchOr = [
         { name: { $regex: search, $options: "i" } },
         { description: { $regex: search, $options: "i" } },
       ];
+      if (query.$or) {
+        query.$and = [{ $or: query.$or }, { $or: searchOr }];
+        delete query.$or;
+      } else {
+        query.$or = searchOr;
+      }
     }
+
 
     const vendors = await Vendor.find(query).sort({ rating: -1 });
 

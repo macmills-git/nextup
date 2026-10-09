@@ -1,6 +1,6 @@
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
-import { Search, MapPin, Store, Share2, BadgeCheck, Phone, Mail, Plus, AlertCircle } from "lucide-react";
+import { Search, MapPin, Store, Share2, BadgeCheck, Phone, Mail, Plus, AlertCircle, X } from "lucide-react";
 import { useMemo, useState, useEffect } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { useEventStore, VendorCategory, VendorProfileModel } from "@/contexts/EventStore";
@@ -31,6 +31,20 @@ const vendorCategories: ("All" | VendorCategory)[] = [
   "Other",
 ];
 
+const popularLocations = [
+  "All Locations",
+  "Accra",
+  "Legon",
+  "East Legon",
+  "Osu",
+  "Spintex",
+  "Kumasi",
+  "Takoradi",
+  "Tema",
+  "Cape Coast",
+  "Tamale",
+];
+
 export const VendorsDirectoryPage = () => {
   const navigate = useNavigate();
   const { vendors } = useEventStore();
@@ -41,7 +55,7 @@ export const VendorsDirectoryPage = () => {
   }, [vendors, user]);
 
   const [query, setQuery] = useState("");
-  const [locationFilter, setLocationFilter] = useState("");
+  const [locationFilter, setLocationFilter] = useState("All Locations");
   const [activeCat, setActiveCat] = useState<"All" | VendorCategory>("All");
   const { isLoading } = useInitialLoad();
 
@@ -53,22 +67,44 @@ export const VendorsDirectoryPage = () => {
 
   const filtered = useMemo(() => {
     return publicVendors.filter((v) => {
+      // 1. Category Filter
       const matchCat =
         activeCat === "All" || v.categories.includes(activeCat as VendorCategory);
 
-      const q = query.toLowerCase();
+      // 2. Search Query Filter
+      const q = query.trim().toLowerCase();
       const matchQuery =
         !q ||
         v.name.toLowerCase().includes(q) ||
         v.description.toLowerCase().includes(q) ||
+        (v.city && v.city.toLowerCase().includes(q)) ||
+        (v.location && v.location.toLowerCase().includes(q)) ||
+        (v.serviceArea && v.serviceArea.toLowerCase().includes(q)) ||
         v.services.some(s => s.title.toLowerCase().includes(q));
 
-      const loc = locationFilter.toLowerCase();
-      const matchLoc =
-        !loc ||
-        v.city.toLowerCase().includes(loc) ||
-        v.location.toLowerCase().includes(loc) ||
-        v.serviceArea.toLowerCase().includes(loc);
+      // 3. Location / Service Area Filter
+      const loc = locationFilter.trim().toLowerCase();
+      let matchLoc = true;
+
+      if (loc && loc !== "all locations" && loc !== "all") {
+        const vCity = (v.city || "").toLowerCase();
+        const vLoc = (v.location || "").toLowerCase();
+        const vArea = (v.serviceArea || "").toLowerCase();
+
+        // Direct matching
+        const directMatch = vCity.includes(loc) || vLoc.includes(loc) || vArea.includes(loc);
+
+        // Smart regional aliases (e.g. Accra matches Greater Accra Region & Accra sub-districts)
+        const isAccraLoc = loc === "accra" || loc === "legon" || loc === "east legon" || loc === "osu" || loc === "spintex";
+        const aliasMatch = isAccraLoc && (
+          vCity.includes("accra") ||
+          vLoc.includes("accra") ||
+          vArea.includes("accra") ||
+          vArea.includes("greater accra")
+        );
+
+        matchLoc = directMatch || aliasMatch;
+      }
 
       return matchCat && matchQuery && matchLoc;
     });
@@ -100,37 +136,84 @@ export const VendorsDirectoryPage = () => {
           </Button>
         </div>
 
-        {/* Search & Location Bar */}
-        <div className="flex flex-col md:flex-row gap-3 mb-6 bg-card border border-border p-2.5 rounded-2xl">
+        {/* Search & Location Filter Bar */}
+        <div className="flex flex-col md:flex-row gap-3 mb-6 bg-card border border-border p-2.5 rounded-2xl shadow-xs">
           <div className="flex-1 relative">
             <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
             <input
               value={query}
               onChange={(e) => setQuery(e.target.value)}
               placeholder="Search vendor name, service, or keyword..."
-              className="w-full h-11 rounded-xl bg-muted/60 pl-11 pr-4 text-xs md:text-sm text-foreground placeholder:text-muted-foreground outline-none border border-transparent focus:border-primary/30 transition-all"
+              className="w-full h-11 rounded-xl bg-muted/60 pl-11 pr-8 text-xs md:text-sm text-foreground placeholder:text-muted-foreground outline-none border border-transparent focus:border-primary/30 transition-all"
             />
+            {query && (
+              <button
+                onClick={() => setQuery("")}
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-stone-400 hover:text-stone-600 p-1"
+                title="Clear search"
+              >
+                <X className="w-3.5 h-3.5" />
+              </button>
+            )}
           </div>
+
           <div className="relative md:w-80">
-            <MapPin className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+            <MapPin className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-primary" />
             <input
-              value={locationFilter}
-              onChange={(e) => setLocationFilter(e.target.value)}
-              placeholder="Service area or city..."
-              className="w-full h-11 rounded-xl bg-muted/60 pl-11 pr-4 text-xs md:text-sm text-foreground placeholder:text-muted-foreground outline-none border border-transparent focus:border-primary/30 transition-all"
+              value={locationFilter === "All Locations" ? "" : locationFilter}
+              onChange={(e) => setLocationFilter(e.target.value || "All Locations")}
+              placeholder="Filter by city or service area..."
+              className="w-full h-11 rounded-xl bg-muted/60 pl-11 pr-8 text-xs md:text-sm text-foreground placeholder:text-muted-foreground outline-none border border-transparent focus:border-primary/30 transition-all"
             />
+            {locationFilter && locationFilter !== "All Locations" && (
+              <button
+                onClick={() => setLocationFilter("All Locations")}
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-stone-400 hover:text-stone-600 p-1"
+                title="Clear location filter"
+              >
+                <X className="w-3.5 h-3.5" />
+              </button>
+            )}
           </div>
+        </div>
+
+        {/* Location Quick Filter Pills */}
+        <div className="flex flex-wrap items-center gap-2 mb-4">
+          <span className="text-xs font-semibold text-stone-500 mr-1 flex items-center gap-1">
+            <MapPin className="w-3 h-3 text-primary" /> Location:
+          </span>
+          {popularLocations.map((loc) => {
+            const isSelected =
+              (loc === "All Locations" && (!locationFilter || locationFilter === "All Locations")) ||
+              locationFilter.toLowerCase() === loc.toLowerCase();
+            return (
+              <button
+                key={loc}
+                onClick={() => setLocationFilter(loc)}
+                className={`px-3 py-1 text-xs font-medium rounded-full border transition-all duration-200 ${
+                  isSelected
+                    ? "border-primary bg-primary/10 text-primary font-bold shadow-2xs"
+                    : "border-stone-200/80 bg-card text-stone-600 hover:text-foreground hover:bg-stone-100"
+                }`}
+              >
+                {loc}
+              </button>
+            );
+          })}
         </div>
 
         {/* Categories Pills */}
         <div className="flex flex-wrap items-center gap-2 mb-8">
+          <span className="text-xs font-semibold text-stone-500 mr-1 flex items-center gap-1">
+            <Store className="w-3 h-3 text-stone-500" /> Category:
+          </span>
           {vendorCategories.map((cat) => (
             <button
               key={cat}
               onClick={() => setActiveCat(cat)}
               className={`px-3.5 py-1.5 text-xs font-medium rounded-full border transition-all duration-200 ${
                 activeCat === cat
-                  ? "border-primary bg-primary text-primary-foreground"
+                  ? "border-stone-900 bg-stone-900 text-white shadow-2xs font-semibold"
                   : "border-stone-200 bg-card text-stone-600 hover:text-foreground hover:bg-stone-100"
               }`}
             >
@@ -138,6 +221,7 @@ export const VendorsDirectoryPage = () => {
             </button>
           ))}
         </div>
+
 
 
         {/* Vendor Cards Grid */}
